@@ -1,0 +1,72 @@
+<div class="form-sidebar">
+  <form action="#" phx-submit="submit" phx-change="update_room">
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p><%= dgettext "errors", "Something went wrong. Errors are listed below." %></p>
+      </div>
+    <% end %>
+
+    <%= if @updated do %>
+      <div class="info">
+        <p><%= gettext "Successful update" %> <a href="/r/<%= @room.name %>"><%= @room.name %></a></p>
+      </div>
+    <% end %>
+
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+      changeset: @changeset, 
+      changeset_key: :name,
+      title: "name",
+      type: "room",
+      desc: gettext("This name is used for your unique room url. Use letters only and no spaces or special characters."), 
+      value: @room.name,
+      autofocus: "autofocus"}) %>
+
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+      changeset: @changeset, 
+      changeset_key: :title,
+      title: "title",
+      type: "room",
+      desc: gettext("A longer (250 character max) title that displays prominently. Use HTML IMG w/link for image banner."), 
+      value: @room.title}) %>
+
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+      changeset: @changeset, 
+      changeset_key: :description,
+      title: "description",
+      type: "room",
+      desc: gettext("A text description of up to 500 characters."), 
+      value: @room.description}) %>
+
+    <div class="form-group">
+      <label class="control-label" for="room_type">Type</label>
+      <input type="radio" name="room[type]" id="room_type_public" value="public" checked="checked" />
+      <div class="radio-label">Public</div>
+      <input type="radio" name="room[type]" id="room_type_restricted" value="restricted" />
+      <div class="radio-label">Restricted</div>
+      <input type="radio" name="room[type]" id="room_type_private" value="private" />
+      <div class="radio-label">Private</div>
+      <div class="form-description clear"><%= gettext "Public: everyone can see it and subscribe. Restricted: everyone can see but only authorized can post. Private: Nobody can see unless authorized to. Admins can view all to monitor site policy." %></div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label" for="room_age">Age</label>
+      <input class="form-control" id="room_age" name="room[age]" type="number">
+      <div class="form-description"><%= gettext "The minimum age. 0/Blank means any." %></div>
+      <div class="form-error"><%= show_error(Keyword.get(@changeset.errors, :age)) %></div>
+    </div>
+
+    <%= if Application.get_env(:gabbler, :captcha, :off) == :on do %>
+      <div class="form-group captcha">
+        <%= raw Recaptcha.Template.display(hl: Application.get_env(:gettext, :default_locale, "en"),
+          noscript: true) %>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= case @mode do %>
+        <% :create -> %><button class="btn btn-primary" type="submit">Submit</button>
+        <% :update -> %><button class="btn btn-primary" type="submit">Update</button>
+      <% end %>
+    </div>
+  </form>
+</div>

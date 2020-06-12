@@ -1,0 +1,10 @@
+<div class="form-group">
+  <label class="control-label" for="<%= @type %>_<%= @title %>"><%= String.capitalize(@title) %></label>
+  <input class="form-control" 
+    id="<%= @type %>_<%= @title %>" 
+    name="<%= @type %>[<%= @title %>]" 
+    type="text" 
+    value="<%= @value %>" <%= assigns[:autofocus] %> />
+  <div class="form-description"><%= @desc %></div>
+  <div class="form-error"><%= show_error(Keyword.get(@changeset.errors, @changeset_key)) %></div>
+</div>

@@ -1,0 +1,11 @@
+<%= if length(@comments) > 0 do %>
+  <%= render @view_module, "comment_controls.html", %{page: @page, pages: max(@pages, 1)} %>
+
+  <div class="comments">
+    <%= for comment <- @comments do %>
+      <%= render @view_module, "comment.html", %{op: @post, comment: comment, user: @user, room: @room, mod: @mod} %>
+    <% end %>
+  </div>
+
+  <%= render @view_module, "comment_controls.html", %{page: @page, pages: max(@pages, 1)} %>
+<% end %>

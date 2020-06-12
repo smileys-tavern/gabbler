@@ -1,0 +1,64 @@
+<%= if @show_auth do %>
+  <div class="login-container">
+    <div class="login-middle">
+      <div class="login">
+        <% route = case @mode do
+          :register -> "/users/register"
+          _ -> "/users/login"
+        end %>
+
+        <%= if @mode == :logout do %>
+          <%= form_for @changeset_user, 
+            "/users/logout", 
+            [class: "login-form", csrf_token: @csrf] %>
+              <button class="btn btn-primary button-action" type="submit">Logout</button>
+            </form>
+        <% else %>
+          <h2>
+            <a href="#" phx-click="login_mode" phx-value-mode="login">Login</a> | 
+            <a href="#" phx-click="login_mode" phx-value-mode="register">Register</a>
+          </h2>
+          <p><%= gettext("Some actions require an account. Login or create one here.") %></p>
+
+          <%= form_for @changeset_user, route, 
+          [phx_change: :login_change, class: "login-form", csrf_token: @csrf] %>
+            <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+              changeset: @changeset_user, 
+              changeset_key: :name,
+              title: "name",
+              type: "user",
+              desc: gettext("This is your unique handle used across the site"), 
+              value: @user.name,
+              autofocus: "autofocus"}) %>
+
+            <%= if @mode == :register && Application.get_env(:gabbler, :user_email, false) do %>
+              <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+                changeset: @changeset_user,
+                changeset_key: :email,
+                title: "email",
+                type: "user",
+                desc: gettext("Email can be used optionally for login and subscriptions"),
+                value: @user.email}) %>
+            <% end %>
+
+            <%= Phoenix.View.render(GabblerWeb.FormView, "input_password.html", %{
+              changeset: @changeset_user, 
+              changeset_key: :password,
+              title: "password",
+              type: "user",
+              desc: gettext("Must be at least 12 characters")}) %>
+
+            <div class="login-form-actions">
+              <a href="#" class="login-cancel button-action negation" phx-click="login_hide">Cancel</a>
+              <%= if @mode == :register do %>
+                <button class="btn btn-primary button-action" type="submit">Register</button>
+              <% else %>
+                <button class="btn btn-primary button-action" type="submit">Login</button>
+              <% end %>
+            </div>
+          </form>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,5 @@
+<div class="vote">
+  <div class="arrow-up vote-up" phx-click="vote" phx-value-dir="up" phx-value-hash="<%= @post.hash %>"></div>
+  <div class="vote-count"><%= @post.score_public %></div>
+  <div class="arrow-down vote-down" phx-click="vote" phx-value-dir="down" phx-value-hash="<%= @post.hash %>"></div>
+</div>

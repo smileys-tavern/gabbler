@@ -1,0 +1,16 @@
+<div class="konami">
+  <%= case :rand.uniform(4) do %>
+    <% 1 -> %> 
+      <p>Who are you?</p>
+      <p>No one of consequence.</p>
+      <p>I must know.</p>
+      <p>Get used to disappointment.</p>
+    <% 2 -> %>
+      <p>Good night, Westley. Good work. Sleep well. I'll most likely kill you in the morning.</p>
+    <% 3 -> %>
+      <p>We'll never survive!</p>
+      <p>Nonsense. You’re only saying that because no one ever has.</p>
+    <% 4 -> %>
+      <p>I'll tell you the truth and its up to you to live with it.</p>
+  <% end %>
+</div>

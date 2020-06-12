@@ -1,0 +1,11 @@
+<div class="comment-controls">
+  <%= if @page > 1 do %>
+    <div class="arrow-left" phx-click="page_down"></div>
+  <% end %>
+
+  <div class="page-number">Page <%= @page %> of <%= @pages %></div>
+
+  <%= if @page < @pages do %>
+    <div class="arrow-right" phx-click="page_up"></div>
+  <% end %>
+</div>

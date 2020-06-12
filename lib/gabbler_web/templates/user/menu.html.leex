@@ -1,0 +1,66 @@
+<nav role="navigation">
+  <ul class="nav nav-pills pull-right">
+    <%= if assigns[:user] do %>
+      <li><a href="#" phx-click="toggle_menu"><%= @user.name %></a></li>
+    <% else %>
+      <li><a href="#" phx-click="login">Sign in</a></li>
+    <% end %>
+  </ul>
+
+  <%= if @menu_open do %>
+    <div class="menu">
+      <div class="options">
+        <a href="/room/new">Create Room</a>
+        <a href="/u/<%= @user.name %>">/u/<%= @user.name %></a>
+        <a href="/users/logout">Sign Out</a>
+      </div>
+      <div class="activity">
+        <h3>Your Recent Posts</h3>
+        <%= if Enum.count(@posts) < 1 do %>
+          <div><%= gettext("Nothing at the moment") %></div>
+        <% end %>
+        <%= for %{id: id, hash: hash} <- @posts do %>
+          <div class="user-post">
+            <a href="/r/<%= @rooms[id].name %>/comments/<%= hash %>">/r/<%= @rooms[id].name %> <%= hash %></a>
+          </div>
+        <% end %>
+
+        <h3>Subscriptions</h3>
+        <%= for sub <- @subscriptions do %>
+          <div class="user-sub">
+            <a href="/r/<%= sub %>">/r/<%= sub %></a>
+          </div>
+        <% end %>
+
+        <%= if Enum.count(@moderating) > 0 do %>
+          <h3>Moderating</h3>
+          <%= for mod_room <- @moderating do %>
+            <div class="user-mod">
+              <a href="/r/<%= mod_room %>">/r/<%= mod_room %></a>
+            </div>
+          <% end %>
+        <% end %>
+
+        <h3>New Activity</h3>
+        <%= if Enum.count(@activity) < 1 do %>
+          <div><%= gettext("Nothing at the moment") %></div>
+        <% end %>
+        <%= for {id, type} <- @activity do %>
+          <%= render @view_module, "activity_#{type}.html", %{posts: @posts, rooms: @rooms, id: id} %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= if @warning do %>
+    <div class="warning">
+      <%= @warning %>
+    </div>
+  <% end %>
+
+  <%= if @info do %>
+    <div class="info">
+      <%= @info %>
+    </div>
+  <% end %>
+</nav>

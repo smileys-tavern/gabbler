@@ -1,0 +1,43 @@
+<div class="post">
+  <%= render(GabblerWeb.PostView, "vote.html", %{post: @post}) %>
+  
+  <%= render(GabblerWeb.PostView, "preview_square.html", post_meta: @post_meta) %>
+
+  <div class="title">
+    <div class="text">
+      <%= cond do %>
+        <% @post.parent_type == "room" && @room.name -> %>
+          <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>"><%= @post.title %></a>
+        <% @room.name -> %>
+          <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>"><%= @post.title %></a>
+        <% true -> %>
+          <%= @post.title %>
+      <% end %>
+      by <%= @user.name %>
+    </div>
+    
+    <div class="actions">
+      <%= if @post.parent_type == "room" do %>
+        <%= if @comment_count && @comment_count > 0 do %>
+          <span class="post-activity-comment activity-count"><%= @comment_count %></span>
+        <% end %>
+        <%= if @room.name do %>
+          <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>">Comment</a>
+        <% else %>
+          Comment
+        <% end %>
+      <% end %>
+      
+      <%= if @room.name && @post.parent_type != "room" do %>
+        <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>">Focus</a> 
+      <% end %>
+      
+      <%= if @room.name do %>
+        <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
+      <% end %>
+      
+      <%= if @post_meta.link do %><a href="<%= @post_meta.link %>">Direct Link</a><% end %>
+      <%= if @post_meta.tags do %><strong><%= @post_meta.tags %></strong><% end %>
+    </div>
+  </div>
+</div>

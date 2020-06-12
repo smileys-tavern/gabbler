@@ -1,0 +1,15 @@
+<div class="room-title" id="room">
+  From All of <%= Application.get_env(:gabbler, :page_title) %>
+</div>
+
+<div class="description">
+  <a href="/">/r/all</a> A collection of recent activity across <%= Application.get_env(:gabbler, :page_title) %> 
+  public rooms.
+</div>
+
+<div class="posts">
+  <%= for %{id: post_id} = post <- @posts do %>
+    <%= render GabblerWeb.RoomView, "post_summary.html", 
+      %{user: @users[post_id], post: post, room: @rooms[post_id], post_meta: @post_metas[post_id], comment_count: 0} %>
+  <% end %>
+</div>

@@ -1,0 +1,14 @@
+<div class="preview-square">
+  <%= cond do %>
+    <% !@post_meta -> %>
+      <strong>T</strong>
+    <% @post_meta.thumb && String.length(@post_meta.thumb) -> %>
+      <img src="http://<%= @post_meta.thumb %>" />
+
+    <% @post_meta.link -> %>
+      <strong>L</strong>
+
+    <% true -> %>
+      <strong>T</strong>
+  <% end %>
+</div>

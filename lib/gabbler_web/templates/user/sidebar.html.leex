@@ -1,0 +1,49 @@
+<div class="mobile mobile_sidebar_options"><a href="#" phx-click="toggle_sidebar">Menu</a></div>
+<div class="sidebar <%= if @sidebar_on do %>mobile<% end %>" phx-keydown="keydown" phx-target="window">
+  <div class="site-actions">
+    <div class="room-fact">
+      <%= @user_count %> online here
+    </div>
+    <%= if @room do %>
+      <%= if @user do %>
+        <a href="/r/<%= @room.name %>/new_post" class="button-action">Post</a>
+      <% end %>
+      <%= if @subscribed do %>
+        <a href="#" class="button-action" phx-click="unsubscribe">Unsubscribe /r/<%= @room.name %></a>
+      <% else %>
+        <a href="#" class="button-action" phx-click="subscribe">Subscribe /r/<%= @room.name %></a>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="current-room">
+    <h3>Moderators</h3>
+    <a href="/u/<%= @owner.name %>"><%= @owner.name %></a>
+    <%= for name <- @moderators do %>
+      <a href="/u/<%= name %>"><%= name %></a> 
+
+      <%= if @user && @owner.id == @user.id do %>
+        <a href="#" phx-click="remove_mod" phx-value-name="<%= name %>">X</a>
+      <% end %>
+    <% end %>
+    <div class="clear"></div>
+
+    <%= if @user && @owner.id == @user.id do %>
+      <form action="#" phx-submit="submit_mod_invite">
+        <div class="form-group">
+          <label class="control-label" for="mod_name"><%= gettext("Invite to Moderate") %></label>
+          <input class="form-control" id="mod_name" name="mod[name]" type="text" value="<%= @mod_invite %>" placeholder="username" />
+        </div>
+        <button class="btn btn-primary" type="submit"><%= gettext("Invite") %></button>
+      </form>
+    <% end %>
+  </div>
+
+  <div class="sidebar-links sidebar-links-last">
+    <div class="room-link"><a href="/about">About <%= Application.get_env(:gabbler, :page_title) %></a></div>
+  </div>
+
+  <%= if assigns[:konami] do %>
+    <%= render GabblerWeb.PageView, "konami.html" %>
+  <% end %>
+</div>

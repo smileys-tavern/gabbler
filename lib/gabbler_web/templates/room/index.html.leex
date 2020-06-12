@@ -1,0 +1,26 @@
+<div class="room-title" id="room">
+  <%= raw @room.title %>
+</div>
+
+<div class="description">
+  <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a> <%= @room.description %> 
+</div>
+
+<%= if @room_type == "room" && @mode in [:new, :hot, :live] do %>
+  <div class="room-control">
+    <a href="/r/<%= @room.name %>/view/new">New</a> | 
+    <a href="/r/<%= @room.name %>">Hot</a> | 
+    <a href="/r/<%= @room.name %>/view/live">Live</a>
+  </div>
+<% end %>
+
+<div class="posts">
+  <%= if Enum.count(@posts) do %>
+    <%= for %{id: post_id} = post <- @posts do %>
+      <%= render @view_module, "post_summary.html", 
+        %{user: @users[post_id], post: post, room: @room, post_meta: @post_metas[post_id], comment_count: 0} %>
+    <% end %>
+  <% else %>
+    <div>Nothing here yet!</div>
+  <% end %>
+</div>

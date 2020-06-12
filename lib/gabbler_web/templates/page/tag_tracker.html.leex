@@ -1,0 +1,27 @@
+<!-- Tag input form -->
+<form class="tag-tracker-form" action="#" phx-submit="submit">
+  <div class="form-group">
+    <input class="form-control" 
+      id="tag_tracker" 
+      name="tag[tracker]" 
+      type="text"
+      placeholder="<%= gettext("tag to track") %>"
+      value="" autofocus />
+    <button class="btn btn-primary" type="submit"><%= gettext("Track Tag") %></button>
+  </div>
+</form>
+
+<!-- POSTS! -->
+<div class="tag-tracker-status">
+  Current tag: <span>"<%= @current_tag %>"</span>
+</div>
+<div class="posts">
+  <%= if Enum.count(@posts) do %>
+    <%= for %{id: post_id} = post <- @posts do %>
+      <%= render GabblerWeb.RoomView, "post_summary.html", 
+      %{user: @users[post_id], post: post, room: @rooms[post_id], post_meta: @post_metas[post_id], comment_count: 0} %>
+    <% end %>
+  <% else %>
+    <div>Nothing here yet!</div>
+  <% end %>
+</div>

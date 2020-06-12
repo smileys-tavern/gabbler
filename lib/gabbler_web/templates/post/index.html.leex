@@ -1,0 +1,76 @@
+<div id="original-post" class="original-post">
+  <%= render @view_module, "vote.html", %{post: @post} %>
+
+  <div class="op-title">
+    <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
+    <%= @post.title %> - <strong><a href="/u/<%= @post_user.name %>"><%= @post_user.name %></a></strong> 
+
+    <%= if @parent do %>
+      <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/focus/<%= @parent.hash %>">Parent</a> | 
+    <% end %> 
+
+    <%= if assigns[:focus_hash] do %>
+      <br /><br />From 
+      <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/<%= @op.title %>">
+        /r/<%= @room.name %>/comments/<%= @op.hash %>/<%= @op.title %>
+      </a>
+    <% end %>
+  </div>
+
+  <div class="op-content">
+    <div class="op-body">
+      <%= if @post_meta.image do %>
+        <div><img src="<%= @post_meta.image %>" class="post-image" /></div><br />
+      <% end %>
+
+      <%= if @post_meta.link do %>
+        <p><a href="<%= @post_meta.link %>"><%= @post_meta.link %></a></p>
+      <% end %>
+
+      <%= if @post_meta.tags do %>
+        <p>Tags Used: <strong><%= @post_meta.tags %></strong></p>
+      <% end %>
+
+      <p><%= if @post.body do %>
+        <%= raw display_post_body(@post) %>
+      <% end %></p>
+    </div>
+  </div>
+  
+  <div class="op-content">
+    <span class="time-blatant">Posted <%= posted_at(@post.inserted_at) %></span>
+
+    <div class="op-actions">
+      <a href="#" class="reply button-action" phx-click="reply" phx-value-to="<%= @post.hash %>">Comment</a>
+      &nbsp;&nbsp;&nbsp;Or view 
+      <a class="button-action" href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>/view/new">
+        New
+      </a> 
+      <a class="button-action" href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>">
+        Hot
+      </a> 
+      <a class="button-action" href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>/view/live">
+        Live
+      </a>
+      <%= if @mod do %>
+        <a href="#" class="mod-action" phx-click="delete_post" phx-value-hash="<%= @post.hash %>">Delete</a>
+      <% end %>
+
+      <div class="hidden interactive">| <a href="#" class="load-thread">New</a></div>
+    </div>
+
+    <%= if @changeset_reply && assigns[:reply_display] do %>
+      <%= render @view_module, "form_reply.html", %{display: @reply_display, changeset: @changeset_reply} %>
+    <% end %>
+  </div>
+
+  <div class="op-reply" id="comment-reply-<%= @post.hash %>" data-commentdepth="0"></div>
+
+  <%= render @view_module, "post_thread.html", assigns %>
+</div>
+
+<%= if @changeset_reply && assigns[:reply_comment_display] do %>
+  <%= render @view_module, "form_reply_comment.html", %{display: @reply_comment_display, changeset: @changeset_reply} %>
+<% end %>
+
+<div class="end-spacer"></div>

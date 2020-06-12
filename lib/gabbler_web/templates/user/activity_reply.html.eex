@@ -1,0 +1,10 @@
+<% {post, room} = get_activity_subjects(@posts, @rooms, @id, "reply") %>
+
+<%= if room do %>
+  <div class="new-activity">
+  
+    <a href="/r/<%= room.name %>/comments/<%= post.hash %>">
+      /r/<%= room.name %> <%= String.slice(post.hash, 0..7) %> Reply!
+    </a>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<div class="posts">
+  <%= if Enum.count(@posts) do %>
+    <%= for %{id: post_id} = post <- @posts do %>
+      <%= render GabblerWeb.RoomView, "post_summary.html", 
+        %{user: @subject_user, post: post, room: @rooms[post_id], post_meta: @post_metas[post_id], comment_count: 0} %>
+    <% end %>
+  <% else %>
+    <div>You have not yet posted.</div>
+  <% end %>
+</div>

@@ -1,0 +1,82 @@
+<div class="form-sidebar form-sidebar-wide">
+  <%= form_for @changeset, "#", [phx_change: :update_post, phx_submit: :submit] %>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p><%= dgettext "errors", "Something went wrong in Post. Errors are listed below." %></p>
+      </div>
+    <% end %>
+
+    <%= if @changeset_meta.action do %>
+      <div class="alert alert-danger">
+        <p><%= dgettext "errors", "Something went wrong in Post Meta. Errors are listed below." %></p>
+      </div>
+    <% end %>
+
+    <%= if @updated do %>
+      <div class="info">
+        <p>
+          <%= gettext "Successful update" %> <%= @updated %> 
+        </p>
+        <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/">
+          /r/<%= @room.name %>/comments/<%= @post.hash %>
+        </a>
+      </div>
+    <% end %>
+
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{changeset: @changeset, changeset_key: :title,
+      title: "title",
+      type: "post",
+      desc: gettext("please use letters, numbers and -.,?!:)(#][+$"), 
+      value: @post.title,
+      autofocus: "autofocus"}) %>
+
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_textarea.html", %{
+      changeset: @changeset, 
+      changeset_key: :body,
+      title: "body",
+      type: "post",
+      maxlength: "11099",
+      desc: gettext("alphanumeric and .,?!:;-\" allowed as well as markdown"), 
+      value: @post.body}) %>
+
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+      changeset: @changeset_meta, 
+      changeset_key: :link,
+      title: "link",
+      type: "post_meta",
+      desc: gettext("(optional) appropriate link to other content"), 
+      value: @post_meta.link}) %>
+
+    <%= if (@uploads != :off) do %>
+      <%= Phoenix.View.render(GabblerWeb.FormView, "input_upload.html", %{
+        changeset: @changeset_meta, 
+        changeset_key: :image,
+        title: "image",
+        type: "post_meta",
+        desc: gettext("(optional) images will be resized and thumbed automatically"), 
+        value: @post_meta.image}) %>
+    <% end %>
+
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+      changeset: @changeset_meta, 
+      changeset_key: :tags,
+      title: "tags",
+      type: "post_meta",
+      desc: gettext("(optional) use letters, numbers and spaces in a comma separated list of up to 3 tags that help with search"), 
+      value: @post_meta.tags}) %>
+
+    <%= if Application.get_env(:gabbler, :captcha, :off) == :on do %>
+      <div class="form-group captcha">
+        <%= raw Recaptcha.Template.display(hl: Application.get_env(:gettext, :default_locale, "en"),
+          noscript: true) %>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= case @mode do %>
+        <% :create -> %><button class="btn btn-primary" type="submit">Submit</button>
+        <% :update -> %><button class="btn btn-primary" type="submit">Update</button>
+      <% end %>
+    </div>
+  </form>
+</div>

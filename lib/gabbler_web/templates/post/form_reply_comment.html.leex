@@ -1,0 +1,15 @@
+<form action="#" class="comment-reply-form-bottom <%= @display %>" phx-submit="reply_submit" phx-change="reply_change">
+  <%= Phoenix.View.render(GabblerWeb.FormView, "input_textarea.html", %{
+      changeset: @changeset, 
+      changeset_key: :body,
+      title: "body",
+      type: "reply",
+      desc: "", 
+      autofocus: "autofocus",
+      value: get_post_body(@changeset)}) %>
+  
+  <div class="comment-reply-form-actions">
+    <button class="comment-reply-send button-action" phx-value-action="reply_confirm">Send Reply</button> 
+    <a href="#" class="comment-reply-cancel button-action negation" phx-click="reply_comment_hide">Cancel</a>
+  </div>
+</form>
