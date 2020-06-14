@@ -24,12 +24,14 @@ defmodule Gabbler.TagTracker do
   a tag. :trending, :random and "tagname" are all valid. The user asking for tags must
   be specified so they can have the result broadcast
   """
-  def get(retrieve_type, %User{id: id}) do
-    cast(:get, {retrieve_type, user_channel(id)})
+  def get(%User{id: id} = user, retrieve_type) do
+    _ = cast(:get, {retrieve_type, user_channel(id)})
+    user
   end
 
-  def get(retrieve_type, channel_name) when is_binary(channel_name) do
-    cast(:get, {retrieve_type, channel_name})
+  def get(channel_name, retrieve_type) when is_binary(channel_name) do
+    _ = cast(:get, {retrieve_type, channel_name})
+    channel_name
   end
 
   @doc """

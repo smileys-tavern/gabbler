@@ -4,8 +4,16 @@ defmodule Gabbler.Subscription do
   """
   alias Phoenix.PubSub
 
-  def subscribe(channel_name), do: PubSub.subscribe(Gabbler.PubSub, channel_name)
-  def unsubscribe(channel_name), do: PubSub.unsubscribe(Gabbler.PubSub, channel_name)
+  def subscribe(channel_name) do 
+    _ = PubSub.subscribe(Gabbler.PubSub, channel_name)
+    channel_name
+  end
+
+  def unsubscribe(channel_name) do
+    _ = PubSub.unsubscribe(Gabbler.PubSub, channel_name)
+    channel_name
+  end
+
   def broadcast(channel_name, payload), do: Gabbler.PubSub
     |> PubSub.broadcast(channel_name, payload)
 end

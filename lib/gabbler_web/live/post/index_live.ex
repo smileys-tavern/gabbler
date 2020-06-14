@@ -34,6 +34,8 @@ defmodule GabblerWeb.Post.IndexLive do
     |> no_reply()
   end
 
+  def handle_event("reply", _, socket), do: no_reply(socket)
+
   def handle_event("page_up", _, %{assigns: %{page: current_page}} = socket) do
     change_page(socket, current_page + 1)
     |> no_reply()
@@ -43,8 +45,6 @@ defmodule GabblerWeb.Post.IndexLive do
     change_page(socket, current_page - 1)
     |> no_reply()
   end
-
-  def handle_event("reply", _, socket), do: no_reply(socket)
 
   def handle_event("reply_comment", %{"to" => parent_hash}, socket) do
     open_reply_to(socket, query(:post).get_by_hash(parent_hash))
@@ -140,9 +140,9 @@ defmodule GabblerWeb.Post.IndexLive do
   end
 
   defp add_reply(%{assigns: %{op: op, comments: comments}} = socket, {:ok, comment}) do
-    # Inform user of parent post of reply (TODO: move out of this module)
     post = query(:post).get(comment.parent_id)
 
+    # Inform user of parent post of reply (TODO: move out of this module)
     _ = Gabbler.User.add_activity(post.user_id, post.id, "reply")
 
     socket = socket

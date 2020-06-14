@@ -39,13 +39,14 @@ defmodule GabblerWeb.Live.Auth do
         # TODO: logic to clear session if token doesn't work
         Accounts.get_user_by_session_token(user_token)
         |> assign_to(:user, socket)
+        |> assign(:temp_token, nil)
         |> init(params, Map.drop(session, ["user_token", "temp_token", "user"]))
       end
 
       defp check_authorization(socket) do
         # TODO: 403 logic
         case @auth_req do
-          [:full_page] -> socket
+          [:_page] -> socket
           _ -> socket
         end
       end

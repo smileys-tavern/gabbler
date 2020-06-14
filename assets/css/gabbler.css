@@ -649,6 +649,7 @@ nav .menu .menu-item {
 }
 .op-actions a {
   cursor: pointer;
+  padding-left: 10px;
 }
 .op-content {
   clear: both;

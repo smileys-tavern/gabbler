@@ -23,14 +23,8 @@ defmodule GabblerWeb.Router do
   scope "/", GabblerWeb do
     pipe_through [:browser]
 
-    # GABBLER
-    get "/", PageController, :index
     get "/about", PageController, :about
     get "/tos", PageController, :tos
-
-    # ROOM
-    get "/h/all", PageController, :index
-    get "/h/tag_tracker", PageController, :tag_tracker
 
     # USER
     post "/u/session/new", UserController, :new
@@ -42,6 +36,11 @@ defmodule GabblerWeb.Router do
 
   scope "/", GabblerWeb do
     pipe_through [:browser, :live_browser]
+
+    # GABBLER
+    live "/", House.AllLive, :all
+    live "/h/all", House.AllLive, :all
+    live "/h/tag_tracker", House.TagTrackerLive, :tag_tracker
 
     # ROOM
     live "/r/:room", Room.IndexLive, :index
@@ -57,17 +56,6 @@ defmodule GabblerWeb.Router do
     live "/r/:room/comments/:hash/:title/focus/:focushash", Post.IndexLive, :index
     live "/r/:room/comments/:hash/focus/:focushash", Post.IndexLive, :index
   end
-
-  #scope "/", GabblerWeb do
-  #  pipe_through :browser
-  #
-  #  live "/", PageLive, :index
-  #end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", GabblerWeb do
-  #   pipe_through :api
-  # end
 
   # Enables LiveDashboard only for development
   #
