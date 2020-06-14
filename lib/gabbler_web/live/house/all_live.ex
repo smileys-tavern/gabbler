@@ -13,7 +13,7 @@ defmodule GabblerWeb.House.AllLive do
 
   # PRIVATE FUNCTIONS
   ###################
-  defp init(socket, _, session) do
+  defp init(socket, _, _) do
     posts = query(:post).list(order_by: :score_private, limit: 20, only: :op)
 
     assign(socket, 

@@ -8,11 +8,12 @@ defmodule Gabbler.Room.Query do
 
   alias Gabbler.Cache
   alias GabblerData.Room
+  alias GabblerData.Query.Room, as: QueryRoom
 
   def get(%Room{name: name}), do: get_by_name(name)
 
   @impl true
-  def get(id), do: Room.get(id)
+  def get(id), do: QueryRoom.get(id)
 
   @impl true
   def get_by_name(name), do: Cache.get("ROOM_#{name}")

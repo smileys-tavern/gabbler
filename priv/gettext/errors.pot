@@ -1,10 +1,33 @@
-## This is a PO Template file.
-##
-## `msgid`s here are often extracted from source code.
-## Add new translations manually only if they're dynamic
-## translations that can't be statically extracted.
-##
-## Run `mix gettext.extract` to bring this file up to
-## date. Leave `msgstr`s empty as changing them here has no
-## effect: edit them in PO (`.po`) files instead.
+#, elixir-format
+#: lib/gabbler_web/templates/post/create.html.leex:11
+msgid "Something went wrong in Post Meta. Errors are listed below."
+msgstr ""
 
+#, elixir-format
+#: lib/gabbler_web/templates/post/create.html.leex:5
+msgid "Something went wrong in Post. Errors are listed below."
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler_web/templates/room/create.html.leex:5
+msgid "Something went wrong. Errors are listed below."
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler/post/creation.ex:22
+msgid "post not created. You may have reached a daily posting limit."
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler_web/live/house/all_live.ex:7
+#: lib/gabbler_web/live/house/tag_tracker_live.ex:7 lib/gabbler_web/live/post/index_live.ex:7
+#: lib/gabbler_web/live/room/index_live.ex:8
+msgid "there was an issue voting"
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler_web/live/house/all_live.ex:7
+#: lib/gabbler_web/live/house/tag_tracker_live.ex:7 lib/gabbler_web/live/post/index_live.ex:7
+#: lib/gabbler_web/live/room/index_live.ex:8
+msgid "you have reached your voting capacity for today or already voted here"
+msgstr ""

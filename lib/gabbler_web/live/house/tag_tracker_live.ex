@@ -9,7 +9,6 @@ defmodule GabblerWeb.House.TagTrackerLive do
   import Gabbler.Live.SocketUtil, only: [no_reply: 1, assign_to: 3]
   import GabblerWeb.Gettext
 
-  alias Gabbler.Accounts.User
   alias Gabbler.Subscription, as: GabSub
   alias Gabbler.TagTracker
 
@@ -48,7 +47,7 @@ defmodule GabblerWeb.House.TagTrackerLive do
 
   # PRIV
   #############################
-  defp init(%{assigns: %{user: %{id: user_id} = user, temp_token: nil}} = socket, _, _) do
+  defp init(%{assigns: %{user: %{id: user_id}, temp_token: nil}} = socket, _, _) do
     TagTracker.user_channel(user_id)
     |> GabSub.subscribe()
     |> TagTracker.get(:trending)
