@@ -4,11 +4,11 @@ defmodule GabblerWeb.Room.NewLive do
   """
   use GabblerWeb, :live_view
   use GabblerWeb.Live.Auth, auth_required: [:_page]
-  import Gabbler, only: [query: 1]
   import Gabbler.Live.SocketUtil, only: [no_reply: 1]
 
-  alias GabblerData.{Room, Post, PostMeta}
   alias Gabbler.Accounts.User
+  alias Gabbler.Room, as: GabblerRoom
+  alias GabblerData.{Room, Post, PostMeta}
 
   @doc """
   Set default form and status of creation
@@ -29,14 +29,14 @@ defmodule GabblerWeb.Room.NewLive do
 
   @impl true
   def handle_event("submit", _, %{assigns: %{changeset: changeset, mode: :create}} = socket) do
-    update_room(socket, query(:room).create(changeset))
+    update_room(socket, GabblerRoom.create_room(changeset))
     |> no_reply()
   end
 
   # PRIV
   #############################
   defp init(%{assigns: assigns} = socket, %{"room" => name, "user" => user}, _) do
-    case query(:room).get_by_name(name) do
+    case GabblerRoom.get_room(name) do
       nil ->
         assign(socket, default_assigns(assigns))
 

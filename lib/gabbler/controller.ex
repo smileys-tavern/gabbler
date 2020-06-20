@@ -48,7 +48,7 @@ defmodule Gabbler.Controller do
   Add a user to the connection
   """
   def assign_user(conn, %{"username" => name}), do: conn
-    |> assign(:subject_user, query(:user).get(URI.decode(name)))
+    |> assign(:subject_user, query(:user).get_by_name(URI.decode(name)))
   
   def assign_user(conn, _), do: conn
 

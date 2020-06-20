@@ -8,9 +8,11 @@ defmodule GabblerWeb.Live.Room do
     quote do
       import Gabbler, only: [query: 1]
       import GabblerWeb.Gettext
-      import Gabbler.Live.SocketUtil, only: [no_reply: 1, assign_to: 3, update_changeset: 5]
+      import Gabbler.Live.SocketUtil, only: [
+        no_reply: 1, assign_to: 3, assign_or: 4, update_changeset: 5]
 
       alias Gabbler.Room, as: GabblerRoom
+      alias Gabbler.User, as: GabblerUser
       alias Gabbler.Subscription, as: GabSub
       alias Gabbler.Type.Mode
       alias GabblerWeb.Presence
@@ -38,27 +40,33 @@ defmodule GabblerWeb.Live.Room do
 
       @impl true
       def handle_event("subscribe", _, %{assigns: %{user: user, room: room}} = socket) do
-        assign_subscription(socket, query(:subscription).subscribe(user, room))
-        |> broadcast_subscribed()
+        GabblerUser.subscribe(user, room)
+        |> assign_or(:subscription, {true, false}, socket)
         |> no_reply()
       end
 
       @impl true
       def handle_event("unsubscribe", _, %{assigns: %{user: user, room: room}} = socket) do
-        assign_unsubscribed(socket, query(:subscription).unsubscribe(user, room))
-        |> broadcast_unsubscribed()
+        GabblerUser.unsubscribe(user, room)
+        |> assign_or(:subscription, {false, true}, socket)
         |> no_reply()
       end
 
       @impl true
-      def handle_event("submit_mod_invite", %{"mod" => %{"name" => name}}, %{assigns: %{room: room}} = socket) do
-        invite_mod(socket, query(:user).get(name), room)
+      def handle_event("submit_mod_invite", %{"mod" => %{"name" => name}}, %{assigns: %{user: user, room: room}} = socket) do
+        GabblerUser.get_by_name(name)
+        |> GabblerUser.invite_to_mod(user, room)
+        |> assign_or(:mod_request, {"", ""}, socket)
         |> no_reply()
       end
 
       @impl true
-      def handle_event("remove_mod", %{"name" => user_name}, socket) do
-        remove_mod(socket, query(:user).get(user_name))
+      def handle_event("remove_mod", %{"name" => u_name}, %{assigns: %{room: room, moderators: mods}} = socket) do
+        _ = GabblerUser.get_by_name(u_name)
+        |> GabblerUser.remove_mod(room)
+
+        socket
+        |> assign(moderators: Enum.filter(mods, fn name -> name != u_name end))
         |> no_reply()
       end
 
@@ -130,61 +138,6 @@ defmodule GabblerWeb.Live.Room do
       end
 
       defp init_room(socket, _), do: socket
-
-      defp assign_subscription(socket, {:ok, _subbed_result}) do
-        assign(socket, subscribed: true)
-      end
-
-      defp assign_subscription(socket, {:error, _error}) do
-        # TODO: handle notifying user
-         assign(socket, subscribed: false)
-      end
-
-      defp assign_unsubscribed(socket, {:ok, _unsubbed_result}) do
-        assign(socket, subscribed: false)
-      end
-
-      defp assign_unsubscribed(socket, {:error, _error}) do
-        assign(socket, subscribed: true)
-      end
-
-      defp invite_mod(%{assigns: %{user: user}} = socket, nil, _) do
-        Gabbler.User.notify(user, gettext("User not found so mod request could not be sent"), "warning")
-        
-        socket
-      end
-
-      defp invite_mod(%{assigns: %{user: user}} = socket, user_to_invite, %{name: room_name} = room) do
-        _ = Gabbler.User.add_activity(user_to_invite, room_name, "mod_request")
-
-        Gabbler.User.notify(user, gettext("Mod request sent"))
-
-        assign(socket, mod_request: "")
-      end
-
-      defp remove_mod(socket, nil), do: no_reply(socket)
-
-      defp remove_mod(%{assigns: %{room: room, moderators: mods}} = socket, %{name: user_name} = user) do
-        _ = query(:moderating).remove_moderate(user, room)
-
-        assign(socket, moderators: Enum.filter(mods, fn name -> name != user_name end))
-      end
-
-      defp broadcast_subscribed(%{assigns: %{user: user, room: room, subscribed: true}} = socket) do
-        GabSub.broadcast("user:#{user.id}", %{event: "subscribed", room_name: room.name})
-
-        socket
-      end
-
-      defp broadcast_subscribed(socket), do: socket
-
-      defp broadcast_unsubscribed(%{assigns: %{user: user, room: room, subscribed: false}} = socket) do
-        GabSub.broadcast("user:#{user.id}", %{event: "unsubscribed", room_name: room.name})
-
-        socket
-      end
-
-      defp broadcast_unsubscribed(socket), do: socket
     end
   end
 end

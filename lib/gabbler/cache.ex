@@ -8,4 +8,7 @@ defmodule Gabbler.Cache do
       otp_app: :gabbler,
       adapter: Nebulex.Adapters.Local
   end
+
+  def set_if(nil, _, _), do: nil
+  def set_if(value, key, opts), do: set(key, value, opts)
 end

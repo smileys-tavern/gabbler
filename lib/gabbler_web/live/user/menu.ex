@@ -4,8 +4,7 @@ defmodule GabblerWeb.Live.User.Menu do
   """
   use Phoenix.LiveView
   import Gabbler, only: [query: 1]
-  import GabblerWeb.Gettext
-  import Gabbler.Live.SocketUtil, only: [no_reply: 1, assign_to: 3]
+  import Gabbler.Live.SocketUtil, only: [no_reply: 1, assign_to: 3, assign_if: 4]
 
   alias Gabbler.Accounts.User
   alias Gabbler.Subscription, as: GabSub
@@ -29,25 +28,30 @@ defmodule GabblerWeb.Live.User.Menu do
   def handle_info(:info_expire, socket), do: {:noreply, assign(socket, info: nil)}
 
   def handle_info(%{event: "subscribed", room_name: name}, %{assigns: %{user: user}} = socket) do
-    Gabbler.User.activity_subscribed(user, name)
+    user
+    |> Gabbler.User.subscribe(Gabbler.Room.get_room(name))
+    |> Gabbler.User.subscriptions()
     |> assign_to(:subscriptions, socket)
     |> no_reply()
   end
 
   def handle_info(%{event: "unsubscribed", room_name: name}, %{assigns: %{user: user}} = socket) do
-    Gabbler.User.activity_unsubscribed(user, name)
+    user
+    |> Gabbler.User.unsubscribe(Gabbler.Room.get_room(name))
+    |> Gabbler.User.subscriptions()
     |> assign_to(:subscriptions, socket)
     |> no_reply()
   end
 
   def handle_info(%{event: "new_post", post: post}, %{assigns: %{posts: posts, rooms: rooms}} = socket) do
-    Map.put(rooms, post.id, query(:room).get(post.room_id))
+    rooms
+    |> Map.put(post.id, Gabbler.Room.get(post.room_id))
     |> assign_to(:rooms, socket)
     |> assign(posts: [post|posts])
     |> no_reply()
   end
 
-  def handle_info(%{event: "mod_request", id: room_name}, %{assigns: %{activity: activity}} = socket) do
+  def handle_info(%{event: "mod_request", payload: %{id: room_name}}, %{assigns: %{activity: activity}} = socket) do
     Enum.take([{room_name, "mod_request"}|activity], @max_activity_shown)
     |> assign_to(:activity, socket)
     |> no_reply()
@@ -90,14 +94,17 @@ defmodule GabblerWeb.Live.User.Menu do
     |> no_reply()
   end
 
-  def handle_event("accept_mod", %{"id" => room_name}, socket) do
-    accept_mod_invite(socket, query(:room).get(room_name), room_name)
-    |> broadcast_mod_invite()
+  def handle_event("accept_mod", %{"id" => room_name}, %{assigns: %{user: user}} = socket) do
+    user
+    |> Gabbler.User.add_mod(Gabbler.Room.get_room(room_name))
+    |> assign_if(:moderating, Gabbler.User.moderating(user), socket)
     |> no_reply()
   end
 
   def handle_event("decline_mod", %{"id" => room_name}, %{assigns: %{user: user}} = socket) do
-    assign(socket, activity: Gabbler.User.remove_activity(user, room_name))
+    user
+    |> Gabbler.User.remove_activity(room_name)
+    |> assign_if(:activity, Gabbler.User.get_activity(user), socket)
     |> no_reply()
   end
 
@@ -155,7 +162,7 @@ defmodule GabblerWeb.Live.User.Menu do
         socket = Enum.take([{post_id, "reply"} | activity], @max_activity_shown)
         |> assign_to(:activity, socket)
 
-        Map.put(rooms, post_id, query(:room).get(post.room_id))
+        Map.put(rooms, post_id, Gabbler.Room.get(post.room_id))
         |> assign_to(:rooms, socket)
         |> assign(posts: [post|posts])
 
@@ -164,26 +171,6 @@ defmodule GabblerWeb.Live.User.Menu do
         Enum.take([{post_id, "reply"}|activity], @max_activity_shown)
         |> assign_to(:activity, socket)
     end
-  end
-
-  defp accept_mod_invite(%{assigns: %{user: user}} = socket, {:ok, _}, room_name) do
-    {:ok, assign(socket, Gabbler.User.remove_activity(user, room_name))}
-  end
-
-  defp accept_mod_invite(%{assigns: %{user: user}} = socket, {:error, _}, room_name) do
-    {:error, assign(socket, Gabbler.User.remove_activity(user, room_name))}
-  end
-
-  defp broadcast_mod_invite({:ok, %{assigns: %{user: user}} = socket}) do
-    Gabbler.User.notify(user, gettext("added as moderator"))
-
-    socket
-  end
-
-  defp broadcast_mod_invite({:error, %{assigns: %{user: user}} = socket}) do
-    Gabbler.User.notify(user, gettext("room no longer exists"), "warning")
-
-    socket
   end
 
   defp hash_to_post(user_posts) do

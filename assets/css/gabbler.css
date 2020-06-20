@@ -98,10 +98,11 @@ nav .menu {
 nav .info,
 nav .warning {
   position: fixed;
-  top: 43px;
-  right: 9px;
+  top: 52px;
+  right: 22px;
   z-index: 110;
-  background-color: #C24E10;
+  background-color: #a0672e;
+  border: 2px solid #000;
   color: #FFF;
   border-radius: 5px;
   border-top-right-radius: 0;
@@ -157,7 +158,7 @@ nav .menu .menu-item {
   color: #FFF;
   font-size: 9pt;
   padding-left: 5px;
-  height: -webkit-fill-available;
+  height: auto;
 }
 .menu .activity .user-mod:last-child
 .menu .activity .user-sub:last-child
@@ -165,7 +166,6 @@ nav .menu .menu-item {
 .menu .activity .user-post:last-child {
   margin-bottom: 15px;
 }
-
 .button-action {
   border: 2px dotted #77a1be;
   background-color: #345b76;
@@ -174,8 +174,10 @@ nav .menu .menu-item {
   text-decoration: none;
   color: #fff;
   border-radius: 5px;
-  margin-left: 3px;
   cursor: pointer;
+}
+.op-actions .button-action {
+  margin-left: 3px;
 }
 .negation {
   background-color: #9A3600;
@@ -709,7 +711,7 @@ nav .menu .menu-item {
 }
 .comment-depth-2 {
   margin-left: 50px;
-  border: 1px dashed #e29739;
+  border: 1px dashed #464646;
   max-width: calc(75% - 50px);
 }
 .comment-depth-3 {
@@ -718,7 +720,7 @@ nav .menu .menu-item {
 }
 .comment-depth-4 {
   margin-left: 150px;
-  border: 1px dashed #e29739;
+  border: 1px dashed #464646;
   max-width: calc(75% - 150px);
 }
 .comment-depth-5 {
@@ -727,7 +729,7 @@ nav .menu .menu-item {
 }
 .comment-depth-6 {
   margin-left: 250px;
-  border: 1px dashed #e29739;
+  border: 1px dashed #464646;
   max-width: calc(75% - 250px);
 }
 .comment-depth-7 {
@@ -736,7 +738,7 @@ nav .menu .menu-item {
 }
 .comment-depth-8 {
   margin-left: 350px;
-  border: 1px dashed #e29739;
+  border: 1px dashed #464646;
   max-width: calc(75% - 350px);
 }
 .comment-depth-9 {
@@ -745,7 +747,7 @@ nav .menu .menu-item {
 }
 .comment-depth-10 {
   margin-left: 450px;
-  border: 1px dashed #e29739;
+  border: 1px dashed #464646;
   max-width: calc(75% - 450px);
 }
 

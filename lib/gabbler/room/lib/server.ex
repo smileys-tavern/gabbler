@@ -10,7 +10,7 @@ defmodule Gabbler.Room.Server do
 
   def start_link(%RoomState{room: %{name: room_name}} = room_state) do
     GenServer.start_link(
-      __MODULE__, room_state, name: {:via, :syn, Gabbler.Room.server_name(room_name)}, timeout: @server_timeout
+      __MODULE__, room_state, name: Gabbler.Room.server_name(room_name), timeout: @server_timeout
     )
   end
 
@@ -28,7 +28,7 @@ defmodule Gabbler.Room.Server do
 
   @impl true
   def handle_call({:update_room, %Room{} = room}, _from, %RoomState{} = state) do
-    {:reply, :ok, %{state | room: room}}
+    {:reply, room, %{state | room: room}}
   end
 
   @impl true

@@ -11,6 +11,7 @@ defmodule GabblerWeb.Post.IndexLive do
 
   alias Gabbler.Subscription, as: GabSub
   alias Gabbler.{PostCreation, PostRemoval}
+  alias Gabbler.Post, as: GabblerPost
   alias GabblerWeb.Presence
   alias GabblerData.{Post, PostMeta, Comment, Room}
   alias Gabbler.Accounts.User
@@ -118,7 +119,7 @@ defmodule GabblerWeb.Post.IndexLive do
 
   defp init(%{assigns: %{post: post, mode: mode, room: room, user: user}} = socket, _, _) do
     assign(socket,
-      comments: query(:post).thread(post, mode),
+      comments: GabblerPost.thread(post, mode, 1, 1),
       post_user: query(:user).get(post.user_id),
       pages: query(:post).page_count(post),
       changeset_reply: default_reply_changeset(user, room, post),
@@ -162,7 +163,7 @@ defmodule GabblerWeb.Post.IndexLive do
   end
 
   defp broadcast_reply({:error, _, %{assigns: %{user: user}} = socket}) do
-    Gabbler.User.notify(user, gettext("there was an issue sending your reply"))
+    Gabbler.User.broadcast(user, gettext("there was an issue sending your reply"), "warning")
 
     socket
   end

@@ -62,7 +62,7 @@ defmodule Gabbler.MixProject do
       {:simplestatex, "~> 0.3.0"},
       {:quantum, "~> 2.3"},
       {:httpotion, "~> 3.1.0"},
-      {:nebulex, "~> 1.1"},
+      {:nebulex, "~> 1.2.2"},
       {:jchash, "0.1.1"}
       | env_deps(Mix.env())
     ]

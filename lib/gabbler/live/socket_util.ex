@@ -21,6 +21,20 @@ defmodule Gabbler.Live.SocketUtil do
   def assign_to(value, key, socket), do: assign(socket, [{key, value}])
 
   @doc """
+  Alias for assign that attempts to assign to socket conditionally
+  """
+  def assign_or({:ok, _}, key, {value, _}, socket), do: assign(socket, [{key, value}])
+  def assign_or({:error, _}, key, {_, value}, socket), do: assign(socket, [{key, value}])
+  def assign_or(nil, key, {_ , value}, socket), do: assign(socket, [{key, value}])
+  def assign_or(_, key, {value, _}, socket), do: assign(socket, [{key, value}])
+
+  @doc """
+  Alias for assign that no-ops on non-ok
+  """
+  def assign_if({:ok, _}, key, value, socket), do: assign(socket, [{key, value}])
+  def assign_if(_, _, _, socket), do: socket
+
+  @doc """
   Update a changeset in a way standard to many of gabbler's liveview forms
   """
   def update_changeset(%{assigns: assigns} = socket, changeset_name, type, key, value) do

@@ -2,4 +2,7 @@ defmodule Gabbler.Guards do
   @moduledoc """
   Custom guard classes generic to Gabbler
   """
+  defguard alert?(value) when value in ["info", "warning", "error"]
+
+  defguard user_event?(value) when value in ["subscribed"]
 end

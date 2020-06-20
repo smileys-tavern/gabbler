@@ -91,22 +91,25 @@ defmodule Gabbler.User.Server do
   end
 
   @impl true
-  def handle_call(
-        {:activity_moderating, room_name},
-        _from,
-        %ActivityModel{moderating: moderating} = state
-      ) do
-    case can_moderate?(state) do
+  def handle_call({:activity_moderating, %{name: name}}, _from, %ActivityModel{moderating: moderating} = state) do
+    case can_add_moderate?(state) do
       true ->
         {:reply, true,
          %{
            state
-           | moderating: [room_name | Enum.filter(moderating, fn name -> name == room_name end)]
+           | moderating: [name | Enum.filter(moderating, fn n -> n == name end)]
          }}
 
       false ->
         {:reply, false, state}
     end
+  end
+
+  @impl true
+  def handle_call({:activity_moderate_remove, room_name}, _from, %ActivityModel{moderating: moderating} = state) do
+    moderating = Enum.filter(moderating, fn name -> name == room_name end)
+
+    {:reply, moderating, %{state | moderating: moderating}}
   end
 
   @impl true
@@ -162,13 +165,18 @@ defmodule Gabbler.User.Server do
   end
 
   @impl true
-  def handle_call({:moderating, _room}, _from, %ActivityModel{moderating: _moderating} = state) do
-    {:reply, true, state}
+  def handle_call({:moderating, %{name: name}}, _from, %ActivityModel{moderating: moderating} = state) do
+    {:reply, Enum.any?(moderating, fn m -> m == name end), state}
   end
 
   @impl true
   def handle_call(:get_activity, _from, %ActivityModel{activity: activity} = state) do
     {:reply, activity, state}
+  end
+
+  @impl true
+  def handle_call({:update_user, %User{} = user}, _from, %ActivityModel{} = state) do
+    {:reply, user, %{state | user: user}}
   end
 
   @impl true
@@ -208,7 +216,7 @@ defmodule Gabbler.User.Server do
     Enum.count(posts) < @max_posts
   end
 
-  defp can_moderate?(%{moderating: moderating}) do
+  defp can_add_moderate?(%{moderating: moderating}) do
     Enum.count(moderating) < @max_moderating
   end
 end

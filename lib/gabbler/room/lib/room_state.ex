@@ -1,6 +1,6 @@
 defmodule Gabbler.Room.RoomState do
   @moduledoc """
-  The struct that holds running status of a room, expected to be maintained in memory
+  The struct that holds running status of a room
   """
   alias GabblerData.Room
 
