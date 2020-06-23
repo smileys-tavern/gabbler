@@ -59,13 +59,13 @@ nav li {
 }
 .mobile_sidebar_options a,
 nav a {
-  color: #fff;
+  color: #464646;
   font-size: 12px;
-  background-color: #345b76;
+  background-color: #ffffff;
   padding: 0 5px;
   text-align: center;
   border-radius: 5px;
-  border: 2px solid #000;
+  border: 2px solid #b6b0b0;
   text-decoration: none;
   display: block;
   margin: 5px 4px 5px 0;
@@ -119,8 +119,8 @@ nav p {
 nav .menu .menu-item {
   width: 305px;
   min-height: 40px;
-  background-color: #345b76;
-  color: #FFF;
+  background-color: #ffffff;
+  color: #464646;
   margin: 0 5px;
   border-radius: 0;
   border-bottom: none;
@@ -167,8 +167,8 @@ nav .menu .menu-item {
   margin-bottom: 15px;
 }
 .button-action {
-  border: 2px dotted #77a1be;
-  background-color: #345b76;
+  border: 2px dotted #b6b0b0;
+  background-color: #464646;
   text-align: center;
   padding: 3px;
   text-decoration: none;
@@ -300,15 +300,15 @@ nav .menu .menu-item {
   font-weight: bold;
 }
 .sub-header {
-  background-color: #908353;
+  background-color: #ffffff;
   height: 20px;
   padding: 3px 14px;
-  color: #fff;
+  color: #464646;
   overflow: hidden;
   font-size: 13pt;
 }
 .sub-header a {
-  color: #fff;
+  color: #464646;
 }
 .header h1 {
   float: left;
@@ -492,11 +492,11 @@ nav .menu .menu-item {
 }
 .room-fact {
   padding: 5px;
-  background-color: #a0672e;
+  background-color: #ffffff;
   margin: 11px 0;
   border-radius: 5px;
-  border: 2px solid #3a5471;
-  color: #FFF;
+  border: 2px solid #464646;
+  color: #464646;
   font-weight: bold;
   text-align: center;
 }
@@ -652,6 +652,7 @@ nav .menu .menu-item {
 .op-actions a {
   cursor: pointer;
   padding-left: 10px;
+  padding-right: 7px;
 }
 .op-content {
   clear: both;
@@ -830,7 +831,7 @@ nav .menu .menu-item {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border: none;
-  background-color: #275d98;
+  background-color: #464646;
   color: #FFF;
   width: 21%;
 }

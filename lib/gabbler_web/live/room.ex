@@ -40,15 +40,17 @@ defmodule GabblerWeb.Live.Room do
 
       @impl true
       def handle_event("subscribe", _, %{assigns: %{user: user, room: room}} = socket) do
-        GabblerUser.subscribe(user, room)
-        |> assign_or(:subscription, {true, false}, socket)
+        user
+        |> GabblerUser.subscribe(room)
+        |> assign_or(:subscribed, {true, false}, socket)
         |> no_reply()
       end
 
       @impl true
       def handle_event("unsubscribe", _, %{assigns: %{user: user, room: room}} = socket) do
-        GabblerUser.unsubscribe(user, room)
-        |> assign_or(:subscription, {false, true}, socket)
+        user
+        |> GabblerUser.unsubscribe(room)
+        |> assign_or(:subscribed, {false, true}, socket)
         |> no_reply()
       end
 

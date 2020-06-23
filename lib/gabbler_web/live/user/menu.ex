@@ -4,7 +4,7 @@ defmodule GabblerWeb.Live.User.Menu do
   """
   use Phoenix.LiveView
   import Gabbler, only: [query: 1]
-  import Gabbler.Live.SocketUtil, only: [no_reply: 1, assign_to: 3, assign_if: 4]
+  import Gabbler.Live.SocketUtil
 
   alias Gabbler.Accounts.User
   alias Gabbler.Subscription, as: GabSub
@@ -27,17 +27,15 @@ defmodule GabblerWeb.Live.User.Menu do
 
   def handle_info(:info_expire, socket), do: {:noreply, assign(socket, info: nil)}
 
-  def handle_info(%{event: "subscribed", room_name: name}, %{assigns: %{user: user}} = socket) do
+  def handle_info(%{event: "subscribed"}, %{assigns: %{user: user}} = socket) do
     user
-    |> Gabbler.User.subscribe(Gabbler.Room.get_room(name))
     |> Gabbler.User.subscriptions()
     |> assign_to(:subscriptions, socket)
     |> no_reply()
   end
 
-  def handle_info(%{event: "unsubscribed", room_name: name}, %{assigns: %{user: user}} = socket) do
+  def handle_info(%{event: "unsubscribed"}, %{assigns: %{user: user}} = socket) do
     user
-    |> Gabbler.User.unsubscribe(Gabbler.Room.get_room(name))
     |> Gabbler.User.subscriptions()
     |> assign_to(:subscriptions, socket)
     |> no_reply()
@@ -52,7 +50,8 @@ defmodule GabblerWeb.Live.User.Menu do
   end
 
   def handle_info(%{event: "mod_request", payload: %{id: room_name}}, %{assigns: %{activity: activity}} = socket) do
-    Enum.take([{room_name, "mod_request"}|activity], @max_activity_shown)
+    [{room_name, "mod_request"}|activity]
+    |> Enum.take(@max_activity_shown)
     |> assign_to(:activity, socket)
     |> no_reply()
   end
@@ -97,14 +96,15 @@ defmodule GabblerWeb.Live.User.Menu do
   def handle_event("accept_mod", %{"id" => room_name}, %{assigns: %{user: user}} = socket) do
     user
     |> Gabbler.User.add_mod(Gabbler.Room.get_room(room_name))
-    |> assign_if(:moderating, Gabbler.User.moderating(user), socket)
+    |> assign_always(:moderating, Gabbler.User.moderating(user), socket)
+    |> assign(activity: Gabbler.User.get_activity(user))
     |> no_reply()
   end
 
   def handle_event("decline_mod", %{"id" => room_name}, %{assigns: %{user: user}} = socket) do
     user
-    |> Gabbler.User.remove_activity(room_name)
-    |> assign_if(:activity, Gabbler.User.get_activity(user), socket)
+    |> Gabbler.User.decline_mod(Gabbler.Room.get_room(room_name))
+    |> assign_always(:activity, Gabbler.User.get_activity(user), socket)
     |> no_reply()
   end
 

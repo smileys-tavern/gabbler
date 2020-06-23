@@ -44,23 +44,29 @@ defmodule Gabbler.User do
     |> call_if(user, :activity_unsubscribed, room)
   end
 
-  def add_mod(user, room) do
+  def add_mod(user, %{name: room_name} = room) do
     user
     |> QueryMod.moderate(room)
+    |> call_through(user, :remove_activity, room_name)
     |> call_if(user, :activity_moderating, room)
     |> broadcast_if(user, {:modding_room, :modding_room_error})
   end
 
-  def remove_mod(user, room) do
+  def decline_mod(user, %{name: room_name}) do
+    call(user, :remove_activity, room_name)
+  end
+
+  def remove_mod(user, %{name: room_name} = room) do
     user
     |> QueryMod.remove_moderate(room)
+    |> call_if(user, :remove_activity, room_name)
     |> call_if(user, :activity_moderate_remove, room)
   end
 
   def invite_to_mod(nil, from_user, _), do: {:error, notify(from_user, :mod_request_failed)}
 
   def invite_to_mod(user, from_user, %{name: name}) do
-    _ = call(user, :add_activity, {name, "mod_request"})
+    _ = add_activity(user, name, "mod_request")
     
     {:ok, notify(from_user, :mod_request_sent)}
   end
@@ -90,15 +96,9 @@ defmodule Gabbler.User do
   Add a simple activity to a fixed length FILO queue. Should expect the value to be displayed
   organized by the id key
   """
-  def add_activity(user, id, value) do
+  def add_activity(%{id: user_id} = user, id, value) do
+    _ = GabblerWeb.Endpoint.broadcast("user:#{user_id}", value, %{id: id})
     call(user, :add_activity, {id, value})
-  end
-
-  @doc """
-  Remove a single activity key
-  """
-  def remove_activity(user, id) do
-    call(user, :remove_activity, id)
   end
 
   @doc """
@@ -175,6 +175,11 @@ defmodule Gabbler.User do
   defp call_if({:error, _}, user, action, args), do: {:error, notify(user, :error, action, args)}
   defp call_if(_, user, action, args), do: {:error, notify(user, :error, action, args)}
 
+  defp call_through(result, user, action, args) do
+    _ = call(user, action, args)
+    result
+  end
+
   def broadcast_if({:ok, user}, {action, _}), do: {:ok, notify(user, action)}
   def broadcast_if({:error, user}, {_, action}), do: {:error, notify(user, action)}
   def broadcast_if({:ok, _}, user, event), do: {:ok, broadcast_msg(user, event)}
@@ -241,6 +246,9 @@ defmodule Gabbler.User do
 
   defp notify(user, :error, :invite_mod, {nil, _}), do: user
   |> broadcast_msg(gettext("User not found so mod request could not be sent"), "warning")
+
+  defp notify(user, :error, :activity_moderating, _), do: user
+  |> broadcast_msg(gettext("There was an issue accepting moderation request"), "warning")
 
   defp broadcast_msg(%{id: id} = user, %{event: event_name} = event) when user_event?(event_name) do
     GabSub.broadcast("user:#{id}", event)

@@ -31,7 +31,9 @@
     <%= if @user && @owner.id == @user.id do %>
       <form action="#" phx-submit="submit_mod_invite">
         <div class="form-group">
-          <label class="control-label" for="mod_name"><%= gettext("Invite to Moderate") %></label>
+          <label class="control-label" for="mod_name">
+            <%= gettext("Invite to Moderate") %>    
+          </label>
           <input class="form-control" id="mod_name" name="mod[name]" type="text" value="<%= @mod_invite %>" placeholder="username" />
         </div>
         <button class="btn btn-primary" type="submit"><%= gettext("Invite") %></button>

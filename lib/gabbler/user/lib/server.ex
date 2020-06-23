@@ -66,7 +66,7 @@ defmodule Gabbler.User.Server do
 
   @impl true
   def handle_call(
-        {:activity_subscribed, room_name},
+        {:activity_subscribed, %{name: room_name}},
         _from,
         %ActivityModel{subs: subscriptions} = state
       ) do
@@ -81,7 +81,7 @@ defmodule Gabbler.User.Server do
 
   @impl true
   def handle_call(
-        {:activity_unsubscribed, room_name},
+        {:activity_unsubscribed, %{name: room_name}},
         _from,
         %ActivityModel{subs: subscriptions} = state
       ) do
@@ -113,19 +113,10 @@ defmodule Gabbler.User.Server do
   end
 
   @impl true
-  def handle_call(
-        {:add_activity, {id, value}},
-        _from,
-        %ActivityModel{user: %{id: user_id}, activity: activity} = state
-      ) do
-    GabblerWeb.Endpoint.broadcast("user:#{user_id}", value, %{id: id})
+  def handle_call({:add_activity, {id, value}}, _from, %ActivityModel{activity: activity} = state) do
+    activity = [{id, value} | Enum.take(activity, @max_activity - 1)]
 
-    {:reply, true,
-     %{
-       state
-       | activity: [{id, value} | Enum.take(activity, @max_activity - 1)],
-         read_receipt: false
-     }}
+    {:reply, activity, %{state | activity: activity}}
   end
 
   @impl true

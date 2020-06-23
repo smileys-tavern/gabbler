@@ -42,12 +42,12 @@ defmodule GabblerWeb.Router do
     live "/h/all", House.AllLive, :all
     live "/h/tag_tracker", House.TagTrackerLive, :tag_tracker
 
-    # ROOM
+    # GABBLER -> ROOM
     live "/r/:room", Room.IndexLive, :index
     live "/r/:room/view/:mode", Room.IndexLive, :index
     live "/room/new", Room.NewLive, :new
 
-    # ROOM -> POST
+    # GABBLER -> ROOM -> POST
     live "/r/:room/new_post", Post.NewLive, :new
     live "/r/:room/comments/:hash/:title", Post.IndexLive, :index
     live "/r/:room/comments/:hash/:title/view/:mode", Post.IndexLive, :index

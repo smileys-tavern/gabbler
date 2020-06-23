@@ -35,6 +35,11 @@ defmodule Gabbler.Live.SocketUtil do
   def assign_if(_, _, _, socket), do: socket
 
   @doc """
+  Assign based on an app where a value is used irreguardless of action previous
+  """
+  def assign_always(_, key, value, socket), do: assign(socket, [{key, value}])
+
+  @doc """
   Update a changeset in a way standard to many of gabbler's liveview forms
   """
   def update_changeset(%{assigns: assigns} = socket, changeset_name, type, key, value) do
