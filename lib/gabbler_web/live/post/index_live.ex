@@ -12,6 +12,7 @@ defmodule GabblerWeb.Post.IndexLive do
   alias Gabbler.Subscription, as: GabSub
   alias Gabbler.{PostCreation, PostRemoval}
   alias Gabbler.Post, as: GabblerPost
+  alias Gabbler.Room, as: GabblerRoom
   alias GabblerWeb.Presence
   alias GabblerData.{Post, PostMeta, Comment, Room}
   alias Gabbler.Accounts.User
@@ -28,11 +29,17 @@ defmodule GabblerWeb.Post.IndexLive do
     |> no_reply()
   end
 
-  def handle_event("reply", %{"to" => _}, %{assigns: %{post: %{id: post_id}}} = socket) do
-    socket
-    |> update_changeset(:changeset_reply, :reply, :parent_id, post_id)
-    |> assign(reply_display: "block")
-    |> no_reply()
+  def handle_event("reply", %{"to" => _}, %{assigns: %{post: post} = assigns} = socket) do
+    if GabblerRoom.in_timeout?(assigns.room, assigns.user) do
+      socket
+      |> put_flash(:info, "you are in a timeout")
+      |> no_reply()
+    else
+      socket
+      |> update_changeset(:changeset_reply, :reply, :parent_id, post.id)
+      |> assign(reply_display: "block")
+      |> no_reply()
+    end
   end
 
   def handle_event("reply", _, socket), do: no_reply(socket)
@@ -47,9 +54,15 @@ defmodule GabblerWeb.Post.IndexLive do
     |> no_reply()
   end
 
-  def handle_event("reply_comment", %{"to" => parent_hash}, socket) do
-    open_reply_to(socket, query(:post).get_by_hash(parent_hash))
-    |> no_reply()
+  def handle_event("reply_comment", %{"to" => parent_hash}, %{assigns: assigns} = socket) do
+    if GabblerRoom.in_timeout?(assigns.room, assigns.user) do
+      socket
+      |> put_flash(:info, "you are in a timeout")
+      |> no_reply()
+    else
+      open_reply_to(socket, query(:post).get_by_hash(parent_hash))
+      |> no_reply()
+    end
   end
 
   def handle_event("reply_hide", _, socket) do
@@ -115,6 +128,16 @@ defmodule GabblerWeb.Post.IndexLive do
     socket
     |> assign(:op, socket.assigns.post)
     |> init(Map.drop(params, ["hash"]), session)
+  end
+
+  defp init(socket, %{"focushash" => focus_hash} = params, session) do
+    post = GabblerPost.get_post(focus_hash)
+
+    socket
+    |> assign(:post, post)
+    |> assign(:focus_hash, focus_hash)
+    |> assign(:op, GabblerPost.get_parent(post))
+    |> init(Map.drop(params, ["focushash"]), session)
   end
 
   defp init(%{assigns: %{post: post, mode: mode, room: room, user: user}} = socket, _, _) do

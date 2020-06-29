@@ -18,6 +18,7 @@ defmodule Gabbler.Application do
       GabblerWeb.Endpoint,
       {Gabbler.User.Application, strategy: :one_for_one, name: :user_server},
       {Gabbler.Room.Application, strategy: :one_for_one, name: :room_server},
+      {Gabbler.Post.Application, strategy: :one_for_one, name: :post_server},
       Gabbler.TagTracker.Application,
       worker(Gabbler.Scheduler, []),
       Gabbler.Cache,

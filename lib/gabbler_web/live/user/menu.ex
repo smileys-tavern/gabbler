@@ -64,7 +64,6 @@ defmodule GabblerWeb.Live.User.Menu do
   def handle_info(%{event: "warning", msg: msg}, socket) do
     Process.send_after(self(), :warning_expire, 4000)
 
-    # TODO: create a container for the message and update state to activate it
     assign(socket, warning: msg)
     |> no_reply()
   end
@@ -126,15 +125,24 @@ defmodule GabblerWeb.Live.User.Menu do
   end
 
   defp assign_user_info(%{assigns: %{user: %User{} = user}} = socket) do
-    posts = Gabbler.User.posts(user)
-    |> hash_to_post()
+    activity = Gabbler.User.get_activity(user)
+    posts = Gabbler.User.posts(user) |> hash_to_post()
 
-    assign(socket,
+    socket = assign(socket,
       posts: posts,
-      subscriptions: Gabbler.User.subscriptions(user),
-      moderating: Gabbler.User.moderating(user),
       rooms: query(:post).map_rooms(posts),
-      activity: Gabbler.User.get_activity(user))
+      activity: [])
+
+    activity
+    |> Enum.reduce(socket, fn {post_id, type}, socket ->
+      case type do
+        "reply" -> assign_activity(socket, post_id)
+        _ -> socket
+      end
+    end)
+    |> assign(
+      subscriptions: Gabbler.User.subscriptions(user),
+      moderating: Gabbler.User.moderating(user))
   end
 
   defp assign_user_info(socket), do: socket

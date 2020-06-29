@@ -5,7 +5,12 @@ defmodule GabblerWeb.FormView do
 
   def show_error({msg, opts}) do
     Enum.reduce(opts, msg, fn {key, value}, acc ->
-      String.replace(acc, "%{#{key}}", to_string(value))
+      case value do
+        list when is_list(list) -> 
+          String.replace(acc, "%{#{key}}", to_string(Enum.join(list, " ")))
+        _ -> 
+          String.replace(acc, "%{#{key}}", to_string(value))
+      end
     end)
   end
 

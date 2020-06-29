@@ -41,18 +41,17 @@ msgid "Email can be used optionally for login and subscriptions"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/templates/user/sidebar.html.leex:37
+#: lib/gabbler_web/templates/user/sidebar.html.leex:39
 msgid "Invite"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/templates/user/sidebar.html.leex:34
+#: lib/gabbler_web/templates/user/sidebar.html.leex:35
 msgid "Invite to Moderate"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/live/post/index_live.ex:8
-#: lib/gabbler_web/live/room/index_live.ex:7
+#: lib/gabbler/user/user.ex:241
 msgid "Mod request sent"
 msgstr ""
 
@@ -62,8 +61,8 @@ msgid "Must be at least 12 characters"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/templates/user/menu.html.leex:20
-#: lib/gabbler_web/templates/user/menu.html.leex:46
+#: lib/gabbler_web/templates/user/menu.html.leex:28
+#: lib/gabbler_web/templates/user/menu.html.leex:54
 msgid "Nothing at the moment"
 msgstr ""
 
@@ -104,8 +103,7 @@ msgid "Track Tag"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/live/post/index_live.ex:8
-#: lib/gabbler_web/live/room/index_live.ex:7
+#: lib/gabbler/user/user.ex:244 lib/gabbler/user/user.ex:253
 msgid "User not found so mod request could not be sent"
 msgstr ""
 
@@ -126,11 +124,6 @@ msgid "about"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/live/user/menu.ex:178
-msgid "added as moderator"
-msgstr ""
-
-#, elixir-format
 #: lib/gabbler_web/live/house/tag_tracker_live.ex:66
 msgid "all trending"
 msgstr ""
@@ -146,16 +139,31 @@ msgid "please use letters, numbers and -.,?!:)(#][+$"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/live/user/menu.ex:184
-msgid "room no longer exists"
-msgstr ""
-
-#, elixir-format
 #: lib/gabbler_web/templates/page/tag_tracker.html.leex:8
 msgid "tag to track"
 msgstr ""
 
 #, elixir-format
-#: lib/gabbler_web/live/post/index_live.ex:165
+#: lib/gabbler_web/live/post/index_live.ex:166
 msgid "there was an issue sending your reply"
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler/user/user.ex:247
+msgid "Added as moderator"
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler/user/user.ex:250
+msgid "Failed to add as moderator"
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler/user/user.ex:256
+msgid "There was an issue accepting moderation request"
+msgstr ""
+
+#, elixir-format
+#: lib/gabbler/room/room.ex:42
+msgid "you are in a timeout from "
 msgstr ""

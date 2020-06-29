@@ -10,5 +10,6 @@ defmodule Gabbler.Cache do
   end
 
   def set_if(nil, _, _), do: nil
+  def set_if(false, _, _), do: false
   def set_if(value, key, opts), do: set(key, value, opts)
 end

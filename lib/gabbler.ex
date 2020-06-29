@@ -14,6 +14,7 @@ defmodule Gabbler do
 
   # PRIVATE FUNCTIONS
   ###################
+  # DEPRECATED: replace with app calls to gabbler:post/user/room/etc
   defp to_module(:post), do: :Post
   defp to_module(:room), do: :Room
   defp to_module(:user), do: :User

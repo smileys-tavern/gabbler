@@ -176,6 +176,9 @@ nav .menu .menu-item {
   border-radius: 5px;
   cursor: pointer;
 }
+.button-action:hover {
+  background-color: #27679c;
+}
 .op-actions .button-action {
   margin-left: 3px;
 }
@@ -618,6 +621,7 @@ nav .menu .menu-item {
 .vote-count {
   width: 30px;
   text-align: center;
+  padding-top: 1px;
 }
 
 /**
@@ -625,7 +629,9 @@ nav .menu .menu-item {
  */
 .original-post {
   padding: 10px;
-  width: 80%;
+  width: 78%;
+  background-color: #f3f3f3;
+  border-radius: 4px;
 }
 .op-title {
   font-size: 18px;
@@ -714,6 +720,7 @@ nav .menu .menu-item {
   margin-left: 50px;
   border: 1px dashed #464646;
   max-width: calc(75% - 50px);
+  border-radius: 4px;
 }
 .comment-depth-3 {
   margin-left: 100px;
@@ -723,6 +730,7 @@ nav .menu .menu-item {
   margin-left: 150px;
   border: 1px dashed #464646;
   max-width: calc(75% - 150px);
+  border-radius: 4px;
 }
 .comment-depth-5 {
   margin-left: 200px;
@@ -732,6 +740,7 @@ nav .menu .menu-item {
   margin-left: 250px;
   border: 1px dashed #464646;
   max-width: calc(75% - 250px);
+  border-radius: 4px;
 }
 .comment-depth-7 {
   margin-left: 300px;
@@ -741,6 +750,7 @@ nav .menu .menu-item {
   margin-left: 350px;
   border: 1px dashed #464646;
   max-width: calc(75% - 350px);
+  border-radius: 4px;
 }
 .comment-depth-9 {
   margin-left: 400px;
@@ -928,23 +938,22 @@ nav .menu .menu-item {
  * Gabbler flash messages
  */
 .alert {
+  position: fixed;
+  top: 53px;
+  left: 0;
+  width: 100%;
+  background-color: #db873f;
+  border-top: 2px solid #000;
   font-weight: bold;
-  padding: 15px;
-  margin-top: 0;
-  margin-bottom: 20px;
-  margin-left: -20px;
+  padding: 10px;
+  color: #ffffff;
+  z-index: 1;
 }
 .form-sidebar .alert {
   margin-left: 0;
 }
-.alert-danger,
-.alert-info {
-  color: #ffffff;
-  background-color: #05520e;
-  border-top: 2px solid #67ac69;
-}
 .alert-danger {
-  background-color: #c24e10;
+  background-color: #e63434;
 }
 
 /* 

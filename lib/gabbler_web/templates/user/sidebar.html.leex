@@ -18,7 +18,6 @@
 
   <div class="current-room">
     <h3>Moderators</h3>
-    <a href="/u/<%= @owner.name %>"><%= @owner.name %></a>
     <%= for name <- @moderators do %>
       <a href="/u/<%= name %>"><%= name %></a> 
 

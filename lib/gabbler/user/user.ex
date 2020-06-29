@@ -38,10 +38,11 @@ defmodule Gabbler.User do
     |> broadcast_if(user, %{event: "subscribed", room_name: name})
   end
 
-  def unsubscribe(user, room) do
+  def unsubscribe(user, %{name: name} = room) do
     user
     |> QuerySub.unsubscribe(room)
     |> call_if(user, :activity_unsubscribed, room)
+    |> broadcast_if(user, %{event: "unsubscribed", room_name: name})
   end
 
   def add_mod(user, %{name: room_name} = room) do
@@ -94,11 +95,17 @@ defmodule Gabbler.User do
 
   @doc """
   Add a simple activity to a fixed length FILO queue. Should expect the value to be displayed
-  organized by the id key
+  organized by the id key. Includes alias for user id directly since many times we
+  have that available readily during broadcasts
   """
   def add_activity(%{id: user_id} = user, id, value) do
     _ = GabblerWeb.Endpoint.broadcast("user:#{user_id}", value, %{id: id})
     call(user, :add_activity, {id, value})
+  end
+
+  def add_activity(user_id, id, value) do
+    _ = GabblerWeb.Endpoint.broadcast("user:#{user_id}", value, %{id: id})
+    call(user_id, :add_activity, {id, value})
   end
 
   @doc """
@@ -160,14 +167,16 @@ defmodule Gabbler.User do
   @doc """
   Generic broadcast support (possibly temporary)
   """
-  def broadcast(%User{id: id}, msg, type \\ "info") do
+  def broadcast(%User{id: id} = user, msg, type \\ "info") do
     GabSub.broadcast("user:#{id}", %{event: type, msg: msg})
+    user
   end
 
   @doc """
   Create a server name based on a user so it can be found easily by id
   """
   def server_name(%User{id: id}), do: "USER_SERV_#{id}"
+
 
   # PRIVATE FUNCTIONS
   ###################
@@ -255,7 +264,8 @@ defmodule Gabbler.User do
     user
   end
 
-  defp broadcast_msg(%{id: id} = user, msg, type) when alert?(type) do
+  # TODO: refactoring broadcasts from server interfaces soon
+  defp broadcast_msg(%User{id: id} = user, msg, type \\ "info") when alert?(type) do
     GabSub.broadcast("user:#{id}", %{event: type, msg: msg})
     user
   end

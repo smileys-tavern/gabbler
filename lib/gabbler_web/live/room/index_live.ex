@@ -9,6 +9,7 @@ defmodule GabblerWeb.Room.IndexLive do
   use GabblerWeb.Live.Konami, timeout: 5000
   import Gabbler.Live.SocketUtil, only: [no_reply: 1]
 
+  alias Gabbler.Room, as: GabblerRoom
   alias Gabbler.Subscription, as: GabSub
 
   @impl true
@@ -22,12 +23,19 @@ defmodule GabblerWeb.Room.IndexLive do
     |> no_reply()
   end
 
+  @impl true
+  def handle_info(%{event: "user_timeout", user: name, hash: hash}, %{assigns: assigns} = socket) do
+    assign(socket, timeouts: Map.put(assigns.timeouts, name, hash))
+    |> no_reply()
+  end
+
   # PRIV
   #############################
-  defp init(%{assigns: %{posts: posts}} = socket, _, _) do
+  defp init(%{assigns: %{room: room, posts: posts}} = socket, _, _) do
     assign(socket,
       post_metas: query(:post).map_meta(posts),
-      users: query(:post).map_users(posts)
+      users: query(:post).map_users(posts),
+      timeouts: GabblerRoom.get_timeouts(room)
     )
   end
 

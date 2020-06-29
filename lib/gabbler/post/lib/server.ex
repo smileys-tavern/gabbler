@@ -10,7 +10,9 @@ defmodule Gabbler.Post.Server do
 
   def start_link(%PostState{post: %{hash: hash}} = post_state) do
     GenServer.start_link(
-      __MODULE__, post_state, name: Gabbler.Post.server_name(hash), timeout: @server_timeout
+      __MODULE__, 
+      post_state, 
+      name: {:via, :syn, Gabbler.Post.server_name(hash)}, timeout: @server_timeout
     )
   end
 

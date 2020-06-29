@@ -55,6 +55,7 @@ defmodule GabblerWeb.Router do
     live "/r/:room/comments/:hash/view/:mode", Post.IndexLive, :index
     live "/r/:room/comments/:hash/:title/focus/:focushash", Post.IndexLive, :index
     live "/r/:room/comments/:hash/focus/:focushash", Post.IndexLive, :index
+    live "/r/:room/comments/focus/:focushash", Post.IndexLive, :index
   end
 
   # Enables LiveDashboard only for development

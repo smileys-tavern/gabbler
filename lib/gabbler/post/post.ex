@@ -18,9 +18,13 @@ defmodule Gabbler.Post do
   def get_post(hash) do
     case QueryPost.get_by_hash(hash) do
       {:cachehit, post} -> post
-      {:ok, post} -> call(post, :update_post)
+      {:ok, post} -> call(post, :update_post, post)
       {:error, _} -> nil
     end
+  end
+
+  def get_parent(%Post{parent_id: parent_id}) do
+    QueryPost.get(parent_id)
   end
 
 
@@ -35,16 +39,19 @@ defmodule Gabbler.Post do
     end)
   end
 
-  def server_name(hash) when is_binary(hash), do: {:via, :syn, "POST_#{hash}"}
+  def server_name(hash) when is_binary(hash), do: "POST_#{hash}"
 
   # PRIVATE FUNCTIONS
   ###################
-  defp call(%Post{} = post, action, args \\ nil) do
+  defp call(%Post{parent_type: "room"} = post, action, args) do
+    # Only top level (Original) posts have servers
     case get_post_server_pid(post) do
       {:ok, pid} -> GenServer.call(pid, {action, args})
       {:error, _} -> nil
     end
   end
+
+  defp call(post, _, _), do: post
 
   defp get_post_server_pid(%Post{hash: hash} = post) do
     case :syn.whereis(server_name(hash)) do

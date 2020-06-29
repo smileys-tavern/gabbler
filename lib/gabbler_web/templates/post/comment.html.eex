@@ -17,6 +17,8 @@
       <% end %>
       <%= if @mod do %>
         | <a href="#" class="mod-action" phx-click="delete_post" phx-value-hash="<%= @comment.hash %>">Delete</a>
+        | <a href="#" class="mod-action" phx-click="user_timeout" phx-value-hash="<%= @comment.hash %>" phx-value-name="<%= @comment.name %>">Timeout</a>
+        | <a href="#" class="mod-action" phx-click="user_ban" phx-value-hash="<%= @comment.hash %>" phx-value-name="<%= @comment.name %>">Ban for Life</a>
       <% end %>
     </div>
   </div>

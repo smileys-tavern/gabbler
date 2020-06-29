@@ -1,7 +1,18 @@
 <nav role="navigation">
   <ul class="nav nav-pills pull-right">
+    <% activity_count = case assigns[:activity] do 
+      nil -> 0
+      activity -> Enum.count(activity) 
+    end %>
     <%= if assigns[:user] do %>
-      <li><a href="#" phx-click="toggle_menu"><%= @user.name %></a></li>
+      <li>
+        <a href="#" phx-click="toggle_menu">
+          <%= @user.name %>
+          <%= if activity_count > 0 do %>
+            (<%= activity_count %>)
+          <% end %>
+        </a>
+      </li>
     <% else %>
       <li><a href="#" phx-click="login">Sign in</a></li>
     <% end %>
@@ -42,7 +53,7 @@
         <% end %>
 
         <h3>New Activity</h3>
-        <%= if Enum.count(@activity) < 1 do %>
+        <%= if activity_count < 1 do %>
           <div><%= gettext("Nothing at the moment") %></div>
         <% end %>
         <%= for {id, type} <- @activity do %>

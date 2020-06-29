@@ -22,24 +22,25 @@
 
           <%= form_for @changeset_user, route, 
           [phx_change: :login_change, class: "login-form", csrf_token: @csrf] %>
-            <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
-              changeset: @changeset_user, 
-              changeset_key: :name,
-              title: "name",
-              type: "user",
-              desc: gettext("This is your unique handle used across the site"), 
-              value: @user.name,
-              autofocus: "autofocus"}) %>
-
-            <%= if @mode == :register && Application.get_env(:gabbler, :user_email, false) do %>
+            <%= if @mode == :register do %>
               <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
-                changeset: @changeset_user,
-                changeset_key: :email,
-                title: "email",
+                changeset: @changeset_user, 
+                changeset_key: :name,
+                title: "name",
                 type: "user",
-                desc: gettext("Email can be used optionally for login and subscriptions"),
-                value: @user.email}) %>
+                desc: gettext("This is your unique handle used across the site"), 
+                value: @user.name,
+                autofocus: "autofocus"}) %>
             <% end %>
+
+            
+            <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
+              changeset: @changeset_user,
+              changeset_key: :email,
+              title: "email",
+              type: "user",
+              desc: gettext("Your email address is used to log in and optionally for subscriptions"),
+              value: @user.email}) %>
 
             <%= Phoenix.View.render(GabblerWeb.FormView, "input_password.html", %{
               changeset: @changeset_user, 

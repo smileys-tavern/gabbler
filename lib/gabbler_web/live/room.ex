@@ -27,6 +27,34 @@ defmodule GabblerWeb.Live.Room do
       end
 
       @impl true
+      def handle_event("user_timeout", %{"name" => name, "hash" => hash}, %{assigns: assigns} = socket) do
+        if GabblerUser.moderating?(assigns.user, assigns.room) do
+          _ = assigns.room
+          |> GabblerRoom.user_timeout(GabblerUser.get_by_name(name), hash)
+          
+          socket
+          |> put_flash(:info, "#{name} is in a timeout")
+          |> no_reply()
+        else
+          no_reply(socket)
+        end
+      end
+
+      @impl true
+      def handle_event("user_ban", %{"name" => name, "hash" => _hash}, %{assigns: assigns} = socket) do
+        if GabblerUser.moderating?(assigns.user, assigns.room) do
+          _ = assigns.room
+          |> GabblerRoom.user_ban(GabblerUser.get_by_name(name))
+          
+          socket
+          |> put_flash(:info, "#{name} is banned for life from #{assigns.room.name}")
+          |> no_reply()
+        else
+          no_reply(socket)
+        end
+      end
+
+      @impl true
       def handle_event("toggle_sidebar", _, %{assigns: %{sidebar_on: false}} = socket) do
         assign(socket, sidebar_on: true)
         |> no_reply()
