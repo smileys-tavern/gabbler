@@ -71,6 +71,7 @@ defmodule Gabbler.Room.Query do
 
   @impl true
   def unban(id, user_id) do
+    _ = Cache.delete("BAN_#{user_id}_#{id}")
     QueryRoom.unban(id, user_id)
   end
 
@@ -86,6 +87,15 @@ defmodule Gabbler.Room.Query do
     end
   end
 
+  @impl true
+  def add_to_allow_list(id, user_id), do: QueryRoom.add_to_allow_list(id, user_id)
+
+  @impl true
+  def remove_from_allow_list(id, user_id), do: QueryRoom.remove_from_allow_list(id, user_id)
+
+  @impl true
+  def allow_list?(id, user_id), do: QueryRoom.allow_list?(id, user_id)
+    
   # PRIVATE FUNCTIONS
   ###################
   defp room_found?(nil), do: {:error, :room_not_found}

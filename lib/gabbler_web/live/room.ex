@@ -33,7 +33,7 @@ defmodule GabblerWeb.Live.Room do
           |> GabblerRoom.user_timeout(GabblerUser.get_by_name(name), hash)
           
           socket
-          |> put_flash(:info, "#{name} is in a timeout")
+          |> put_flash(:info, name <> gettext(" is in a timeout"))
           |> no_reply()
         else
           no_reply(socket)
@@ -47,7 +47,7 @@ defmodule GabblerWeb.Live.Room do
           |> GabblerRoom.user_ban(GabblerUser.get_by_name(name))
           
           socket
-          |> put_flash(:info, "#{name} is banned for life from #{assigns.room.name}")
+          |> put_flash(:info, name <> " is banned for life from " <> assigns.room.name)
           |> no_reply()
         else
           no_reply(socket)
@@ -105,6 +105,7 @@ defmodule GabblerWeb.Live.Room do
       defp init(socket, %{"room" => _} = params, session) do
         assign_room(socket, params)
         |> assign_mode(params)
+        |> init_room(:allow_user)
         |> init_room(:room_defaults)
         |> init_room(:presence)
         |> init_room(:mods)
@@ -123,6 +124,24 @@ defmodule GabblerWeb.Live.Room do
         |> assign(:room, GabblerRoom.get_room(name))
 
       defp assign_room(socket, _), do: socket
+
+      defp init_room(%{assigns: %{allowed: false}} = socket, _), do: socket
+
+      defp init_room(%{assigns: %{user: user, room: room}} = socket, :allow_user) do
+        if GabblerRoom.allow_entrance?(room, user) do
+          assign(socket, allowed: true)
+        else
+          socket
+          |> assign(allowed: false)
+          |> assign(mod: false)
+          |> assign(sidebar_on: false)
+          |> assign(user_count: "unknown")
+          |> assign(moderators: [])
+          |> assign(owner: %{id: 0})
+          |> assign(subscribed: false)
+          |> put_flash(:info, gettext("you are either banned for life or this is a private room"))
+        end
+      end
 
       defp init_room(socket, :room_defaults) do
         assign(socket, 

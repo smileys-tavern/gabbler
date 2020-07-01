@@ -5,6 +5,7 @@ defmodule GabblerWeb.Live.User.Menu do
   use Phoenix.LiveView
   import Gabbler, only: [query: 1]
   import Gabbler.Live.SocketUtil
+  import GabblerWeb.Gettext
 
   alias Gabbler.Accounts.User
   alias Gabbler.Subscription, as: GabSub
@@ -53,6 +54,11 @@ defmodule GabblerWeb.Live.User.Menu do
     [{room_name, "mod_request"}|activity]
     |> Enum.take(@max_activity_shown)
     |> assign_to(:activity, socket)
+    |> no_reply()
+  end
+
+  def handle_info(%{event: "banned_for_life", room_name: name}, socket) do
+    assign(socket, info: name <> gettext(": you are banned for life"))
     |> no_reply()
   end
 

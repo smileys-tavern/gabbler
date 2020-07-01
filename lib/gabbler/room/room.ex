@@ -46,23 +46,43 @@ defmodule Gabbler.Room do
     |> broadcast_live(%{event: "user_timeout", user: user_name, hash: hash})
   end
 
+  @doc """
+  Ban a user (for life)
+  """
   def user_ban(%{id: id, name: name} = room, %{id: user_id}) do
     # TODO: formalize channels in protocol so they aren't ad-hoc string codes
     QueryRoom.ban_for_life(id, user_id)
     |> broadcast_if(room, "user:#{user_id}", %{event: "banned_for_life", room_name: name})
   end
 
+  @doc """
+  Unban a user (not as for life as thought!)
+  """
   def user_unban(%{id: id} = room, %{id: user_id}) do
     _ = QueryRoom.unban(id, user_id)
     room
   end
 
+  @doc """
+  Is the user currently banned
+  """
   def banned?(%{id: id}, %{id: user_id}), do: QueryRoom.banned?(id, user_id)
 
   @doc """
+  Return boolean based on whether a user is allowed in the room
+  """
+  def allow_entrance?(nil, _), do: true
+  def allow_entrance?(%{type: "private"}, nil), do: false
+
+  def allow_entrance?(room, user) do
+    banned?(room, user)
+    |> allow_private_if_not_banned?(room, user)
+  end
+
+  @doc """
   Return true/false based on if the user is in a timeout currently. Handles
-  refreshing the cache if not found (to avoid hitting room server with large
-  request load (may not prove necessary))
+  refreshing the cache if cache not found. Timeouts source of truth is the
+  rooms server
   """
   def in_timeout?(room, user) do
     room
@@ -72,6 +92,9 @@ defmodule Gabbler.Room do
     |> return_timeout_result(room)
   end
 
+  @doc """
+  Retrieve all current users in timeouts for this room
+  """
   def get_timeouts(room) do
     call(room, :get_user_timeouts)
   end
@@ -140,6 +163,14 @@ defmodule Gabbler.Room do
         {:ok, pid}
     end
   end
+
+  defp allow_private_if_not_banned?(true, room, _), do: false
+
+  defp allow_private_if_not_banned?(false, %{id: id, type: "private"}, %{id: user_id}) do
+    QueryRoom.allow_list?(id, user_id)
+  end
+
+  defp allow_private_if_not_banned?(false, _, _), do: true
 
   defp broadcast_if({:ok, _}, room, channel, %{} = event) do
     GabSub.broadcast(channel, event)
