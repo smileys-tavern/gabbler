@@ -1,5 +1,17 @@
 <div class="vote">
-  <div class="arrow-up vote-up" phx-click="vote" phx-value-dir="up" phx-value-hash="<%= @post.hash %>"></div>
+  <% {animate_up, animate_down} = case @post do 
+    %{voted: _} -> 
+      {" animate__animated animate__fadeOutUp", " animate__animated animate__fadeOutDown"}
+    _ -> 
+      {"", ""}
+  end%>
+  <div class="arrow-up vote-up<%= animate_up %>" 
+    phx-click="vote" 
+    phx-value-dir="up" 
+    phx-value-hash="<%= @post.hash %>"></div>
   <div class="vote-count"><%= @post.score_public %></div>
-  <div class="arrow-down vote-down" phx-click="vote" phx-value-dir="down" phx-value-hash="<%= @post.hash %>"></div>
+  <div class="arrow-down vote-down<%= animate_down %>" 
+    phx-click="vote" 
+    phx-value-dir="down" 
+    phx-value-hash="<%= @post.hash %>"></div>
 </div>

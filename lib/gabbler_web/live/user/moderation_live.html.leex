@@ -1,0 +1,38 @@
+<p>Activate each room to turn on real-time post updates</p>
+<div class="moderating">
+  <%= for {_, %{name: name}} <- @moderating do %>
+    <button 
+      class="button-action <%= @room_mode[name] %>"
+      phx-click="toggle_room"
+      phx-value-name="<%= name %>">
+      <%= name %>    
+    </button>
+  <% end %>
+
+  <div class="posts">
+    <%= for {room_id, room_posts} <- @posts do %>
+      <div class="room">
+        <div class="room_heading"><%= @rooms[room_id].name %></div>
+        
+        <%= if Enum.count(room_posts) > 0 do %>
+          <%= for %{id: post_id} = post <- room_posts do %>
+            <%= render(
+              GabblerWeb.RoomView, 
+              "post_summary.html", 
+              %{
+                user: @users[post_id], 
+                post: post, 
+                room: @rooms[room_id], 
+                post_meta: @post_metas[post_id], 
+                comment_count: 0,
+                mod: true}
+            ) %>
+          <% end %>
+        <% else %>
+          <div class="empty">Nothing here yet!</div>
+        <% end %>
+      
+      </div>
+    <% end %>
+  </div>
+</div>

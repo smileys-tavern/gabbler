@@ -97,7 +97,7 @@ defmodule Gabbler.User.Server do
         {:reply, true,
          %{
            state
-           | moderating: [name | Enum.filter(moderating, fn n -> n == name end)]
+           | moderating: [name | Enum.filter(moderating, fn n -> n != name end)]
          }}
 
       false ->

@@ -13,7 +13,7 @@
         <% true -> %>
           <%= @post.title %>
       <% end %>
-      by <%= @user.name %>
+      <%= if @user do %>by <%= @user.name %><% end %>
     </div>
     
     <div class="actions">
@@ -29,15 +29,29 @@
       <% end %>
       
       <%= if @room.name && @post.parent_type != "room" do %>
-        <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>">Focus</a> 
+        | <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>">Focus</a> 
       <% end %>
       
       <%= if @room.name do %>
-        <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
+        | <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
       <% end %>
       
-      <%= if @post_meta.link do %><a href="<%= @post_meta.link %>">Direct Link</a><% end %>
-      <%= if @post_meta.tags do %><strong><%= @post_meta.tags %></strong><% end %>
+      <%= if @post_meta.link do %>| <a href="<%= @post_meta.link %>">Direct Link</a><% end %>
+      <%= if @post_meta.tags do %>| <strong><%= @post_meta.tags %></strong><% end %>
+
+      <%= if assigns[:mod] && @mod do %>
+        | <a href="#" class="mod-action" 
+            phx-click="delete_post" 
+            phx-value-hash="<%= @post.hash %>">Delete</a>
+        | <a href="#" class="mod-action" 
+            phx-click="user_timeout" 
+            phx-value-hash="<%= @post.hash %>" 
+            phx-value-name="<%= @user.name %>">Timeout</a>
+        | <a href="#" class="mod-action" 
+            phx-click="user_ban" 
+            phx-value-hash="<%= @post.hash %>" 
+            phx-value-name="<%= @user.name %>">Ban for Life</a>
+      <% end %>
     </div>
   </div>
 </div>

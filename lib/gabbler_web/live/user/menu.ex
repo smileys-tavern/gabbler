@@ -42,7 +42,7 @@ defmodule GabblerWeb.Live.User.Menu do
     |> no_reply()
   end
 
-  def handle_info(%{event: "new_post", post: post}, %{assigns: %{posts: posts, rooms: rooms}} = socket) do
+  def handle_info(%{event: "new_post", payload: %{post: post}}, %{assigns: %{posts: posts, rooms: rooms}} = socket) do
     rooms
     |> Map.put(post.id, Gabbler.Room.get(post.room_id))
     |> assign_to(:rooms, socket)

@@ -27,7 +27,6 @@ defmodule Gabbler.Post do
     QueryPost.get(parent_id)
   end
 
-
   def thread(post, mode, page, level, depth \\ @default_thread_depth)
 
   def thread(_, _, _, _, 0), do: []
@@ -37,6 +36,14 @@ defmodule Gabbler.Post do
     |> Enum.reduce([], fn thread_post, acc ->
       acc ++ [thread_post|thread(thread_post, mode, 1, level + 1, depth - 1)]
     end)
+  end
+
+  def map_metas(posts) do
+    QueryPost.map_meta(posts)
+  end
+
+  def map_users(posts) do
+    QueryPost.map_users(posts)
   end
 
   def server_name(hash) when is_binary(hash), do: "POST_#{hash}"

@@ -565,7 +565,7 @@ nav .menu .menu-item {
   min-height: 40px;
 }
 .title .actions {
-  height: 20px;
+  /*height: 20px;*/
 }
 
 .arrow-up {
@@ -968,6 +968,13 @@ form.link, form.button {
 /**
  * MODERATOR based CSS
  */
+.moderating .button-action {
+  margin: 5px 10px;
+}
+.moderating .off {
+  background-color: #FFF;
+  color: #464646;
+}
 .mod-section {
   margin: 20px;
   min-width: 400px;
@@ -976,6 +983,32 @@ form.link, form.button {
   background-color: #ccc;
   border-bottom: 2px solid #a94442;
   clear: both;
+}
+.moderating .posts {
+  width: 100%;
+}
+.moderating .room {
+  float: left;
+  margin: 15px 10px 10px 0;
+  width: 540px;
+  background-color: #f3f3f3;
+}
+.moderating .post {
+  width: 100%;
+  margin: 12px 0;
+}
+.moderating .room_heading {
+  margin-left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  background-color: #464646;
+  color: #FFF;
+  border-radius: 4px;
+}
+.moderating .empty {
+  margin: 10px 0;
+  padding: 0 5px;
 }
 
 .manage-menu {

@@ -1,4 +1,9 @@
-<div class="comment comment-depth-<%= @comment.depth %>">
+<% animate = case @comment do
+  %{status: "arrived"} -> " animate__animated animate__fadeIn"
+  _ -> ""
+end %>
+
+<div class="comment comment-depth-<%= @comment.depth %><%= animate %>">
   <%= render @view_module, "vote.html", %{post: @comment} %>
 
   <div class="comment-text">

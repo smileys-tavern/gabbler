@@ -227,7 +227,7 @@ defmodule GabblerWeb.Post.IndexLive do
 
   defp assign_comment(%{assigns: %{op: op, comments: comments}} = socket, comment) do
     assign(socket,
-      comments: add_comment(op, comment, comments),
+      comments: add_comment(op, Map.put(comment, :status, "arrived"), comments),
       pages: query(:post).page_count(op)
     )
   end

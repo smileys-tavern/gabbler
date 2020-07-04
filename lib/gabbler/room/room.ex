@@ -10,6 +10,7 @@ defmodule Gabbler.Room do
 
   alias Gabbler.Room.Application, as: RoomApp
   alias Gabbler.Room.Query, as: QueryRoom
+  alias Gabbler.Post.Query, as: QueryPost
   alias Gabbler.Room.RoomState
   alias Gabbler.Subscription, as: GabSub
   alias Gabbler.User, as: GabblerUser
@@ -28,6 +29,13 @@ defmodule Gabbler.Room do
   end
 
   def get(id), do: QueryRoom.get(id)
+
+  @doc """
+  Retrieve a rooms latest posts
+  """
+  def latest_posts(%{id: id}) do
+    QueryPost.list(by_room: id, order_by: :inserted_at, limit: 5)
+  end
 
   @doc """
   Create a room using data store

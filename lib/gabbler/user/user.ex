@@ -64,6 +64,11 @@ defmodule Gabbler.User do
     |> call_if(user, :activity_moderate_remove, room)
   end
 
+  def mod_list(user) do
+    user
+    |> QueryMod.list(join: :room, limit: @max_moderating)
+  end
+
   def invite_to_mod(nil, from_user, _), do: {:error, notify(from_user, :mod_request_failed)}
 
   def invite_to_mod(user, from_user, %{name: name}) do
@@ -189,9 +194,10 @@ defmodule Gabbler.User do
     result
   end
 
+  def broadcast_if({:error, _}, user, event), do: {:error, notify(user, event)}
   def broadcast_if({:ok, user}, {action, _}), do: {:ok, notify(user, action)}
   def broadcast_if({:error, user}, {_, action}), do: {:error, notify(user, action)}
-  def broadcast_if({:ok, _}, user, event), do: {:ok, broadcast_msg(user, event)}
+  def broadcast_if({:ok, _}, user, event), do: {:ok, notify(user, event)}
   def broadcast_if({:error, _}, user, _), do: {:error, user}
 
   defp call(user, action, args \\ [])
@@ -247,6 +253,8 @@ defmodule Gabbler.User do
   defp notify(user, :mod_request_failed), do: user
   |> broadcast_msg(gettext("User not found so mod request could not be sent"), "warning")
 
+  defp notify(user, {:modding_room, _}), do: notify(user, :modding_room)
+  defp notify(user, {_, :modding_room_error}), do: notify(user, :modding_room_error)
   defp notify(user, :modding_room), do: user
   |> broadcast_msg(gettext("Added as moderator"), "info")
 

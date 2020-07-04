@@ -102,5 +102,5 @@ defmodule Gabbler.Room.Query do
   defp room_found?(room), do: {:ok, room}
 
   defp banned?(false), do: false
-  defp banned?({:ok, true}), do: true
+  defp banned?(_), do: true
 end

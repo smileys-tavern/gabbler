@@ -23,7 +23,7 @@ defmodule GabblerWeb.Live.Voting do
       def handle_event("vote", %{"hash" => hash, "dir" => dir}, %{assigns: assigns} = socket) do
         get_vote_post(assigns, hash)
         |> vote(assigns, dir)
-        |> assign_vote(socket)
+        |> assign_vote(socket, dir)
         |> broadcast_vote()
         |> no_reply()
       end
@@ -35,7 +35,7 @@ defmodule GabblerWeb.Live.Voting do
       @impl true
       def handle_info(%{event: "new_vote", post: %{hash: hash} = post}, %{assigns: assigns} = socket) do
         get_vote_post(assigns, hash)
-        |> assign_vote(socket)
+        |> assign_vote(socket, nil)
         |> get_socket()
         |> no_reply()
       end
@@ -67,7 +67,6 @@ defmodule GabblerWeb.Live.Voting do
               Gabbler.User.activity_voted(user, hash)
 
               {:ok, %{post | :score_public => post.score_public + amt}}
-
             _ ->
               {:error, dgettext("errors", "there was an issue voting")}
           end
@@ -80,35 +79,35 @@ defmodule GabblerWeb.Live.Voting do
         end
       end
 
-      defp assign_vote({:ok, post}, %{assigns: %{comments: comments, room: room}} = socket) do
-        comments = replace_post(comments, post)
+      defp assign_vote({:ok, post}, %{assigns: %{comments: comments, room: room}} = socket, dir) do
+        comments = replace_post(comments, post, dir)
 
         {:ok, post, assign(socket, comments: comments)}
       end
 
-      defp assign_vote({:ok, post}, %{assigns: %{posts: posts, room: room}} = socket) do
-        posts = replace_post(posts, post)
+      defp assign_vote({:ok, post}, %{assigns: %{posts: posts, room: room}} = socket, dir) do
+        posts = replace_post(posts, post, dir)
 
         {:ok, post, assign(socket, posts: posts)}
       end
 
-      defp assign_vote({:ok, post}, %{assigns: %{posts: posts, rooms: rooms}} = socket) do
-        posts = replace_post(posts, post)
+      defp assign_vote({:ok, post}, %{assigns: %{posts: posts, rooms: rooms}} = socket, dir) do
+        posts = replace_post(posts, post, dir)
 
         {:ok, post, assign(socket, posts: posts)}
       end
 
-      defp assign_vote({:ok, post}, %{assigns: %{room: room}} = socket) do
+      defp assign_vote({:ok, post}, %{assigns: %{room: room}} = socket, _) do
         {:ok, post, assign(socket, post: post)}
       end
 
-      defp assign_vote({:error, error_str}, socket) do
+      defp assign_vote({:error, error_str}, socket, _) do
         {:error, error_str, socket}
       end
 
-      defp assign_vote(%Post{} = post, socket), do: assign_vote({:ok, post}, socket)
+      defp assign_vote(%Post{} = post, socket, dir), do: assign_vote({:ok, post}, socket, dir)
 
-      defp assign_vote(nil, socket), do: {:noop, nil, socket}
+      defp assign_vote(nil, socket, _), do: {:noop, nil, socket}
 
       # TODO: moving some of this to a broadcasting protocol?
       defp broadcast_vote({:ok, post, %{assigns: %{room: %{name: room_name}}} = socket}) do
@@ -138,10 +137,10 @@ defmodule GabblerWeb.Live.Voting do
 
       defp get_socket({_, _, socket}), do: socket
 
-      defp replace_post(posts, post) do
+      defp replace_post(posts, post, dir) do
         Enum.map(posts, fn %{hash: hash} = current_post ->
           cond do
-            hash == post.hash -> post
+            hash == post.hash -> Map.put(post, :voted, dir)
             true -> current_post
           end
         end)

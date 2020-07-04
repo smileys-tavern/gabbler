@@ -47,6 +47,9 @@ defmodule GabblerWeb.Router do
     live "/r/:room/view/:mode", Room.IndexLive, :index
     live "/room/new", Room.NewLive, :new
 
+    # GABBLER -> MODERATION
+    live "/moderation", User.ModerationLive, :index
+
     # GABBLER -> ROOM -> POST
     live "/r/:room/new_post", Post.NewLive, :new
     live "/r/:room/comments/:hash/:title", Post.IndexLive, :index

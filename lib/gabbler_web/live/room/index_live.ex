@@ -18,7 +18,7 @@ defmodule GabblerWeb.Room.IndexLive do
   end
 
   @impl true
-  def handle_info(%{event: "new_post", post: post, meta: meta}, socket) do
+  def handle_info(%{event: "new_post", payload: %{post: post, meta: meta}}, socket) do
     assign_new_post(socket, post, meta)
     |> no_reply()
   end
