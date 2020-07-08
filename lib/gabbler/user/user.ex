@@ -31,6 +31,8 @@ defmodule Gabbler.User do
     end
   end
 
+  def get(id), do: QueryUser.get(id)
+
   def subscribe(user, %{name: name} = room) do
     user
     |> QuerySub.subscribe(room)

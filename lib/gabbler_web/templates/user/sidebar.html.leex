@@ -13,6 +13,11 @@
       <% else %>
         <a href="#" class="button-action" phx-click="subscribe">Subscribe /r/<%= @room.name %></a>
       <% end %>
+      <%= if @user && @owner.id == @user.id do %>
+        <a href="/room/new?room=<%= @room.name %>" class="button-action">
+          Edit /r/<%= @room.name %>  
+        </a>
+      <% end %>
     <% end %>
   </div>
 
@@ -37,11 +42,63 @@
         </div>
         <button class="btn btn-primary" type="submit"><%= gettext("Invite") %></button>
       </form>
+
+      <form action="#" phx-submit="submit_unban">
+        <div class="form-group">
+          <label class="control-label" for="user_name_unban">
+            <%= gettext("Unban User") %>    
+          </label>
+          <input class="form-control" 
+            id="user_name_unban" 
+            name="user[name]" 
+            type="text" 
+            value="<%= @user_name_unban %>" 
+            placeholder="username" />
+        </div>
+        <button class="btn btn-primary" type="submit"><%= gettext("Unban") %></button>
+      </form>
+    <% end %>
+    <%= if @user && @owner.id == @user.id && @room && @room.type == "private" do %>
+      <h3>Private Room</h3>
+
+      <form action="#" phx-submit="submit_user_allow">
+        <div class="form-group">
+          <label class="control-label" for="user_name_allow">
+            <%= gettext("Allow user") %>    
+          </label>
+          <input 
+            class="form-control" 
+            id="user_name_allow" 
+            name="user[name]" 
+            type="text" 
+            value="<%= @user_name_allow %>" 
+            placeholder="username" />
+        </div>
+        <button class="btn btn-primary" type="submit"><%= gettext("Allow") %></button>
+      </form>
+
+      <form action="#" phx-submit="submit_user_disallow">
+        <div class="form-group">
+          <label class="control-label" for="user_name_disallow">
+            <%= gettext("Revoke Access") %>    
+          </label>
+          <input 
+            class="form-control" 
+            id="user_name_disallow" 
+            name="user[name]" 
+            type="text" 
+            value="<%= @user_name_disallow %>" 
+            placeholder="username" />
+        </div>
+        <button class="btn btn-primary" type="submit"><%= gettext("Revoke") %></button>
+      </form>
     <% end %>
   </div>
 
   <div class="sidebar-links sidebar-links-last">
-    <div class="room-link"><a href="/about">About <%= Application.get_env(:gabbler, :page_title) %></a></div>
+    <div class="room-link">
+      <a href="/about">About <%= Application.get_env(:gabbler, :page_title) %></a>
+    </div>
   </div>
 
   <%= if assigns[:konami] do %>

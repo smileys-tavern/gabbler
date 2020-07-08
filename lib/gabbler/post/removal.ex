@@ -1,6 +1,8 @@
 defmodule Gabbler.PostRemoval do
   @moduledoc """
   Helping functions for Removing a Post (soft deletes, technically updates)
+  NOTE: possible candidate for deprecation (move functionality to post.ex and
+  lib/query.ex)
   """
   import Gabbler
   import GabblerWeb.Gettext

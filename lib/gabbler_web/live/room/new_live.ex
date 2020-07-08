@@ -35,7 +35,7 @@ defmodule GabblerWeb.Room.NewLive do
 
   # PRIV
   #############################
-  defp init(%{assigns: assigns} = socket, %{"room" => name, "user" => user}, _) do
+  defp init(%{assigns: assigns} = socket, %{"room" => name}, _) do
     case GabblerRoom.get_room(name) do
       nil ->
         assign(socket, default_assigns(assigns))
@@ -50,7 +50,6 @@ defmodule GabblerWeb.Room.NewLive do
           post_metas: PostMeta.mock_data(),
           mode: :update,
           updated: false,
-          user: user,
           users: %{1 => User.mock_data(), 2 => User.mock_data(), 3 => User.mock_data()}
         )
     end
@@ -105,8 +104,10 @@ defmodule GabblerWeb.Room.NewLive do
       |> Room.changeset(%{key => value})
 
     case changeset do
-      %{:errors => []} -> %{changeset | :valid? => true}
-      _ -> changeset
+      %{:errors => []} ->
+        %{changeset | :valid? => true}
+      _ -> 
+        changeset
     end
   end
 

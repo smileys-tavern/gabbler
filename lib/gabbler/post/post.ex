@@ -9,7 +9,9 @@ defmodule Gabbler.Post do
   alias Gabbler.Post.Query, as: QueryPost
   alias Gabbler.Post.PostState
   alias GabblerData.Post
+
   @default_thread_depth 3
+  @max_chat_msg_length 144
 
 
   @doc """
@@ -46,6 +48,24 @@ defmodule Gabbler.Post do
     QueryPost.map_users(posts)
   end
 
+  @doc """
+  Post a chat msg and return :ok or :error depending on delivery success
+  """
+  def chat_msg(post, user, msg) do
+    if String.length(msg) > @max_chat_msg_length do
+      :error
+    else
+      cast(post, :chat_msg, {user, msg})
+    end
+  end
+
+  @doc """
+  Retrieve the current chat
+  """
+  def get_chat(post) do
+    call(post, :get_chat, nil)
+  end
+
   def server_name(hash) when is_binary(hash), do: "POST_#{hash}"
 
   # PRIVATE FUNCTIONS
@@ -59,6 +79,16 @@ defmodule Gabbler.Post do
   end
 
   defp call(post, _, _), do: post
+
+  defp cast(%Post{parent_type: "room"} = post, action, args) do
+    # Only top level (Original) posts have servers
+    case get_post_server_pid(post) do
+      {:ok, pid} -> GenServer.cast(pid, {action, args})
+      {:error, _} -> :error
+    end
+  end
+
+  defp cast(post, _, _), do: :error
 
   defp get_post_server_pid(%Post{hash: hash} = post) do
     case :syn.whereis(server_name(hash)) do

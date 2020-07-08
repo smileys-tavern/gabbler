@@ -37,16 +37,17 @@
       desc: gettext("A text description of up to 500 characters."), 
       value: @room.description}) %>
 
-    <div class="form-group">
-      <label class="control-label" for="room_type">Type</label>
-      <input type="radio" name="room[type]" id="room_type_public" value="public" checked="checked" />
-      <div class="radio-label">Public</div>
-      <input type="radio" name="room[type]" id="room_type_restricted" value="restricted" />
-      <div class="radio-label">Restricted</div>
-      <input type="radio" name="room[type]" id="room_type_private" value="private" />
-      <div class="radio-label">Private</div>
-      <div class="form-description clear"><%= gettext "Public: everyone can see it and subscribe. Restricted: everyone can see but only authorized can post. Private: Nobody can see unless authorized to. Admins can view all to monitor site policy." %></div>
-    </div>
+    <% IO.inspect @room %>
+    <%= Phoenix.View.render(GabblerWeb.FormView, "input_radio.html", %{
+      changeset: @changeset, 
+      changeset_key: :type,
+      title: "type",
+      type: "room",
+      options: [{"public", @room.type == "public"}, 
+        {"restricted", @room.type == "restricted"}, 
+        {"private", @room.type == "private"}],
+      desc: gettext("Public: everyone can see it and subscribe. Restricted: everyone can see but only authorized can post. Private: Nobody can see unless authorized to. Admins can view all to monitor site policy."), 
+      value: @room.description}) %>
 
     <div class="form-group">
       <label class="control-label" for="room_age">Age</label>

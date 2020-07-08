@@ -57,6 +57,8 @@ defmodule Gabbler.Room do
   @doc """
   Ban a user (for life)
   """
+  def user_ban(_, nil), do: {:error, :user_not_found}
+
   def user_ban(%{id: id, name: name} = room, %{id: user_id}) do
     # TODO: formalize channels in protocol so they aren't ad-hoc string codes
     QueryRoom.ban_for_life(id, user_id)
@@ -66,9 +68,11 @@ defmodule Gabbler.Room do
   @doc """
   Unban a user (not as for life as thought!)
   """
-  def user_unban(%{id: id} = room, %{id: user_id}) do
-    _ = QueryRoom.unban(id, user_id)
-    room
+  def user_unban(_, nil), do: {:error, :user_not_found}
+
+  def user_unban(%{id: id, name: name} = room, %{id: user_id}) do
+    QueryRoom.unban(id, user_id)
+    |> broadcast_if(room, "user:#{user_id}", %{event: "unbanned", room_name: name})
   end
 
   @doc """
@@ -80,7 +84,6 @@ defmodule Gabbler.Room do
   Return boolean based on whether a user is allowed in the room
   """
   def allow_entrance?(nil, _), do: true
-  def allow_entrance?(%{type: "private"}, nil), do: false
 
   def allow_entrance?(room, user) do
     banned?(room, user)
@@ -106,6 +109,25 @@ defmodule Gabbler.Room do
   def get_timeouts(room) do
     call(room, :get_user_timeouts)
   end
+
+  @doc """
+  Allow/Disallow a user to a private room (no-op on non-private room)
+  """
+  def allow_user(_, nil), do: {:error, :user_not_found}
+
+  def allow_user(%{id: id, type: "private"}, %{id: user_id}) do
+    QueryRoom.add_to_allow_list(id, user_id)
+  end
+
+  def allow_user(room, _), do: {:error, room}
+
+  def disallow_user(_, nil), do: {:error, :user_not_found}
+
+  def disallow_user(%{id: id, type: "private"}, %{id: user_id}) do
+    QueryRoom.remove_from_allow_list(id, user_id)
+  end
+
+  def disallow_user(room, _), do: {:error, room}
 
   @doc """
   Get identifying process id for a room

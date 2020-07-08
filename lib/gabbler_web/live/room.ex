@@ -11,13 +11,14 @@ defmodule GabblerWeb.Live.Room do
       import Gabbler.Live.SocketUtil, only: [
         no_reply: 1, assign_to: 3, assign_or: 4, update_changeset: 5]
 
+      alias Gabbler.PostRemoval
       alias Gabbler.Room, as: GabblerRoom
       alias Gabbler.User, as: GabblerUser
       alias Gabbler.Subscription, as: GabSub
       alias Gabbler.Type.Mode
       alias GabblerWeb.Presence
 
-      @default_mode :hot
+      @default_mode :live
 
       @impl true
       def handle_info(%{event: "presence_diff"}, %{assigns: %{room: %{name: name}}} = socket) do
@@ -47,11 +48,21 @@ defmodule GabblerWeb.Live.Room do
           |> GabblerRoom.user_ban(GabblerUser.get_by_name(name))
           
           socket
-          |> put_flash(:info, name <> " is banned for life from " <> assigns.room.name)
+          |> put_flash(:info, name <> gettext(" is banned for life from ") <> assigns.room.name)
           |> no_reply()
         else
           no_reply(socket)
         end
+      end
+
+      @impl true
+      def handle_event("submit_unban", %{"user" => user}, %{assigns: assigns} = socket) do
+        _ = assigns.room
+        |> GabblerRoom.user_unban(GabblerUser.get_by_name(user["name"]))
+
+        socket
+        |> put_flash(:info, user["name"] <> gettext(" has been unbanned"))
+        |> no_reply()
       end
 
       @impl true
@@ -100,6 +111,29 @@ defmodule GabblerWeb.Live.Room do
         |> no_reply()
       end
 
+      @impl true
+      def handle_event("submit_user_allow", %{"user" => user}, %{assigns: assigns} = socket) do
+        assigns.room
+        |> Gabbler.Room.allow_user(Gabbler.User.get_by_name(user["name"]))
+        |> user_allow_result(user["name"], socket)
+        |> no_reply()
+      end
+
+      @impl true
+      def handle_event("submit_user_disallow", %{"user" => user}, %{assigns: assigns} = socket) do
+        assigns.room
+        |> Gabbler.Room.disallow_user(Gabbler.User.get_by_name(user["name"]))
+        |> user_disallow_result(user["name"], socket)
+        |> no_reply()
+      end
+
+      @impl true
+      def handle_event("delete_post", %{"hash" => hash}, %{assigns: %{user: user}} = socket) do
+        socket
+        |> state_update_post(PostRemoval.moderator_removal(user, hash))
+        |> no_reply()
+      end
+
       # PRIVATE FUNCTIONS
       ###################
       defp init(socket, %{"room" => _} = params, session) do
@@ -134,11 +168,10 @@ defmodule GabblerWeb.Live.Room do
           socket
           |> assign(allowed: false)
           |> assign(mod: false)
-          |> assign(sidebar_on: false)
-          |> assign(user_count: "unknown")
           |> assign(moderators: [])
           |> assign(owner: %{id: 0})
           |> assign(subscribed: false)
+          |> init_room(:room_defaults)
           |> put_flash(:info, gettext("you are either banned for life or this is a private room"))
         end
       end
@@ -148,6 +181,9 @@ defmodule GabblerWeb.Live.Room do
           room_type: "room", 
           sidebar_on: false, 
           mod_invite: "", 
+          user_name_allow: "",
+          user_name_disallow: "",
+          user_name_unban: "",
           user_count: 0)
       end
 
@@ -187,6 +223,50 @@ defmodule GabblerWeb.Live.Room do
       end
 
       defp init_room(socket, _), do: socket
+
+      defp state_update_post(socket, {:ok, post}), do: state_update_post(socket, post)
+
+      defp state_update_post(
+             %{assigns: %{op: op, comments: comments}} = socket,
+             %{id: id, body: body} = post
+           ) do
+        if op.id == id do
+          assign(socket, op: post)
+        else
+          comments =
+            Enum.map(comments, fn %{id: c_id} = comment ->
+              if c_id == id do
+                %{comment | body: body, score_public: 0}
+              else
+                comment
+              end
+            end)
+
+          assign(socket, comments: comments)
+        end
+      end
+
+      defp state_update_post(socket, post), do: :ok
+
+      defp user_allow_result({:ok, _}, user_name, %{assigns: %{room: room}} = socket) do
+        socket
+        |> put_flash(:info, user_name <> gettext(" granted access to ") <> room.name)
+      end
+
+      defp user_allow_result({:error, _}, user_name, socket) do
+        socket
+        |> put_flash(:info, user_name <> gettext(" either not found or issue granting access"))
+      end
+
+      defp user_disallow_result({:ok, _}, user_name, %{assigns: %{room: room}} = socket) do
+        socket
+        |> put_flash(:info, user_name <> gettext(" access has been revoked from ") <> room.name)
+      end
+
+      defp user_disallow_result({:error, _}, user_name, socket) do
+        socket
+        |> put_flash(:info, user_name <> gettext(" either not found or issue revoking access"))
+      end
     end
   end
 end

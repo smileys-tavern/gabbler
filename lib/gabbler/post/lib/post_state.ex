@@ -4,5 +4,5 @@ defmodule Gabbler.Post.PostState do
   """
   alias GabblerData.Post
 
-  defstruct post: %Post{}
+  defstruct post: %Post{}, chat: []
 end

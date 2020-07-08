@@ -179,12 +179,67 @@ nav .menu .menu-item {
 .button-action:hover {
   background-color: #27679c;
 }
+.op-actions .selected {
+  background-color: #317ab7;
+}
 .op-actions .button-action {
   margin-left: 3px;
 }
 .negation {
   background-color: #9A3600;
   border-color: #4b1a00;
+}
+
+.chat .chat-entry {
+  clear: both;
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  font-size: 18px;
+}
+.chat .chat-user {
+  background-color: #3984e2;
+  color: #FFF;
+  padding: 5px;
+  border-radius: 4px;
+  margin: 1px 4px;
+  min-width: 100px;
+  text-align: center;
+}
+.chat .chat-user a {
+  color: #FFF;
+}
+.chat .chat-msg {
+  background-color: #464646;
+  color: #FFF;
+  border-radius: 4px;
+  margin: 1px 4px;
+  padding: 5px;
+  min-width: 300px;
+}
+
+.chat input {
+  border-color: #464646;
+  border-radius: 4px;
+  border-width: 1px;
+  width: 99%;
+  height: 28px;
+  margin: 5px 0;
+  padding: 0 4px;
+  font-size: 17px;
+  color: #464646;
+}
+.chat button {
+  float: right;
+  margin: 5px;
+  width: 180px;
+  height: 27px;
+  border: 1px solid #317ab7;
+  border-radius: 4px;
+  background-color: #317ab7;
+  color: #FFF;
+  font-weight: bold;
 }
 
 /* AUTH */
@@ -577,7 +632,7 @@ nav .menu .menu-item {
   border-bottom: 15px solid #ababab;
 }
 .arrow-up:hover {
-  border-bottom: 15px solid #000;
+  border-bottom: 15px solid #FF9800;
 }
 
 .arrow-down {
@@ -589,7 +644,7 @@ nav .menu .menu-item {
   border-top: 15px solid #ababab;
 }
 .arrow-down:hover {
-  border-top: 15px solid #000;
+  border-top: 15px solid #FF9800;
 }
 
 .arrow-right {

@@ -62,6 +62,11 @@ defmodule GabblerWeb.Live.User.Menu do
     |> no_reply()
   end
 
+  def handle_info(%{event: "unbanned", room_name: name}, socket) do
+    assign(socket, info: name <> gettext(": you are unbanned"))
+    |> no_reply()
+  end
+
   def handle_info(%{event: "reply", id: post_id}, socket) do
     assign_activity(socket, post_id)
     |> no_reply()

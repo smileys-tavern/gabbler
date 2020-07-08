@@ -17,7 +17,8 @@ defmodule GabblerWeb.Post.IndexLive do
   alias GabblerData.{Post, PostMeta, Comment, Room}
   alias Gabbler.Accounts.User
 
-  @default_mode :hot
+  @default_mode :live
+  @max_chat_shown 30
 
 
   def mount(params, session, socket) do
@@ -26,6 +27,12 @@ defmodule GabblerWeb.Post.IndexLive do
 
   def handle_info(%{event: "new_reply", post: comment}, socket) do
     assign_comment(socket, comment)
+    |> no_reply()
+  end
+
+  def handle_info(%{name: user_name, msg: msg}, %{assigns: %{chat: chat}} = socket) do
+    socket
+    |> assign(chat: Enum.take([{user_name, msg}|chat], @max_chat_shown))
     |> no_reply()
   end
 
@@ -54,10 +61,34 @@ defmodule GabblerWeb.Post.IndexLive do
     |> no_reply()
   end
 
+  def handle_event("chat_msg", %{"msg" => msg}, %{assigns: %{user: nil}} = socket) do
+    socket
+    |> no_reply()
+  end
+
+  def handle_event("chat_msg", %{"msg" => msg}, %{assigns: assigns} = socket) do
+    if GabblerRoom.in_timeout?(assigns.room, assigns.user) do
+      socket
+      |> put_flash(:info, gettext("you are in a timeout"))
+      |> no_reply()
+    else
+      case GabblerPost.chat_msg(assigns.post, assigns.user, msg) do
+        :error -> 
+          socket
+          |> put_flash(:info, "message was not delivered")
+          |> no_reply()
+        :ok -> 
+          socket
+          |> assign(chat_msg: "")
+          |> no_reply()
+      end
+    end
+  end
+
   def handle_event("reply_comment", %{"to" => parent_hash}, %{assigns: assigns} = socket) do
     if GabblerRoom.in_timeout?(assigns.room, assigns.user) do
       socket
-      |> put_flash(:info, "you are in a timeout")
+      |> put_flash(:info, gettext("you are in a timeout"))
       |> no_reply()
     else
       open_reply_to(socket, query(:post).get_by_hash(parent_hash))
@@ -103,9 +134,13 @@ defmodule GabblerWeb.Post.IndexLive do
   # PRIV
   #############################
   defp init(socket, %{"mode" => mode, "hash" => op_hash} = params, session) 
-  when mode in ["hot", "new", "live"] do
+  when mode in ["hot", "new", "live", "chat"] do
     if mode == "live" do
       GabSub.subscribe("post_live:#{op_hash}")
+    end
+
+    if mode == "chat" do
+      GabSub.subscribe("post_chat:#{op_hash}")
     end
 
     assign(socket, :mode, String.to_atom(mode))
@@ -140,9 +175,23 @@ defmodule GabblerWeb.Post.IndexLive do
     |> init(Map.drop(params, ["focushash"]), session)
   end
 
+  defp init(%{assigns: %{post: post, mode: :chat, room: room, user: user}} = socket, _, _) do
+    assign(socket,
+      comments: [],
+      chat: GabblerPost.get_chat(post),
+      chat_msg: "",
+      post_user: Gabbler.User.get(post.user_id),
+      pages: query(:post).page_count(post),
+      changeset_reply: default_reply_changeset(user, room, post),
+      reply: default_reply(user, room, post)
+    )
+  end
+
   defp init(%{assigns: %{post: post, mode: mode, room: room, user: user}} = socket, _, _) do
     assign(socket,
       comments: GabblerPost.thread(post, mode, 1, 1),
+      chat: nil,
+      chat_msg: "",
       post_user: query(:user).get(post.user_id),
       pages: query(:post).page_count(post),
       changeset_reply: default_reply_changeset(user, room, post),
@@ -158,6 +207,8 @@ defmodule GabblerWeb.Post.IndexLive do
     |> assign(:room, nil)
     |> assign(:reply_display, "hidden")
     |> assign(:reply_comment_display, "hidden")
+    |> assign(:chat, nil)
+    |> assign(:chat_msg, "")
     |> assign(:parent, nil)
     |> assign(:page, 1)
     |> assign(:post_meta, %PostMeta{})

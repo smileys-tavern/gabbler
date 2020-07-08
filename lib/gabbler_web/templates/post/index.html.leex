@@ -41,18 +41,20 @@
     <span class="time-blatant">Posted <%= posted_at(@post.inserted_at) %></span>
 
     <div class="op-actions">
-      <a href="#" class="reply button-action" phx-click="reply" phx-value-to="<%= @post.hash %>">Comment</a>
-      &nbsp;&nbsp;&nbsp;Or view 
-      <a class="button-action" href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>/view/new">
-        New
-      </a> 
-      <a class="button-action" href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>">
-        Hot
-      </a> 
-      <a class="button-action" href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>/view/live">
-        Live
-      </a>
-      <%= if @mod do %>
+      <%= if !@chat do %>
+        <a href="#" class="reply button-action" phx-click="reply" phx-value-to="<%= @post.hash %>">Comment</a>
+        &nbsp;&nbsp;&nbsp;Or view 
+      <% end %>
+      
+      <% post_link = "/r/#{@room.name}/comments/#{@post.hash}" %>
+      <%= for mode <- [:live, :hot, :new, :chat] do %>
+        <a class="button-action<%= if @mode == mode, do: ' selected', else: '' %>" 
+          href="<%= post_link %>/<%= @post.title %>/view/<%= mode %>">
+          <%= String.capitalize(Atom.to_string(mode)) %>
+        </a>
+      <% end %>
+      
+      <%= if assigns[:mod] && @mod do %>
         <a href="#" class="mod-action" phx-click="delete_post" phx-value-hash="<%= @post.hash %>">Delete</a>
       <% end %>
 
@@ -67,6 +69,9 @@
   <div class="op-reply" id="comment-reply-<%= @post.hash %>" data-commentdepth="0"></div>
 
   <%= render @view_module, "post_thread.html", assigns %>
+  <%= if @chat do %>
+    <%= render @view_module, "chat.html", %{chat: @chat, chat_msg: @chat_msg} %>
+  <% end %>
 </div>
 
 <%= if @changeset_reply && assigns[:reply_comment_display] do %>

@@ -86,7 +86,7 @@ defmodule GabblerWeb.User.ModerationLive do
       |> assign(:rooms, Map.put(assigns.rooms, id, room))
       |> assign(:posts, Map.put(assigns.posts, id, posts))
       |> assign(:post_metas, Map.merge(assigns.post_metas, GabblerPost.map_metas(posts)))
-      |> assign(:users, Map.merge(assigns.users, GabblerPost.map_users(posts)))
+      |> assign(:users, add_user_from_post(assigns.users, posts))
     end)
   end
 
@@ -109,6 +109,16 @@ defmodule GabblerWeb.User.ModerationLive do
 
     socket
     |> assign(posts: %{assigns.posts | post.room_id => updated_posts})
-    |> assign(post_metas: Map.put(assigns.metas, post.id, meta))
+    |> assign(post_metas: Map.put(assigns.post_metas, post.id, meta))
+    |> assign(users: add_user_from_post(assigns.users, [post]))
+  end
+
+  defp add_user_from_post(%{} = users, posts) when is_list(posts) do
+    Enum.reduce(posts, users, fn %{user_id: user_id}, acc ->
+      case Map.get(users, user_id) do
+        nil -> Map.put(acc, user_id, Gabbler.User.get(user_id))
+        _ -> acc
+      end
+    end)
   end
 end

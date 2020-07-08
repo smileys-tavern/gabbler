@@ -1,0 +1,21 @@
+<div class="form-group">
+  <label class="control-label" for="<%= @type %>_<%= @title %>">
+    <%= String.capitalize(@title) %>
+  </label>
+  <%= for {value, checked} <- @options do %>
+    <% IO.inspect value %><% IO.inspect checked %>
+    <input type="radio" 
+      name="<%= @type %>[<%= @title %>]" 
+      id="<%= @type %>_<%= @title %>_<%= value %>" 
+      value="<%= value %>" 
+      <%= if checked, do: "checked=\"checked\"", else: "" %> />
+    <div class="radio-label"><%= String.capitalize(value) %></div>
+  <% end %>
+
+  <div class="form-description clear">
+    <%= @desc %>  
+  </div>
+  <div class="form-error">
+    <%= show_error(Keyword.get(@changeset.errors, @changeset_key)) %>    
+  </div>
+</div>

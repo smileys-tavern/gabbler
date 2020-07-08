@@ -13,14 +13,14 @@
     <%= for {room_id, room_posts} <- @posts do %>
       <div class="room">
         <div class="room_heading"><%= @rooms[room_id].name %></div>
-        
+
         <%= if Enum.count(room_posts) > 0 do %>
-          <%= for %{id: post_id} = post <- room_posts do %>
+          <%= for %{id: post_id, user_id: user_id} = post <- room_posts do %>
             <%= render(
               GabblerWeb.RoomView, 
               "post_summary.html", 
               %{
-                user: @users[post_id], 
+                user: @users[user_id], 
                 post: post, 
                 room: @rooms[room_id], 
                 post_meta: @post_metas[post_id], 
