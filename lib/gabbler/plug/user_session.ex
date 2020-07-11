@@ -10,8 +10,6 @@ defmodule Gabbler.Plug.UserSession do
   def init(_), do: :ok
 
   def call(%{assigns: %{user: %User{}}} = conn, _) do
-    IO.inspect "USER STILL"
-    IO.inspect conn
     conn 
     |> assign(:temp_token, nil)
   end

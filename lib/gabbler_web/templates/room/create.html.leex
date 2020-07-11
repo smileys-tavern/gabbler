@@ -37,7 +37,6 @@
       desc: gettext("A text description of up to 500 characters."), 
       value: @room.description}) %>
 
-    <% IO.inspect @room %>
     <%= Phoenix.View.render(GabblerWeb.FormView, "input_radio.html", %{
       changeset: @changeset, 
       changeset_key: :type,

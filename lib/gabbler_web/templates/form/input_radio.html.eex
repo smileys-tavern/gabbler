@@ -3,7 +3,6 @@
     <%= String.capitalize(@title) %>
   </label>
   <%= for {value, checked} <- @options do %>
-    <% IO.inspect value %><% IO.inspect checked %>
     <input type="radio" 
       name="<%= @type %>[<%= @title %>]" 
       id="<%= @type %>_<%= @title %>_<%= value %>" 

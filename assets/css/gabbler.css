@@ -330,6 +330,36 @@ nav .menu .menu-item {
 
 /* END AUTH */
 
+.account h1 {
+  margin: 50px;
+}
+.account form {
+  margin-left: 50px;
+}
+.account label {
+  padding: 10px;
+}
+.account input {
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  height: 30px;
+  width: 300px;
+  padding: 3px;
+}
+.account button {
+  height: 37px;
+  font-size: 16px;
+  color: #464646;
+  background-color: #ffffff;
+  border: 2px solid #464646;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 200px;
+  margin: 10px;
+}
+
+
 .end-float { clear: both; }
 .end-spacer { height: 80px; width: 1px; }
 

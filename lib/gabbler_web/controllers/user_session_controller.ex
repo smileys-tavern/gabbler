@@ -19,7 +19,6 @@ defmodule GabblerWeb.UserSessionController do
   end
 
   def delete(conn, _params) do
-    IO.inspect "DELETING THE SESSION???????????????????????"
     conn
     |> put_flash(:info, "Logged out successfully.")
     |> UserAuth.logout_user()
