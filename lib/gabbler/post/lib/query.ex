@@ -32,7 +32,12 @@ defmodule Gabbler.Post.Query do
   def list(opts), do: QueryPost.list(opts)
 
   @impl true
-  def map_meta(posts), do: QueryPost.map_meta(posts)
+  def map_meta(posts) do
+    QueryPost.map_meta(posts)
+    |> Enum.reduce(%{}, fn {id, meta}, acc ->
+      Map.put(acc, id, %{meta | comments: comment_count(id)})
+    end)
+  end
 
   @impl true
   def map_rooms(posts), do: QueryPost.map_rooms(posts)
@@ -55,8 +60,17 @@ defmodule Gabbler.Post.Query do
   @impl true
   def increment_score(post, amt, amt_priv), do: QueryPost.increment_score(post, amt, amt_priv)
 
+  @doc """
+  Increment a counter to mark a new comment under a comment. Returns the new count
+  """
+  def tally_comment(post_id, amount \\ 1) do
+    Cache.update_counter("CMT_CNT_#{post_id}", amount)
+  end
+
   @impl true
-  def comment_count(post), do: QueryPost.comment_count(post)
+  def comment_count(%{id: id}), do: Cache.get("CMT_CNT_#{id}")
+
+  def comment_count(id), do: Cache.get("CMT_CNT_#{id}")
 
   @impl true
   def page_count(post), do: QueryPost.page_count(post)

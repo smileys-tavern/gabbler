@@ -7,7 +7,7 @@ defmodule Gabbler.User do
   This module also handles events as procedures of related state changes. It ensures
   when a user's state changes it chains into broadcasting change results.
   """
-  import Gabbler.Guards, only: [alert?: 1, user_event?: 1]
+  import Gabbler.Guards, only: [alert?: 1]
   import GabblerWeb.Gettext
 
   alias Gabbler.Subscription, as: GabSub
@@ -180,6 +180,14 @@ defmodule Gabbler.User do
   end
 
   @doc """
+  Return if a user can chat, and if they can start the timer blocking
+  them (only call this if wanting to send a message)
+  """
+  def can_chat?(%User{} = user) do
+    call(user, :can_chat)
+  end
+
+  @doc """
   Create a server name based on a user so it can be found easily by id
   """
   def server_name(%User{id: id}), do: "USER_SERV_#{id}"
@@ -197,10 +205,9 @@ defmodule Gabbler.User do
   end
 
   def broadcast_if({:error, _}, user, event), do: {:error, notify(user, event)}
+  def broadcast_if({:ok, _}, user, event), do: {:ok, notify(user, event)}
   def broadcast_if({:ok, user}, {action, _}), do: {:ok, notify(user, action)}
   def broadcast_if({:error, user}, {_, action}), do: {:error, notify(user, action)}
-  def broadcast_if({:ok, _}, user, event), do: {:ok, notify(user, event)}
-  def broadcast_if({:error, _}, user, _), do: {:error, user}
 
   defp call(user, action, args \\ [])
 
@@ -269,13 +276,8 @@ defmodule Gabbler.User do
   defp notify(user, :error, :activity_moderating, _), do: user
   |> broadcast_msg(gettext("There was an issue accepting moderation request"), "warning")
 
-  defp broadcast_msg(%{id: id} = user, %{event: event_name} = event) when user_event?(event_name) do
-    GabSub.broadcast("user:#{id}", event)
-    user
-  end
-
   # TODO: refactoring broadcasts from server interfaces soon
-  defp broadcast_msg(%User{id: id} = user, msg, type \\ "info") when alert?(type) do
+  defp broadcast_msg(%User{id: id} = user, msg, type) when alert?(type) do
     GabSub.broadcast("user:#{id}", %{event: type, msg: msg})
     user
   end

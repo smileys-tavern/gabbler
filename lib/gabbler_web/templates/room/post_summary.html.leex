@@ -13,13 +13,13 @@
         <% true -> %>
           <%= @post.title %>
       <% end %>
-      <%= if @user do %>by <%= @user.name %><% end %>
+      <%= if @user do %>by <a href="/u/<%= @user.name %>"><%= @user.name %></a><% end %>
     </div>
     
     <div class="actions">
       <%= if @post.parent_type == "room" do %>
-        <%= if @comment_count && @comment_count > 0 do %>
-          <span class="post-activity-comment activity-count"><%= @comment_count %></span>
+        <%= if @post_meta.comments && @post_meta.comments > 0 do %>
+          <span class="post-activity-comment activity-count"><%= @post_meta.comments %></span>
         <% end %>
         <%= if @room.name do %>
           <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>">Comment</a>

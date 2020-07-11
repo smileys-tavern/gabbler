@@ -5,4 +5,6 @@ defmodule Gabbler.Guards do
   defguard alert?(value) when value in ["info", "warning", "error"]
 
   defguard user_event?(value) when value in ["subscribed"]
+
+  defguard restricted?(room_type) when room_type in ["restricted", "private"]
 end

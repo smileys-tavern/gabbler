@@ -50,9 +50,15 @@ defmodule GabblerWeb.Post.NewLive do
   def handle_event("update_post", _, socket), do: {:noreply, socket}
 
   def handle_event("submit", _, %{assigns: %{mode: :create, user: user, room: room} = assigns} = socket) do
-    assign_new_post(socket, PostCreation.create(user, room, assigns.changeset, assigns.changeset_meta))
-    |> broadcast_post_create()
-    |> no_reply()
+    if GabblerRoom.in_timeout?(room, user) do
+      socket
+      |> put_flash(:info, gettext("you are in a timeout"))
+      |> no_reply()
+    else
+      assign_new_post(socket, PostCreation.create(user, room, assigns.changeset, assigns.changeset_meta))
+      |> broadcast_post_create()
+      |> no_reply()
+    end
   end
 
   def handle_event("submit", _, %{assigns: %{mode: :update} = assigns} = socket) do
@@ -96,10 +102,20 @@ defmodule GabblerWeb.Post.NewLive do
     )
   end
 
-  defp init(socket, %{"room" => name} = params, session) do
-    socket
-    |> assign(room: GabblerRoom.get_room(name))
-    |> init(session, params)
+  defp init(%{assigns: assigns} = socket, %{"room" => name} = params, session) do
+    room = GabblerRoom.get_room(name)
+
+    if GabblerRoom.allow_entrance?(room, assigns.user) do
+      socket
+      |> assign(room: room)
+      |> assign(allowed: true)
+      |> init(session, params)
+    else
+      socket
+      |> assign(room: room)
+      |> assign(allowed: false)
+      |> put_flash(:info, gettext("you are either banned for life or posting here is restricted"))
+    end
   end
 
   defp init(socket, _, _), do: socket

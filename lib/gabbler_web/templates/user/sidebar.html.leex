@@ -58,8 +58,9 @@
         <button class="btn btn-primary" type="submit"><%= gettext("Unban") %></button>
       </form>
     <% end %>
-    <%= if @user && @owner.id == @user.id && @room && @room.type == "private" do %>
-      <h3>Private Room</h3>
+    <%= if @user && @owner.id == @user.id 
+      && @room && @room.type in ["restricted", "private"] do %>
+      <h3><%= String.capitalize(@room.type) %> Room</h3>
 
       <form action="#" phx-submit="submit_user_allow">
         <div class="form-group">

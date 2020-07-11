@@ -7,6 +7,7 @@ defmodule Gabbler.Room do
   the database is used the Room Server has it's room info refreshed.
   """
   import GabblerWeb.Gettext
+  import Gabbler.Guards, only: [restricted?: 1]
 
   alias Gabbler.Room.Application, as: RoomApp
   alias Gabbler.Room.Query, as: QueryRoom
@@ -78,12 +79,16 @@ defmodule Gabbler.Room do
   @doc """
   Is the user currently banned
   """
+  def banned?(_, nil), do: false
+
   def banned?(%{id: id}, %{id: user_id}), do: QueryRoom.banned?(id, user_id)
 
   @doc """
   Return boolean based on whether a user is allowed in the room
   """
   def allow_entrance?(nil, _), do: true
+
+  def allow_entrance?(%{type: "private"}, nil), do: false
 
   def allow_entrance?(room, user) do
     banned?(room, user)
@@ -196,7 +201,7 @@ defmodule Gabbler.Room do
 
   defp allow_private_if_not_banned?(true, room, _), do: false
 
-  defp allow_private_if_not_banned?(false, %{id: id, type: "private"}, %{id: user_id}) do
+  defp allow_private_if_not_banned?(false, %{id: id, type: type}, %{id: user_id}) when restricted?(type) do
     QueryRoom.allow_list?(id, user_id)
   end
 

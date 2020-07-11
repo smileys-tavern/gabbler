@@ -24,6 +24,16 @@ defmodule GabblerWeb.Room.IndexLive do
   end
 
   @impl true
+  def handle_info(%{event: "comment_count", id: post_id, count: count}, %{assigns: assigns} = socket) do
+    if meta = Map.get(assigns.post_metas, post_id) do
+      socket
+      |> assign(post_metas: Map.put(assigns.post_metas, post_id, %{meta | comments: count}))
+    else
+      socket
+    end
+  end
+
+  @impl true
   def handle_info(%{event: "user_timeout", user: name, hash: hash}, %{assigns: assigns} = socket) do
     assign(socket, timeouts: Map.put(assigns.timeouts, name, hash))
     |> no_reply()
@@ -33,7 +43,7 @@ defmodule GabblerWeb.Room.IndexLive do
   #############################
   defp init(%{assigns: %{room: room, posts: posts}} = socket, _, _) do
     assign(socket,
-      post_metas: query(:post).map_meta(posts),
+      post_metas: Gabbler.Post.map_metas(posts),
       users: query(:post).map_users(posts),
       timeouts: GabblerRoom.get_timeouts(room)
     )

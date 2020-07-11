@@ -1,15 +1,21 @@
 <div class="chat">
-  <%= for {user_name, msg} <- Enum.reverse(@chat) do %>
-    <div class="chat-entry">
-      <div class="chat-user">
-        <a href="/u/<%= user_name %>"><%= user_name %></a>
+  <p>
+    This is a chat for real time conversation about this post. 
+    Messages are not permanent.
+  </p>
+  <div class="messages">
+    <%= for {user_name, msg} <- @chat do %>
+      <div class="chat-entry">
+        <div class="chat-user">
+          <a href="/u/<%= user_name %>"><%= user_name %></a>
+        </div>
+        <div class="chat-msg"><%= msg %></div>
       </div>
-      <div class="chat-msg"><%= msg %></div>
-    </div>
-  <% end %>
-  <%= if length(@chat) == 0 do %>
-    <p>Nothing here at the moment. Start the converstation</p>
-  <% end %>
+    <% end %>
+    <%= if length(@chat) == 0 do %>
+      <p>Nothing here at the moment. Start the converstation</p>
+    <% end %>
+  </div>
 
   <form action="#" phx-submit="chat_msg">
     <div class="form-group">
@@ -19,6 +25,7 @@
         type="text" 
         value="<%= @chat_msg %>" 
         maxlength="144"
+        autocomplete="off"
         placeholder="send a message" />
     </div>
     <button class="btn btn-primary" type="submit"><%= gettext("Send") %></button>

@@ -191,6 +191,7 @@ nav .menu .menu-item {
 }
 
 .chat .chat-entry {
+  align-items: flex-start;
   clear: both;
   margin: 10px;
   display: flex;
@@ -217,6 +218,14 @@ nav .menu .menu-item {
   margin: 1px 4px;
   padding: 5px;
   min-width: 300px;
+}
+.chat .messages {
+  height: 400px;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .chat input {

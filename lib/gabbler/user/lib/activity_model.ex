@@ -11,5 +11,6 @@ defmodule Gabbler.User.ActivityModel do
             moderating: [],
             activity: [],
             requests: [],
-            read_receipt: true
+            read_receipt: true,
+            can_chat: true
 end

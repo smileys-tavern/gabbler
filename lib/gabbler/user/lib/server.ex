@@ -23,7 +23,7 @@ defmodule Gabbler.User.Server do
   def start_link({%User{} = user, subs, moderating}) do
     GenServer.start_link(
       __MODULE__,
-      %ActivityModel{user: user, subs: subs, moderating: moderating},
+      %ActivityModel{user: user, subs: subs, moderating: moderating, can_chat: true},
       name: {:via, :syn, Gabbler.User.server_name(user)},
       timeout: @server_timeout
     )
@@ -171,8 +171,25 @@ defmodule Gabbler.User.Server do
   end
 
   @impl true
+  def handle_call(:can_chat, _from, %ActivityModel{can_chat: false} = state) do
+    {:reply, false, state}
+  end
+
+  @impl true
+  def handle_call(:can_chat, _from, %ActivityModel{} = state) do
+    Gabbler.User.Chat.start_chat_timer()
+
+    {:reply, true, %{state | can_chat: false}}
+  end
+
+  @impl true
   def handle_cast({:update_read_receipt, status}, state) do
     {:reply, %{state | read_receipt: status}}
+  end
+
+  @impl true
+  def handle_info(:chat_timer, %ActivityModel{} = state) do
+    {:noreply, %{state | can_chat: true}}
   end
 
   @impl true

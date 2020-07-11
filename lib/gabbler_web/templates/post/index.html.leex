@@ -41,7 +41,7 @@
     <span class="time-blatant">Posted <%= posted_at(@post.inserted_at) %></span>
 
     <div class="op-actions">
-      <%= if !@chat do %>
+      <%= if !assigns[:chat] do %>
         <a href="#" class="reply button-action" phx-click="reply" phx-value-to="<%= @post.hash %>">Comment</a>
         &nbsp;&nbsp;&nbsp;Or view 
       <% end %>
@@ -69,7 +69,7 @@
   <div class="op-reply" id="comment-reply-<%= @post.hash %>" data-commentdepth="0"></div>
 
   <%= render @view_module, "post_thread.html", assigns %>
-  <%= if @chat do %>
+  <%= if assigns[:chat] do %>
     <%= render @view_module, "chat.html", %{chat: @chat, chat_msg: @chat_msg} %>
   <% end %>
 </div>

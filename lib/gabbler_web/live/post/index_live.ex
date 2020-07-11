@@ -3,14 +3,15 @@ defmodule GabblerWeb.Post.IndexLive do
   The Post Page LiveView and post sub-categories like comment focus pages
   """
   use GabblerWeb, :live_view
-  use GabblerWeb.Live.Auth, auth_required: ["reply", "reply_submit", "reply_comment", "vote", "subscribe"]
+  use GabblerWeb.Live.Auth, auth_required: [
+    "reply", "reply_submit", "reply_comment", 
+    "vote", "subscribe", "chat_msg"]
   use GabblerWeb.Live.Voting
   use GabblerWeb.Live.Room
   use GabblerWeb.Live.Konami, timeout: 5000
   import Gabbler.Live.SocketUtil, only: [no_reply: 1, update_changeset: 5, assign_to: 3]
 
   alias Gabbler.Subscription, as: GabSub
-  alias Gabbler.{PostCreation, PostRemoval}
   alias Gabbler.Post, as: GabblerPost
   alias Gabbler.Room, as: GabblerRoom
   alias GabblerWeb.Presence
@@ -25,8 +26,18 @@ defmodule GabblerWeb.Post.IndexLive do
     {:ok, init(assign_defaults(socket), params, session)}
   end
 
-  def handle_info(%{event: "new_reply", post: comment}, socket) do
-    assign_comment(socket, comment)
+  def handle_info(%{event: "new_reply", post: comment, count: count}, %{assigns: assigns} = socket) do
+    assigns.comments
+    |> Enum.reduce([], fn %{id: id} = c, acc ->
+      if id == comment.parent_id do
+        [Map.put(c, :comments, count)|acc]
+      else
+        [c|acc]
+      end
+    end)
+    |> Enum.reverse()
+    |> assign_to(:comments, socket)
+    |> assign_comment(comment)
     |> no_reply()
   end
 
@@ -61,7 +72,7 @@ defmodule GabblerWeb.Post.IndexLive do
     |> no_reply()
   end
 
-  def handle_event("chat_msg", %{"msg" => msg}, %{assigns: %{user: nil}} = socket) do
+  def handle_event("chat_msg", _, %{assigns: %{user: nil}} = socket) do
     socket
     |> no_reply()
   end
@@ -73,9 +84,13 @@ defmodule GabblerWeb.Post.IndexLive do
       |> no_reply()
     else
       case GabblerPost.chat_msg(assigns.post, assigns.user, msg) do
+        :timer ->
+          socket
+          |> put_flash(:info, gettext("please wait a few seconds between messages"))
+          |> no_reply()
         :error -> 
           socket
-          |> put_flash(:info, "message was not delivered")
+          |> put_flash(:info, gettext("message was not delivered"))
           |> no_reply()
         :ok -> 
           socket
@@ -111,9 +126,9 @@ defmodule GabblerWeb.Post.IndexLive do
     |> no_reply()
   end
 
-  def handle_event("reply_submit", _, %{assigns: %{room: room, changeset_reply: changeset}} = socket) do
-    add_reply(socket, query(:post).create_reply(PostCreation.prepare_changeset(room, changeset)))
-    |> broadcast_reply()
+  def handle_event("reply_submit", _, %{assigns: assigns} = socket) do
+    Gabbler.Post.reply_submit(assigns.changeset_reply, assigns.room, assigns.op, assigns.user)
+    |> add_reply(socket)
     |> assign_form_reply_defaults()
     |> no_reply()
   end
@@ -125,39 +140,26 @@ defmodule GabblerWeb.Post.IndexLive do
     |> no_reply()
   end
 
-  def handle_event("delete_post", %{"hash" => hash}, %{assigns: %{user: user}} = socket) do
-    socket
-    |> state_update_post(PostRemoval.moderator_removal(user, hash))
-    |> no_reply()
-  end
-
   # PRIV
   #############################
-  defp init(socket, %{"mode" => mode, "hash" => op_hash} = params, session) 
+  defp init(socket, %{"mode" => mode} = params, session) 
   when mode in ["hot", "new", "live", "chat"] do
-    if mode == "live" do
-      GabSub.subscribe("post_live:#{op_hash}")
-    end
-
-    if mode == "chat" do
-      GabSub.subscribe("post_chat:#{op_hash}")
-    end
-
-    assign(socket, :mode, String.to_atom(mode))
+    socket
+    |> assign(:mode, String.to_atom(mode))
     |> init(Map.drop(params, ["mode"]), session)
   end
 
   defp init(socket, %{"hash" => hash, "focushash" => focus_hash} = params, session) do
     socket
-    |> assign(:post, query(:post).get_by_hash(focus_hash))
-    |> assign(:op, query(:post).get_by_hash(hash))
+    |> assign(:post, Gabbler.Post.get_post(focus_hash))
+    |> assign(:op, Gabbler.Post.get_post(hash))
     |> assign(:focus_hash, focus_hash)
     |> init(Map.drop(params, ["hash", "focushash"]), session)    
   end
 
   defp init(socket, %{"hash" => hash} = params, session) do
     socket = socket
-    |> assign(:post, query(:post).get_by_hash(hash))
+    |> assign(:post, Gabbler.Post.get_post(hash))
     |> assign(:focus_hash, nil)
 
     socket
@@ -175,7 +177,9 @@ defmodule GabblerWeb.Post.IndexLive do
     |> init(Map.drop(params, ["focushash"]), session)
   end
 
-  defp init(%{assigns: %{post: post, mode: :chat, room: room, user: user}} = socket, _, _) do
+  defp init(%{assigns: %{post: post, mode: :chat, room: room, user: user, op: op}} = socket, _, _) do
+    GabSub.subscribe("post_chat:#{op.hash}")
+
     assign(socket,
       comments: [],
       chat: GabblerPost.get_chat(post),
@@ -187,7 +191,11 @@ defmodule GabblerWeb.Post.IndexLive do
     )
   end
 
-  defp init(%{assigns: %{post: post, mode: mode, room: room, user: user}} = socket, _, _) do
+  defp init(%{assigns: %{post: post, mode: mode, room: room, user: user, op: op}} = socket, _, _) do
+    if mode == :live do
+      GabSub.subscribe("post_live:#{op.hash}")
+    end
+
     assign(socket,
       comments: GabblerPost.thread(post, mode, 1, 1),
       chat: nil,
@@ -214,32 +222,14 @@ defmodule GabblerWeb.Post.IndexLive do
     |> assign(:post_meta, %PostMeta{})
   end
 
-  defp add_reply(%{assigns: %{op: op, comments: comments}} = socket, {:ok, comment}) do
-    post = query(:post).get(comment.parent_id)
-
-    # Inform user of parent post of reply (TODO: move out of this module)
-    _ = Gabbler.User.add_activity(post.user_id, post.id, "reply")
-
-    socket = socket
-    |> assign(comments: add_comment(op, comment, comments), reply_display: "hidden", reply_comment_display: "hidden")
-
-    {:ok, comment, socket}
-  end
-
-  defp add_reply(socket, {:error, changeset}) do
-    {:error, nil, assign(socket, changeset_reply: changeset)}
-  end
-
-  defp broadcast_reply({:ok, comment, %{assigns: %{op: %{hash: op_hash}}} = socket}) do
-    GabSub.broadcast("post_live:#{op_hash}", %{event: "new_reply", post: comment})
-
+  defp add_reply({:ok, comment}, %{assigns: assigns} = socket) do
     socket
+    |> assign(comments: add_comment(assigns.op, comment, assigns.comments))
+    |> assign(reply_display: "hidden", reply_comment_display: "hidden")
   end
 
-  defp broadcast_reply({:error, _, %{assigns: %{user: user}} = socket}) do
-    Gabbler.User.broadcast(user, gettext("there was an issue sending your reply"), "warning")
-
-    socket
+  defp add_reply({:error, changeset}, socket) do
+    assign(socket, changeset_reply: changeset)
   end
 
   defp assign_form_reply_defaults(%{assigns: %{op: op, room: room, user: user}} = socket) do
@@ -277,10 +267,10 @@ defmodule GabblerWeb.Post.IndexLive do
   end
 
   defp assign_comment(%{assigns: %{op: op, comments: comments}} = socket, comment) do
-    assign(socket,
-      comments: add_comment(op, Map.put(comment, :status, "arrived"), comments),
-      pages: query(:post).page_count(op)
-    )
+    add_comment(op, Map.put(comment, :status, "arrived"), comments)
+    |> Enum.uniq_by(fn c -> c.id end)
+    |> assign_to(:comments, socket)
+    |> assign(pages: query(:post).page_count(op))
   end
 
   defp add_comment(%{id: op_id}, %{parent_id: parent_id} = new_comment, comments) do
@@ -320,26 +310,4 @@ defmodule GabblerWeb.Post.IndexLive do
     }
 
   defp default_reply(nil, _, _), do: nil
-
-  defp state_update_post(socket, {:ok, post}), do: state_update_post(socket, post)
-
-  defp state_update_post(
-         %{assigns: %{op: op, comments: comments}} = socket,
-         %{id: id, body: body} = post
-       ) do
-    if op.id == id do
-      assign(socket, op: post)
-    else
-      comments =
-        Enum.map(comments, fn %{id: c_id} = comment ->
-          if c_id == id do
-            %{comment | body: body, score_public: 0}
-          else
-            comment
-          end
-        end)
-
-      assign(socket, comments: comments)
-    end
-  end
 end

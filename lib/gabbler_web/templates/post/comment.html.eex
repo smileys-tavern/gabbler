@@ -13,6 +13,9 @@ end %>
       <span class="textbody"><%= raw(@comment.body) %></span>
     </div>
     <div class="actions">
+      <%= if Map.get(@comment, :comments) && @comment.comments > 0 do %>
+        <span class="post-activity-comment activity-count"><%= @comment.comments %></span>
+      <% end %>
       <%= if @comment.depth < Application.get_env(:gabbler, :max_comment_depth, 7) do %>
         <a href="#" class="reply" phx-click="reply_comment" phx-value-to="<%= @comment.hash %>">Reply</a> | 
       <% end %>

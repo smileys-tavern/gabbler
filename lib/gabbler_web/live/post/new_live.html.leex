@@ -1,3 +1,11 @@
-<%= render(GabblerWeb.PostView, "index.html", assigns) %>
+<%= if !@room do %>
+  <%= render(GabblerWeb.RoomView, "404.html", assigns) %>
+<% else %>
+  <%= if @allowed do %>
+    <%= render(GabblerWeb.PostView, "index.html", assigns) %>
 
-<%= render(GabblerWeb.PostView, "create.html", assigns) %>
+    <%= render(GabblerWeb.PostView, "create.html", assigns) %>
+  <% else %>
+    <%= render(GabblerWeb.RoomView, "barred_entry.html", assigns) %>
+  <% end %>
+<% end %>

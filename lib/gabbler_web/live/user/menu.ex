@@ -67,7 +67,7 @@ defmodule GabblerWeb.Live.User.Menu do
     |> no_reply()
   end
 
-  def handle_info(%{event: "reply", id: post_id}, socket) do
+  def handle_info(%{event: "reply", payload: %{id: post_id}}, socket) do
     assign_activity(socket, post_id)
     |> no_reply()
   end
