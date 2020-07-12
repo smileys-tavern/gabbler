@@ -63,7 +63,7 @@ defmodule Gabbler.MixProject do
       {:quantum, "~> 2.3"},
       {:httpotion, "~> 3.1.0"},
       {:nebulex, "~> 1.2.2"},
-      {:jchash, git: "https://github.com/nikolaik/jchash/tree/fix/otp23", app: false}
+      {:jchash, git: "https://github.com/nikolaik/jchash.git", branch: "fix/otp23", app: false}
       | env_deps(Mix.env())
     ]
   end
