@@ -4,7 +4,7 @@ defmodule Gabbler.MixProject do
   def project do
     [
       app: :gabbler,
-      version: "0.1.0",
+      version: "0.10.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -63,7 +63,7 @@ defmodule Gabbler.MixProject do
       {:quantum, "~> 2.3"},
       {:httpotion, "~> 3.1.0"},
       {:nebulex, "~> 1.2.2"},
-      {:jchash, "0.1.1"}
+      {:jchash, "0.1", app: false}
       | env_deps(Mix.env())
     ]
   end
