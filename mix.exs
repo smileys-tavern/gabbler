@@ -53,7 +53,7 @@ defmodule Gabbler.MixProject do
       # GABBLER DEPENDENCY
       {:timex, "~> 3.6"},
       {:thumbnex, "~> 0.3.1"},
-      {:html_sanitize_ex, "~> 1.3"},
+      {:html_sanitize_ex, "~> 1.4"},
       {:cloudex, "~> 1.3"},
       {:bamboo, "~> 1.3"},
       {:recaptcha, "~> 3.0"},
