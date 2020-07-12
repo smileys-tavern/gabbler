@@ -121,7 +121,8 @@ defmodule GabblerWeb.Post.NewLive do
   defp init(socket, _, _), do: socket
 
   defp update_post_assign(%{assigns: %{post: post, changeset: changeset}} = socket, :body, value) do
-    sanitized_value = HtmlSanitizeEx.markdown_html(value)
+    #TODO: look into sanitization options (recently remove html_sanitize_ex due to slow compile)
+    sanitized_value = value
 
     post = Map.put(post, :body, sanitized_value)
 
