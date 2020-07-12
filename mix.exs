@@ -48,7 +48,7 @@ defmodule Gabbler.MixProject do
       {:plug_cowboy, "~> 2.1"},
       # RELEASE
       {:distillery, "~> 2.1"},
-      {:edeliver, "~> 1.7"},
+      {:edeliver, "~> 1.8"},
       {:phx_gen_auth, "~> 0.2.0", only: [:dev], runtime: false},
       # GABBLER DEPENDENCY
       {:timex, "~> 3.6"},
