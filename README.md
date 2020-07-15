@@ -1,22 +1,53 @@
 # Gabbler
 
-Gabbler is a customizable phoenix project for creating Reddit-Like websites without writing any javascript beyond the LiveView Hook. It's currently in experimentation phase and tidying up key features.
+Gabbler is a customizable Phoenix 1.5+/LiveView project for creating a Reddit-Like website. It remains true to a promise of writing no javascript (the only JS is the LiveView hook). The goal of this project is to provide a real time experience with every feature and provide the best tooling for moderation using and eventually showcasing the Elixir ecosystem.
 
-Demo Site - [https://smileys.pub](https://smileys.pub)
+- ***Demo Site [https://smileys.pub](https://smileys.pub)***
 
-It is based on Phoenix and LiveView and provides the UI+Biz Logic to create and maintain Rooms (/r/..), sign up users and post content in a variety of ways. Most functionality and notifications are presented real time. Also provided is a basic service that tracks trends much like Twitter by keeping a sorted list of content organized by the Tags they were posted with.
+![Gabbler Post](https://res.cloudinary.com/smileys/image/upload/c_scale,w_558/v1594775143/gabbler-post_p1mnya.jpg "Gabbler Post") 
+![Gabbler Post](https://res.cloudinary.com/smileys/image/upload/c_scale,w_558/v1594775143/gabbler-post-create_j2zywu.jpg "Gabbler Post") 
+![Gabbler Moderation](https://res.cloudinary.com/smileys/image/upload/c_scale,w_558/v1594775143/gabbler-moderate_yzu2im.jpg "Gabbler Moderation") 
 
-Previously, Gabbler was a project called Smileys Pub, used to learn the Elixir ecosystem. This is a near complete refactor with new goals such as exploring OTP and LiveView to find good practices for (somewhat) complex sites. As new ideas are explored, the codebase will adapt with a priority on setting good standards. It will also adapt quickly as LiveView evolves toward it's official release. There is in fact zero javascript beyond the hook to run LiveView and it will stay that way for the foreseeable future (or at least ensure extra js is optional).
 
-Feedback & suggestions quite appreciated. If you like the idea of practicing Elixir on a community based site leave a note or dive right in.
+# Features
+
+- Create Rooms:
+  - Public: Anyone can post / comment
+  - Protected: Only allowed users can post original content, all can comment
+  - Private: Only allowed users can view the room and post/comment
+- Room View Modes:
+  - Live: see new comment trees built in real time
+  - Hot: see most upvoted content first
+  - New: static view of new content
+  - Chat: chat room for each post
+- Post Content:
+  - Markdown compatible for formatting
+  - See post preview in real time as it's created
+  - (Coming soon) Collaborative post editing
+  - (Coming soon) upload images
+  - Embed video from several sources
+  - Tag your content with search helpers
+- Moderation:
+  - Give temporary user timeouts, ban for life or delete from near anywhere you see a post
+  - Add/Remove moderators
+  - View all moderated room content in real time for efficient banning
+- Tag Tracking:
+  - Tag tracker room allows to see posts by any tag arrive in real time
+  - Tracks top 500 or so trending tags
+- Authentication
+  - Phoenix standard auth used for creating account
+  - Subscriptions: users can subscribe to rooms to easily come back to content
+  - Be notified on replies / mod requests etc
 
 # For Developers
 
-Gabbler is going in the direction of a generic Reddit-like phoenix site where the querying backend (and later search indexing) can be swapped out and as many aspects of the site configurable as possible. That being said it is for a technical consumer.
+Gabbler tries to adhere to OTP principles and create easy to maintain a [LiveViews](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html) centric client. The basic architecture pattern:
+
+![Gabbler Architecture](https://res.cloudinary.com/smileys/image/upload/v1594734890/gabbler_architecture_xboelg.jpg "Gabbler Architecture")
 
 ## Up and Running
 
-The default dev setting is to have the Repo project alongside Gabbler Web. Everything else is pretty standard for a Phoenix project.
+The default dev setting is to have the Repo project alongside Gabbler Web. Everything else is pretty standard for a Phoenix project. To run a site configuration file is required. To deploy distillery and edeliver file are necessary (not included in repository).
 
 ```
 > cd project_dir
@@ -29,10 +60,12 @@ The default dev setting is to have the Repo project alongside Gabbler Web. Every
 > mix phx.server
 ```
 
-You should be able to navigate to http://localhost:4000 now
+Assuming config is setup you should be able to navigate to http://localhost:4000 now
 
 
 ## Update Translations/Gettext
+
+All site text is setup for internationalization via pot files
 
 ```
 > mix gettext.extract
@@ -41,9 +74,9 @@ You should be able to navigate to http://localhost:4000 now
 
 ## Deployment
 
-1. Ensure .deliver/config and rel/config.exs are up to date for your env and define a build server (see distillery and eDeliver docs)
+1. Ensure .deliver/config and rel/config.exs are up to date for your env and define a build server if necessary (see distillery and eDeliver docs)
 
-2. Make sure Git repo is up to date
+2. Make sure Git repo/fork is up to date
 
 3. mix edeliver build release --mix-env=prod
 
@@ -51,14 +84,8 @@ You should be able to navigate to http://localhost:4000 now
 
 ## Plans
 
-Here are some project goals upcoming.
+Features being deliberated:
 
-- Create best moderation tools in class
-
-- Improve caching layer until postgres is only utilized by necessity
-
-- Create timing based tools for posts and user notifications
-
-- Re-implement image uploading once it's standard in LiveView based forms
-
-- Improve posting tools (including collaborative editing)
+- Collaborative editing
+- Image Uploads for posts
+- Optional email subscriptions

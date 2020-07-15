@@ -44,6 +44,11 @@ defmodule Gabbler.Room do
   def create_room(changeset), do: QueryRoom.create(changeset)
 
   @doc """
+  Update a room using data store
+  """
+  def update_room(changeset), do: QueryRoom.update(changeset)
+
+  @doc """
   Give a user a timeout! They cannot post for the duration in this room
   """
   def user_timeout(%{name: name} = room, %{name: user_name} = user, hash) do

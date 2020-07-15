@@ -107,7 +107,7 @@ defmodule GabblerWeb.Live.Voting do
 
       defp assign_vote(%Post{} = post, socket, dir), do: assign_vote({:ok, post}, socket, dir)
 
-      defp assign_vote(nil, socket, _), do: {:noop, nil, socket}
+      defp assign_vote(_, socket, _), do: {:noop, nil, socket}
 
       # TODO: moving some of this to a broadcasting protocol?
       defp broadcast_vote({:ok, post, %{assigns: %{room: %{name: room_name}}} = socket}) do

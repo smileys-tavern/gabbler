@@ -276,6 +276,11 @@ defmodule Gabbler.User do
   defp notify(user, :error, :activity_moderating, _), do: user
   |> broadcast_msg(gettext("There was an issue accepting moderation request"), "warning")
 
+  defp notify(%User{id: id} = user, %{} = event) do
+    GabSub.broadcast("user:#{id}", event)
+    user
+  end
+
   # TODO: refactoring broadcasts from server interfaces soon
   defp broadcast_msg(%User{id: id} = user, msg, type) when alert?(type) do
     GabSub.broadcast("user:#{id}", %{event: type, msg: msg})

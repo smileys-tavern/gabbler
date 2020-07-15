@@ -29,6 +29,14 @@ defmodule Gabbler.Room.Query do
     end
   end
 
+  def get_by_name!(name) do
+    case get_by_name(name) do
+      {:cachehit, room} -> room
+      {:ok, room} -> room
+      {:error, _} -> nil
+    end
+  end
+
   @impl true
   def list(_), do: []
 
@@ -39,12 +47,14 @@ defmodule Gabbler.Room.Query do
   def create(changeset), do: QueryRoom.create(changeset)
 
   @impl true
-  def update(_changeset) do
-    #get_by_name(changeset.data.name)
-    #|> Map.merge(changeset.data)
-    #|> QueryRoom.update()
+  def update(changeset) do
+    result = QueryRoom.update(changeset)
 
-    {:ok, nil}#Cache.update()}
+    if result do
+      _ = Cache.delete("ROOM_#{changeset.data.name}")
+    end
+
+    result
   end
 
   def update_timeouts(%{name: name} = room, %{} = user_timeouts) do

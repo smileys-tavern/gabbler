@@ -33,6 +33,11 @@ defmodule GabblerWeb.Room.NewLive do
     |> no_reply()
   end
 
+  def handle_event("submit", _, %{assigns: %{changeset: changeset, mode: :update}} = socket) do
+    update_room(socket, GabblerRoom.update_room(changeset))
+    |> no_reply()
+  end
+
   # PRIV
   #############################
   defp init(%{assigns: assigns} = socket, %{"room" => name}, _) do
