@@ -178,7 +178,7 @@ defmodule GabblerWeb.Live.Room do
 
       defp init_room(socket, :room_defaults) do
         assign(socket, 
-          room_type: "room", 
+          room_type: "room",
           sidebar_on: false, 
           mod_invite: "", 
           user_name_allow: "",

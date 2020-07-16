@@ -121,7 +121,19 @@ defmodule GabblerWeb.UserAuth do
     end
   end
 
-  defp gen_temp_token(conn), do: conn
+  defp gen_temp_token(conn) do
+    {_, _, micro} = :os.timestamp()
+    s1 = :rand.uniform(1000)
+    s2 = :rand.uniform(1000)
+    s3 = :rand.uniform(1000)
+
+    token = Hashids.new(salt: "gabbler_temp_token", min_len: 16)
+    |> Hashids.encode([micro, s1, s2, s3])
+
+    conn
+    |> put_session(:temp_token, token)
+    |> assign(:temp_token, token)
+  end
 
   @doc """
   Used for routes that require the user to not be authenticated.
