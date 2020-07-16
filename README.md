@@ -1,13 +1,8 @@
 # Gabbler
 
-Gabbler is a customizable Phoenix 1.5+/LiveView project for creating a Reddit-Like website. It remains true to a promise of writing no javascript (the only JS is the LiveView hook). The goal of this project is to provide a real time experience with every feature and provide the best tooling for moderation using and eventually showcasing the Elixir ecosystem.
+Gabbler is a customizable Phoenix 1.5+/LiveView project for creating a Reddit-Like website. It remains true to a promise of writing no javascript (the only JS is the LiveView hook). The goal of this project is to provide a real time experience with every feature, maintain good 'bones' and create the best tooling for moderation and such that Elixir ecosystem does such a great job providing.
 
 - ***Demo Site [https://smileys.pub](https://smileys.pub)***
-
-![Gabbler Post](https://res.cloudinary.com/smileys/image/upload/c_scale,w_558/v1594775143/gabbler-post_p1mnya.jpg "Gabbler Post") 
-![Gabbler Post](https://res.cloudinary.com/smileys/image/upload/c_scale,w_558/v1594775143/gabbler-post-create_j2zywu.jpg "Gabbler Post") 
-![Gabbler Moderation](https://res.cloudinary.com/smileys/image/upload/c_scale,w_558/v1594775143/gabbler-moderate_yzu2im.jpg "Gabbler Moderation") 
-
 
 # Features
 
