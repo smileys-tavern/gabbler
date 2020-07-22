@@ -49,7 +49,7 @@
       <% post_link = "/r/#{@room.name}/comments/#{@post.hash}" %>
       <%= for mode <- [:live, :hot, :new, :chat] do %>
         <a class="button-action<%= if @mode == mode, do: ' selected', else: '' %>" 
-          href="<%= post_link %>/<%= @post.title %>/view/<%= mode %>">
+          href="<%= post_link %>/<%= String.replace(@post.title, "#", "") %>/view/<%= mode %>">
           <%= String.capitalize(Atom.to_string(mode)) %>
         </a>
       <% end %>

@@ -7,9 +7,11 @@
     <div class="text">
       <%= cond do %>
         <% @post.parent_type == "room" && @room.name -> %>
-          <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>"><%= @post.title %></a>
+          <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= String.replace(@post.title, "#", "") %>"><%= @post.title %></a>
         <% @room.name -> %>
-          <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>"><%= @post.title %></a>
+          <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>">
+            <%= @post.title %>    
+          </a>
         <% true -> %>
           <%= @post.title %>
       <% end %>
@@ -22,7 +24,7 @@
           <span class="post-activity-comment activity-count"><%= @post_meta.comments %></span>
         <% end %>
         <%= if @room.name do %>
-          <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= @post.title %>">Comment</a>
+          <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= String.replace(@post.title, "#", "") %>">Comment</a>
         <% else %>
           Comment
         <% end %>
