@@ -47,13 +47,14 @@
       <% end %>
       
       <% post_link = "/r/#{@room.name}/comments/#{@post.hash}" %>
-      <%= for mode <- [:live, :hot, :new, :chat] do %>
-        <a class="button-action<%= if @mode == mode, do: ' selected', else: '' %>" 
-          href="<%= post_link %>/<%= String.replace(@post.title, "#", "") %>/view/<%= mode %>">
-          <%= String.capitalize(Atom.to_string(mode)) %>
-        </a>
+      <%= if @post.title do %>
+        <%= for mode <- [:live, :hot, :new, :chat] do %>
+          <a class="button-action<%= if @mode == mode, do: ' selected', else: '' %>" 
+            href="<%= post_link %>/<%= String.replace(@post.title, "#", "") %>/view/<%= mode %>">
+            <%= String.capitalize(Atom.to_string(mode)) %>
+          </a>
+        <% end %>
       <% end %>
-      
       <%= if assigns[:mod] && @mod do %>
         <a href="#" class="mod-action" phx-click="delete_post" phx-value-hash="<%= @post.hash %>">Delete</a>
       <% end %>
