@@ -6,12 +6,18 @@
     </div>
     <%= if @room do %>
       <%= if @user do %>
-        <a href="/r/<%= @room.name %>/new_post" class="button-action">Post</a>
+        <a href="/r/<%= @room.name %>/new_post/<%= @story_hash %>" class="button-action">
+          Post
+        </a>
       <% end %>
       <%= if @subscribed do %>
-        <a href="#" class="button-action" phx-click="unsubscribe">Unsubscribe /r/<%= @room.name %></a>
+        <a href="#" class="button-action" phx-click="unsubscribe">
+          Unsubscribe /r/<%= @room.name %>    
+        </a>
       <% else %>
-        <a href="#" class="button-action" phx-click="subscribe">Subscribe /r/<%= @room.name %></a>
+        <a href="#" class="button-action" phx-click="subscribe">
+          Subscribe /r/<%= @room.name %>    
+        </a>
       <% end %>
       <%= if @user && @owner.id == @user.id do %>
         <a href="/room/new?room=<%= @room.name %>" class="button-action">

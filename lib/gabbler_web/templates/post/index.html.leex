@@ -23,15 +23,17 @@
         <div><img src="<%= @post_meta.image %>" class="post-image" /></div><br />
       <% end %>
 
-      <%= if @post_meta.link do %>
-        <p><a href="<%= @post_meta.link %>"><%= @post_meta.link %></a></p>
-      <% end %>
+      <div class="op-meta">
+        <%= if @post_meta.link do %>
+          <p><a href="<%= @post_meta.link %>"><%= @post_meta.link %></a></p>
+        <% end %>
 
-      <%= if @post_meta.tags do %>
-        <p>Tags Used: <strong><%= @post_meta.tags %></strong></p>
-      <% end %>
+        <%= if @post_meta.tags do %>
+          <p>Tags: <strong><%= @post_meta.tags %></strong></p>
+        <% end %>
+      </div>
 
-      <p><%= if @post.body do %>
+      <p class="op-post"><%= if @post.body do %>
         <%= raw display_post_body(@post) %>
       <% end %></p>
     </div>

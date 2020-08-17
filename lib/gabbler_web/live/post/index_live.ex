@@ -158,12 +158,13 @@ defmodule GabblerWeb.Post.IndexLive do
   end
 
   defp init(socket, %{"hash" => hash} = params, session) do
-    socket = socket
-    |> assign(:post, Gabbler.Post.get_post(hash))
-    |> assign(:focus_hash, nil)
+    post = Gabbler.Post.get_post(hash)
 
     socket
-    |> assign(:op, socket.assigns.post)
+    |> assign(:post, post)
+    |> assign(:post_meta, GabblerPost.get_meta(post))
+    |> assign(:focus_hash, nil)
+    |> assign(:op, post)
     |> init(Map.drop(params, ["hash"]), session)
   end
 
@@ -172,6 +173,7 @@ defmodule GabblerWeb.Post.IndexLive do
 
     socket
     |> assign(:post, post)
+    |> assign(:post_meta, GabblerPost.get_meta(post))
     |> assign(:focus_hash, focus_hash)
     |> assign(:op, GabblerPost.get_parent(post))
     |> init(Map.drop(params, ["focushash"]), session)

@@ -29,6 +29,18 @@ defmodule Gabbler.Post.Query do
   end
 
   @impl true
+  def get_meta(%{id: id} = post) do
+    case Cache.get("POST_META_#{id}") do
+      nil -> 
+        query(:post).get_meta(post)
+        |> Cache.set_if("POST_META_#{id}", ttl: @cache_default_ttl)
+        |> post_found?()
+      post_meta ->
+        {:cachehit, post_meta}
+    end
+  end
+
+  @impl true
   def list(opts), do: QueryPost.list(opts)
 
   @impl true

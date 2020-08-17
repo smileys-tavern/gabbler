@@ -49,6 +49,12 @@ defmodule GabblerWeb.Post.NewLive do
 
   def handle_event("update_post", _, socket), do: {:noreply, socket}
 
+  def handle_event("open_story_creator", _, socket) do
+    socket
+    |> assign(story_toggle: :on)
+    |> no_reply()
+  end
+
   def handle_event("submit", _, %{assigns: %{mode: :create, user: user, room: room} = assigns} = socket) do
     if GabblerRoom.in_timeout?(room, user) do
       socket
@@ -102,18 +108,24 @@ defmodule GabblerWeb.Post.NewLive do
     )
   end
 
-  defp init(%{assigns: assigns} = socket, %{"room" => name} = params, session) do
+  defp init(%{assigns: assigns} = socket, %{"room" => name, "story_hash" => hash} = params, session) do
     room = GabblerRoom.get_room(name)
 
     if GabblerRoom.allow_entrance?(room, assigns.user) do
+      story = Gabbler.Story.state(hash, assigns.user, %Post{user_id: assigns.user.id})
+
       socket
       |> assign(room: room)
       |> assign(allowed: true)
-      |> init(session, params)
+      |> assign(story: story)
+      |> assign(story_toggle: :off)
+      |> init(params, session)
     else
       socket
       |> assign(room: room)
       |> assign(allowed: false)
+      |> assign(story: nil)
+      |> assign(story_toggle: :off)
       |> put_flash(:info, gettext("you are either banned for life or posting here is restricted"))
     end
   end

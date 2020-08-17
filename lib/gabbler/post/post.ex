@@ -29,6 +29,16 @@ defmodule Gabbler.Post do
     end
   end
 
+  @doc """
+  Retrieve a Posts meta, first trying cache
+  """
+  def get_meta(post) do
+    case QueryPost.get_meta(post) do
+      {:error, _} -> nil
+      {_, post_meta} -> post_meta
+    end
+  end
+
   def get_parent(%Post{parent_id: parent_id}) do
     QueryPost.get(parent_id)
   end

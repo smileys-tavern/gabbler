@@ -38,6 +38,9 @@
       maxlength: "11099",
       desc: gettext("alphanumeric and .,?!:;-\" allowed as well as markdown"), 
       value: @post.body}) %>
+    <p><a href="https://www.markdownguide.org/cheat-sheet" target="_blank">
+      Formatting Cheat-Sheet
+    </a></p>
 
     <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
       changeset: @changeset_meta, 
@@ -47,14 +50,14 @@
       desc: gettext("(optional) appropriate link to other content"), 
       value: @post_meta.link}) %>
 
-    <%= if (@uploads != :off) do %>
+    <%= if false do %>
       <%= Phoenix.View.render(GabblerWeb.FormView, "input_upload.html", %{
-        changeset: @changeset_meta, 
-        changeset_key: :image,
-        title: "image",
-        type: "post_meta",
-        desc: gettext("(optional) images will be resized and thumbed automatically"), 
-        value: @post_meta.image}) %>
+          changeset: @changeset_meta, 
+          changeset_key: :image,
+          title: "image",
+          type: "post_meta",
+          desc: gettext("(optional) images will be resized and thumbed automatically"), 
+          value: @post_meta.image}) %>
     <% end %>
 
     <%= Phoenix.View.render(GabblerWeb.FormView, "input_text.html", %{
@@ -73,10 +76,30 @@
     <% end %>
 
     <div class="form-group">
+      <div class="form-story" phx-click="open_story_creator">
+        <div class="form-story-icon"><img src="/images/icon/story.webp" /></div>
+        <div class="form-story-text">Attach Story</div>
+      </div>
+      <div class="form-description clear">
+        Create a story using up to 20MB of JPG imagery
+      </div>
+    </div>
+
+    <div class="form-group">
       <%= case @mode do %>
         <% :create -> %><button class="btn btn-primary" type="submit">Submit</button>
         <% :update -> %><button class="btn btn-primary" type="submit">Update</button>
       <% end %>
     </div>
   </form>
+
+  <%= if @story_toggle == :on do %>
+    <div class="story_create_container">
+      <iframe 
+        src="<%= GabblerWeb.Endpoint.url() %>/r/<%= @room.name %>/story/<%= @story.hash %>"
+        title="Story Creator"
+        style="border: none;">
+      </iframe>
+    </div>
+  <% end %>
 </div>

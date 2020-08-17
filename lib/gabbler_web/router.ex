@@ -23,15 +23,20 @@ defmodule GabblerWeb.Router do
   scope "/", GabblerWeb do
     pipe_through [:browser]
 
+    # GABBLER
     get "/about", PageController, :about
     get "/tos", PageController, :tos
 
-    # USER
+    # GABBLER -> USER
     post "/u/session/new", UserController, :new
     get "/u/session/new", UserController, :index
     get "/u/session/delete", UserController, :delete
     get "/u/:username", UserController, :profile
     get "/u/:username/settings", UserController, :settings
+
+    # GABBLER -> ROOM -> POST
+    get "/r/:room/story/:hash", StoryController, :new
+    post "/r/story/upload/:hash", StoryController, :upload
   end
 
   scope "/", GabblerWeb do
@@ -51,7 +56,7 @@ defmodule GabblerWeb.Router do
     live "/moderation", User.ModerationLive, :index
 
     # GABBLER -> ROOM -> POST
-    live "/r/:room/new_post", Post.NewLive, :new
+    live "/r/:room/new_post/:story_hash", Post.NewLive, :new
     live "/r/:room/comments/:hash/:title", Post.IndexLive, :index
     live "/r/:room/comments/:hash/:title/view/:mode", Post.IndexLive, :index
     live "/r/:room/comments/:hash/", Post.IndexLive, :index

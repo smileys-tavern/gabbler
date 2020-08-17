@@ -146,6 +146,7 @@ defmodule GabblerWeb.Live.Room do
         |> init_room(:subscription)
         |> init_room(:user_info)
         |> init_room(:room_owner)
+        |> init_room(:story_hash)
         |> init(Map.drop(params, ["room"]), session)
       end
 
@@ -220,6 +221,11 @@ defmodule GabblerWeb.Live.Room do
       defp init_room(%{assigns: %{room: room}} = socket, :room_owner) do
         query(:user).get(room.user_id)
         |> assign_to(:owner, socket)
+      end
+
+      defp init_room(%{assigns: %{user: user}} = socket, :story_hash) do
+        Gabbler.Story.create_hash(user)
+        |> assign_to(:story_hash, socket)
       end
 
       defp init_room(socket, _), do: socket
