@@ -100,6 +100,12 @@ defmodule GabblerWeb.Post.IndexLive do
     end
   end
 
+  def handle_event("toggle_story_mode", _, %{assigns: %{story_mode: is_on}} = socket) do
+    socket
+    |> assign(story_mode: !is_on)
+    |> no_reply()
+  end
+
   def handle_event("reply_comment", %{"to" => parent_hash}, %{assigns: assigns} = socket) do
     if GabblerRoom.in_timeout?(assigns.room, assigns.user) do
       socket
@@ -159,21 +165,25 @@ defmodule GabblerWeb.Post.IndexLive do
 
   defp init(socket, %{"hash" => hash} = params, session) do
     post = Gabbler.Post.get_post(hash)
+    meta = GabblerPost.get_meta(post)
 
     socket
     |> assign(:post, post)
-    |> assign(:post_meta, GabblerPost.get_meta(post))
+    |> assign(:post_meta, meta)
     |> assign(:focus_hash, nil)
+    |> assign(:story, %{imgs: GabblerPost.get_story_images(meta)})
     |> assign(:op, post)
     |> init(Map.drop(params, ["hash"]), session)
   end
 
   defp init(socket, %{"focushash" => focus_hash} = params, session) do
     post = GabblerPost.get_post(focus_hash)
+    meta = GabblerPost.get_meta(post)
 
     socket
     |> assign(:post, post)
-    |> assign(:post_meta, GabblerPost.get_meta(post))
+    |> assign(:post_meta, meta)
+    |> assign(:story, %{imgs: GabblerPost.get_story_images(meta)})
     |> assign(:focus_hash, focus_hash)
     |> assign(:op, GabblerPost.get_parent(post))
     |> init(Map.drop(params, ["focushash"]), session)
@@ -214,11 +224,13 @@ defmodule GabblerWeb.Post.IndexLive do
     |> assign(:mode, @default_mode)
     |> assign(:post, nil)
     |> assign(:op, nil)
+    |> assign(:story_mode, false)
     |> assign(:room, nil)
     |> assign(:reply_display, "hidden")
     |> assign(:reply_comment_display, "hidden")
     |> assign(:chat, nil)
     |> assign(:chat_msg, "")
+    |> assign(:story, %{imgs: []})
     |> assign(:parent, nil)
     |> assign(:page, 1)
     |> assign(:post_meta, %PostMeta{})

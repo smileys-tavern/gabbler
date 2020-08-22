@@ -206,6 +206,8 @@ defmodule Gabbler.Room do
 
   defp allow_private_if_not_banned?(true, _, _), do: false
 
+  defp allow_private_if_not_banned?(_, %{user_id: creator_id}, %{id: creator_id}), do: true
+
   defp allow_private_if_not_banned?(false, %{id: id, type: type}, %{id: user_id}) when restricted?(type) do
     QueryRoom.allow_list?(id, user_id)
   end

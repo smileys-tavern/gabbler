@@ -1,4 +1,7 @@
 <div class="form-sidebar form-sidebar-wide">
+  <p>
+    Share the url of this page to collaboratively edit
+  </p>
   <%= form_for @changeset, "#", [phx_change: :update_post, phx_submit: :submit] %>
     <%= if @changeset.action do %>
       <div class="alert alert-danger">
@@ -77,7 +80,7 @@
 
     <div class="form-group">
       <div class="form-story" phx-click="open_story_creator">
-        <div class="form-story-icon"><img src="/images/icon/story.webp" /></div>
+        <div class="form-story-icon"><img src="/images/icon/story_4.png" /></div>
         <div class="form-story-text">Attach Story</div>
       </div>
       <div class="form-description clear">
@@ -95,11 +98,24 @@
 
   <%= if @story_toggle == :on do %>
     <div class="story_create_container">
+      <div class="story_create_close" phx-click="close_story_creator">X</div>
       <iframe 
         src="<%= GabblerWeb.Endpoint.url() %>/r/<%= @room.name %>/story/<%= @story.hash %>"
         title="Story Creator"
-        style="border: none;">
+        style="border: none; width: 560px; height: 170px;">
       </iframe>
+
+      <div class="story-uploaded">
+        <%= for %{thumb: thumb, id: id} <- Enum.reverse(@story.imgs) do %>
+          <div class="thumb" phx-click="update_thumb" phx-value-id="<%= id %>">
+            <div class="delete-img" phx-click="delete_img" phx-value-id="<%= id %>">
+              X
+            </div>
+            <img src="<%= thumb %>" />
+          </div>
+        <% end %>
+      </div>
+      <div class="story-size"><%= @story_size / 1000000 %>MB/20MB</div>
     </div>
   <% end %>
 </div>

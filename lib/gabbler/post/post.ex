@@ -30,6 +30,18 @@ defmodule Gabbler.Post do
   end
 
   @doc """
+  Retrieve the story images associated with the post
+  """
+  def get_story_images(post), do: QueryPost.get_story_images(post)
+
+  @doc """
+  Create a new image associated with a post
+  """
+  def create_story_image(image), do: QueryPost.create_story_image(image)
+
+  def delete_story_image(public_id), do: QueryPost.delete_story_image(public_id)
+
+  @doc """
   Retrieve a Posts meta, first trying cache
   """
   def get_meta(post) do

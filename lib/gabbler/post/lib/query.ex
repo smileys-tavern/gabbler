@@ -58,6 +58,15 @@ defmodule Gabbler.Post.Query do
   def map_users(posts), do: QueryPost.map_users(posts)
 
   @impl true
+  def get_story_images(post), do: QueryPost.get_story_images(post)
+
+  @impl true
+  def delete_story_image(public_id), do: QueryPost.delete_story_image(public_id)
+
+  @impl true
+  def create_story_image(img), do: QueryPost.create_story_image(img)
+
+  @impl true
   def create(changeset, changeset_meta), do: QueryPost.create(changeset, changeset_meta)
 
   @impl true

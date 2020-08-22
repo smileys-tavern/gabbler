@@ -16,6 +16,7 @@ defmodule Gabbler.PostCreation do
     case Gabbler.User.can_post?(user) do
       true ->
         query(:post).create(prepare_changeset(room, changeset), changeset_meta)
+        |> IO.inspect()
 
       false ->
         {:error,

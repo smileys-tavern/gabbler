@@ -69,7 +69,9 @@ defmodule GabblerWeb.Room.NewLive do
   end
 
   defp update_room(socket, {:ok, room}) do
-    assign(socket, room: room, changeset: Room.changeset(room), mode: :update, updated: true)
+    socket
+    |> assign(room: room, changeset: Room.changeset(room), mode: :update, updated: true)
+    |> redirect(to: "/r/#{room.name}")
   end
 
   defp update_room_assign(["room", "title"], %{"title" => title}, socket) do

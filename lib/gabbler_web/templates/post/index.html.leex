@@ -1,5 +1,24 @@
+<%= if @story_mode do %>
+  <div class="story-view-container">
+    <div class="story-view-close" phx-click="toggle_story_mode">X</div>
+    <div class="story-view">
+      <%= for %{url: url} <- @story.imgs do %>
+        <img src="<%= url %>" />
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
 <div id="original-post" class="original-post">
+  <%= if assigns[:post_meta] && @post_meta.image do %>
+    <div class="op-story-mode" phx-click="toggle_story_mode">
+      <div class="op-story-mode-title">Story View</div>
+      <div class="op-story-mode-icon"><img src="/images/icon/fullscreen.png" /></div>
+    </div>
+  <% end %>
   <%= render @view_module, "vote.html", %{post: @post} %>
+
+  <%= render(GabblerWeb.PostView, "preview_square.html", post_meta: @post_meta) %>
 
   <div class="op-title">
     <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
@@ -19,16 +38,16 @@
 
   <div class="op-content">
     <div class="op-body">
-      <%= if @post_meta.image do %>
+      <%= if false && @post_meta.image do %>
         <div><img src="<%= @post_meta.image %>" class="post-image" /></div><br />
       <% end %>
 
       <div class="op-meta">
-        <%= if @post_meta.link do %>
+        <%= if assigns[:post_meta] && @post_meta.link do %>
           <p><a href="<%= @post_meta.link %>"><%= @post_meta.link %></a></p>
         <% end %>
 
-        <%= if @post_meta.tags do %>
+        <%= if assigns[:post_meta] && @post_meta.tags do %>
           <p>Tags: <strong><%= @post_meta.tags %></strong></p>
         <% end %>
       </div>
@@ -36,6 +55,9 @@
       <p class="op-post"><%= if @post.body do %>
         <%= raw display_post_body(@post) %>
       <% end %></p>
+      <%= for %{url: url} <- @story.imgs do %>
+        <img src="<%= url %>" />
+      <% end %>
     </div>
   </div>
   

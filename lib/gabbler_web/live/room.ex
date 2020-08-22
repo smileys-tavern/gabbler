@@ -223,7 +223,7 @@ defmodule GabblerWeb.Live.Room do
         |> assign_to(:owner, socket)
       end
 
-      defp init_room(%{assigns: %{user: user}} = socket, :story_hash) do
+      defp init_room(%{assigns: %{user: user}} = socket, :story_hash) when user != nil do
         Gabbler.Story.create_hash(user)
         |> assign_to(:story_hash, socket)
       end
