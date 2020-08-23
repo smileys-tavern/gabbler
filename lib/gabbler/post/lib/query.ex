@@ -67,6 +67,9 @@ defmodule Gabbler.Post.Query do
   def create_story_image(img), do: QueryPost.create_story_image(img)
 
   @impl true
+  def update_story_image_order(public_id, i), do: QueryPost.update_story_image_order(public_id, i)
+
+  @impl true
   def create(changeset, changeset_meta), do: QueryPost.create(changeset, changeset_meta)
 
   @impl true

@@ -59,7 +59,7 @@ defmodule Gabbler.Story.Server do
 
           %{state | post_meta: meta}
         end
-        
+
         {:reply, uploaded_img, %{state | imgs: [uploaded_img|imgs]}}        
       {:error, file_name} ->
         _ = GabSub.broadcast("story:#{hash}", %{
@@ -69,6 +69,20 @@ defmodule Gabbler.Story.Server do
 
         {:reply, {:error, file_name}, state}
     end
+  end
+
+  @impl true
+  def handle_call({:swap_up, public_id}, _f, %{imgs: imgs} = state) do
+    state = %{state | imgs: swap_up(public_id, imgs, [])}
+
+    {:reply, state, state}
+  end
+
+  @impl true
+  def handle_call({:swap_down, public_id}, _f, %{imgs: imgs} = state) do
+    state = %{state | imgs: swap_down(public_id, imgs, [])}
+
+    {:reply, state, state}
   end
 
   @impl true
@@ -104,4 +118,15 @@ defmodule Gabbler.Story.Server do
 
   # PRIVATE FUNCTIONS
   ###################
+  defp swap_up(_, [], acc), do: Enum.reverse(acc)
+
+  defp swap_up(id, [i1, %{id: id} = i2|t], acc), do: swap_up(id, t, [i1, i2|acc])
+
+  defp swap_up(id, [img|t], acc), do: swap_up(id, t, [img|acc])
+
+  defp swap_down(_, [], acc), do: Enum.reverse(acc)
+
+  defp swap_down(id, [%{id: id} = i1, i2|t], acc), do: swap_down(id, t, [i1, i2|acc])
+
+  defp swap_down(id, [img|t], acc), do: swap_down(id, t, [img|acc])
 end

@@ -85,6 +85,31 @@ defmodule Gabbler.Story do
   end
 
   @doc """
+  Swap the order of images displayed in the story
+  """
+  def swap_up(story, public_id) do
+    call(story, :swap_up, public_id)
+  end
+
+  def swap_down(story, public_id) do
+    call(story, :swap_down, public_id)
+  end
+
+  @doc """
+  Update story order
+  """
+  def update_story_order(%{imgs: imgs} = _s) do
+    update_story_order(imgs, 1)
+  end
+
+  def update_story_order([], _), do: :ok
+  def update_story_order([%{id: public_id}|t], i) do
+    _ = Gabbler.Post.update_story_image_order(public_id, i)
+
+    update_story_order(t, i + 1)
+  end
+
+  @doc """
   Note that a user can have only one story active at once
   """
   def server_name(%StoryState{hash: hash}), do: "STORY_#{hash}"

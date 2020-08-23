@@ -183,13 +183,13 @@ nav .menu .menu-item {
   background-color: #E29739;
 }
 .op-actions .selected {
-  background-color: #317ab7;
+  background-color: #E29739;
 }
 .op-actions .button-action {
   margin-left: 3px;
 }
 .negation {
-  background-color: #9A3600;
+  background-color: #7cacf1;
   border-color: #4b1a00;
 }
 
@@ -560,7 +560,7 @@ nav .menu .menu-item {
   flex-wrap: wrap;
 }
 .story-uploaded .thumb {
-  margin: 10px;
+  margin: 10px 10px 27px 10px;
   cursor: pointer;
   position: relative;
 }
@@ -577,6 +577,25 @@ nav .menu .menu-item {
   color: #9a1c1c;
   padding-top: 1px;
   cursor: pointer;
+}
+.story-uploaded .img-order-up,
+.story-uploaded .img-order-down {
+  position: absolute;
+  bottom: -19px;
+  background-color: #b6b0b0;
+  width: 38px;
+  text-align: center;
+  font-size: 17px;
+}
+.story-uploaded .img-order-up {
+  left: 2px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.story-uploaded .img-order-down {
+  right: 2px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 .story_create_container .story-size {
   margin-top: 20px;

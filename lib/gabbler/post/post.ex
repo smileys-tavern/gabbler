@@ -41,6 +41,8 @@ defmodule Gabbler.Post do
 
   def delete_story_image(public_id), do: QueryPost.delete_story_image(public_id)
 
+  def update_story_image_order(public_id, i), do: QueryPost.update_story_image_order(public_id, i)
+
   @doc """
   Retrieve a Posts meta, first trying cache
   """

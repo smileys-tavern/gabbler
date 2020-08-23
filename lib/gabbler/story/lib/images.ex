@@ -23,7 +23,7 @@ defmodule Gabbler.Story.Images do
 
   def upload(_, %Plug.Upload{filename: name}), do: {:error, name}
 
-  def upload(%{hash: story_hash} = story, name, path) do
+  def upload(%{hash: story_hash}, name, path) do
     case Cloudex.upload(path, %{}) do
       {:ok, %{public_id: public_id, bytes: bytes}} ->
         thumb = Cloudex.Url.for(public_id, %{width: @thumb_dimension, height: @thumb_dimension, format: "jpg"})

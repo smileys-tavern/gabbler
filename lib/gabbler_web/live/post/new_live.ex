@@ -107,6 +107,18 @@ defmodule GabblerWeb.Post.NewLive do
     |> no_reply()
   end
 
+  def handle_event("move_img_up", %{"id" => public_id}, %{assigns: assigns} = socket) do
+    Gabbler.Story.swap_up(assigns.story, public_id)
+    |> assign_to(:story, socket)
+    |> no_reply()
+  end
+
+  def handle_event("move_img_down", %{"id" => public_id}, %{assigns: assigns} = socket) do
+    Gabbler.Story.swap_down(assigns.story, public_id)
+    |> assign_to(:story, socket)
+    |> no_reply()
+  end
+
   def handle_event("submit", _, %{assigns: %{mode: :create, user: user, room: room} = assigns} = socket) do
     if GabblerRoom.in_timeout?(room, user) do
       socket
@@ -116,6 +128,7 @@ defmodule GabblerWeb.Post.NewLive do
       socket
       |> assign_new_post(PostCreation.create(user, room, assigns.changeset, assigns.changeset_meta))
       |> broadcast_post_create()
+      |> update_story_order()
       |> redirect_if()
       |> no_reply()
     end
@@ -199,6 +212,11 @@ defmodule GabblerWeb.Post.NewLive do
   end
 
   defp init(socket, _, _), do: socket
+
+  defp update_story_order(%{assigns: %{story: story}} = socket) do
+    _ = Gabbler.Story.update_story_order(story)
+    socket
+  end
 
   defp update_story_size(%{assigns: %{story: story}} = socket) do
     socket

@@ -106,16 +106,22 @@
       </iframe>
 
       <div class="story-uploaded">
-        <%= for %{thumb: thumb, id: id} <- Enum.reverse(@story.imgs) do %>
+        <%= for %{thumb: thumb, id: id} <- @story.imgs do %>
           <div class="thumb" phx-click="update_thumb" phx-value-id="<%= id %>">
             <div class="delete-img" phx-click="delete_img" phx-value-id="<%= id %>">
               X
+            </div>
+            <div class="img-order-up" phx-click="move_img_up" phx-value-id="<%= id %>">
+              <
+            </div>
+            <div class="img-order-down" phx-click="move_img_down" phx-value-id="<%= id %>">
+              >
             </div>
             <img src="<%= thumb %>" />
           </div>
         <% end %>
       </div>
-      <div class="story-size"><%= @story_size / 1000000 %>MB/20MB</div>
+      <div class="story-size"><%= Float.round(@story_size / 1000000, 1) %>/20MB</div>
     </div>
   <% end %>
 </div>
