@@ -60,7 +60,7 @@ nav li {
 .mobile_sidebar_options a,
 nav a {
   color: #317ab7;
-  font-size: 12px;
+  font-size: 14px;
   background-color: #ffffff;
   padding: 0 5px;
   text-align: center;
@@ -71,7 +71,7 @@ nav a {
   margin: 0px 4px 5px 0;
   height: 52px;
   min-width: 69px;
-  line-height: 52px;
+  line-height: 55px;
 }
 .mobile_sidebar_options a {
   margin: 0;
@@ -124,9 +124,9 @@ nav .menu .menu-item {
   margin: 0 5px;
   border-radius: 0;
   border-bottom: none;
-  border-top: 1px solid #464646;
-  border-left: 1px solid #464646;
-  border-right: 1px solid #464646;
+  border-top: 2px solid #464646;
+  border-left: 2px solid #464646;
+  border-right: 2px solid #464646;
 }
 .menu .options a:first-child {
   border-top-left-radius: 5px;
@@ -691,7 +691,7 @@ nav .menu .menu-item {
 }
 .room-fact {
   padding: 5px;
-  background-color: #ffffff;
+  background-color: #ffdd76;
   margin: 11px 0;
   border-radius: 5px;
   border: 2px solid #464646;
