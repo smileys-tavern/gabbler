@@ -137,7 +137,7 @@ defmodule GabblerWeb.Post.NewLive do
 
   # PRIV
   #############################
-  defp init(%{assigns: %{story: story, room: %{id: room_id}}} = socket, _, _) do
+  defp init(%{assigns: %{story: story}} = socket, _, _) do
     # TODO Address the large list of defaults for the preview (repeated and ugly)
 
     assign(socket,

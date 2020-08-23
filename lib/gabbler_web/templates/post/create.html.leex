@@ -100,7 +100,7 @@
     <div class="story_create_container">
       <div class="story_create_close" phx-click="close_story_creator">X</div>
       <iframe 
-        src="<%= GabblerWeb.Endpoint.url() %>/r/<%= @room.name %>/story/<%= @story.hash %>"
+        src="/r/<%= @room.name %>/story/<%= @story.hash %>"
         title="Story Creator"
         style="border: none; width: 560px; height: 170px;">
       </iframe>
