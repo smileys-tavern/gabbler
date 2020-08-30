@@ -6,7 +6,6 @@ defmodule GabblerWeb.Live.Room do
   """
   defmacro __using__(_) do
     quote do
-      import Gabbler, only: [query: 1]
       import GabblerWeb.Gettext
       import Gabbler.Live.SocketUtil, only: [
         no_reply: 1, assign_to: 3, assign_or: 4, update_changeset: 5]
@@ -203,13 +202,14 @@ defmodule GabblerWeb.Live.Room do
       end
 
       defp init_room(%{assigns: %{room: room}} = socket, :mods) do
-        query(:moderating).list(room, join: :user)
+        GabblerRoom.moderators(room)
         |> Enum.reduce([], fn {_, %{name: name}}, acc -> [name | acc] end)
         |> assign_to(:moderators, socket)
       end
 
       defp init_room(%{assigns: %{room: room, user: user}} = socket, :subscription) do
-        query(:subscription).subscribed?(user, room)
+        room
+        |> GabblerRoom.subscribed?(user)
         |> assign_to(:subscribed, socket)
       end
 
@@ -219,7 +219,7 @@ defmodule GabblerWeb.Live.Room do
       end
 
       defp init_room(%{assigns: %{room: room}} = socket, :room_owner) do
-        query(:user).get(room.user_id)
+        GabblerUser.get(room.user_id)
         |> assign_to(:owner, socket)
       end
 

@@ -17,7 +17,6 @@ defmodule Gabbler.Post do
   @default_thread_depth 3
   @max_chat_msg_length 144
 
-
   @doc """
   Retrieve a Post, first trying cache, then refreshing cache and Post's server
   """
@@ -28,6 +27,8 @@ defmodule Gabbler.Post do
       {:error, _} -> nil
     end
   end
+
+  def get_by_id(id), do: QueryPost.get(id)
 
   @doc """
   Retrieve the story images associated with the post
@@ -70,6 +71,11 @@ defmodule Gabbler.Post do
   end
 
   @doc """
+  Return amount of pages for a posts comments
+  """
+  def page_count(post), do: QueryPost.page_count(post)
+
+  @doc """
   Map a set of posts to their meta data
   """
   def map_metas(posts) do
@@ -108,6 +114,8 @@ defmodule Gabbler.Post do
   """
   def get_chat(post), do: call(post, :get_chat, nil)
 
+  def increment_score(post, amt), do: QueryPost.increment_score(post, amt, nil)
+
   @doc """
   Mark and broadcast that a post/comment has an additional comment under it.
   We use the id only as it is often available as a parent
@@ -117,10 +125,37 @@ defmodule Gabbler.Post do
   end
 
   @doc """
+  Look for a list of posts based on the standard post query interface options
+  """
+  def list(opts), do: QueryPost.list(opts)
+
+  @doc """
+  Map a list of rooms onto a list of posts
+  """
+  def map_rooms(posts), do: QueryPost.map_rooms(posts)
+
+  @doc """
+  Map a list of meta onto a list of posts
+  """
+  def map_meta(posts), do: QueryPost.map_meta(posts)
+
+  def map_users(posts), do: QueryPost.map_users(posts)
+
+  @doc """
   Retrieve the comment count from memory for a post
   """
   def comment_count(post), do: QueryPost.comment_count(post)
 
+  @doc """
+  Update functions for posts
+  """
+  def update(changeset), do: QueryPost.update(changeset)
+
+  def update_meta(changeset), do: QueryPost.update_meta(changeset)
+
+  @doc """
+  Standardized way to find a posts server
+  """
   def server_name(hash) when is_binary(hash), do: "POST_#{hash}"
 
   # PRIVATE FUNCTIONS

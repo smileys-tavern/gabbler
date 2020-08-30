@@ -14,6 +14,7 @@ defmodule GabblerWeb.Post.IndexLive do
   alias Gabbler.Subscription, as: GabSub
   alias Gabbler.Post, as: GabblerPost
   alias Gabbler.Room, as: GabblerRoom
+  alias Gabbler.User, as: GabblerUser
   alias GabblerWeb.Presence
   alias GabblerData.{Post, PostMeta, Comment, Room}
   alias Gabbler.Accounts.User
@@ -112,7 +113,7 @@ defmodule GabblerWeb.Post.IndexLive do
       |> put_flash(:info, gettext("you are in a timeout"))
       |> no_reply()
     else
-      open_reply_to(socket, query(:post).get_by_hash(parent_hash))
+      open_reply_to(socket, GabblerPost.get_post(parent_hash))
       |> no_reply()
     end
   end
@@ -189,31 +190,22 @@ defmodule GabblerWeb.Post.IndexLive do
     |> init(Map.drop(params, ["focushash"]), session)
   end
 
-  defp init(%{assigns: %{post: post, mode: :chat, room: room, user: user, op: op}} = socket, _, _) do
-    GabSub.subscribe("post_chat:#{op.hash}")
-
-    assign(socket,
-      comments: [],
-      chat: GabblerPost.get_chat(post),
-      chat_msg: "",
-      post_user: Gabbler.User.get(post.user_id),
-      pages: query(:post).page_count(post),
-      changeset_reply: default_reply_changeset(user, room, post),
-      reply: default_reply(user, room, post)
-    )
-  end
-
   defp init(%{assigns: %{post: post, mode: mode, room: room, user: user, op: op}} = socket, _, _) do
     if mode == :live do
       GabSub.subscribe("post_live:#{op.hash}")
     end
 
-    assign(socket,
-      comments: GabblerPost.thread(post, mode, 1, 1),
-      chat: nil,
+    chat = case mode do
+      :chat -> GabblerPost.get_chat(post)
+      _ -> nil
+    end
+
+    socket
+    |> assign(comments: GabblerPost.thread(post, mode, 1, 1),
+      chat: chat,
       chat_msg: "",
-      post_user: query(:user).get(post.user_id),
-      pages: query(:post).page_count(post),
+      post_user: GabblerUser.get(post.user_id),
+      pages: GabblerPost.page_count(post),
       changeset_reply: default_reply_changeset(user, room, post),
       reply: default_reply(user, room, post)
     )
@@ -274,17 +266,18 @@ defmodule GabblerWeb.Post.IndexLive do
     |> assign(reply_comment_display: "block")
   end
 
-  defp change_page(%{assigns: %{post: post, mode: mode}} = socket, page_new) do
-    comments = query(:post).thread(post, mode, page_new)
-
-    assign(socket, page: page_new, comments: comments)
+  defp change_page(%{assigns: %{post: post, mode: mode}} = socket, page) do
+    post
+    |> GabblerPost.thread(mode, page, 1)
+    |> assign_to(:comments, socket)
+    |> assign(page: page)
   end
 
   defp assign_comment(%{assigns: %{op: op, comments: comments}} = socket, comment) do
     add_comment(op, Map.put(comment, :status, "arrived"), comments)
     |> Enum.uniq_by(fn c -> c.id end)
     |> assign_to(:comments, socket)
-    |> assign(pages: query(:post).page_count(op))
+    |> assign(pages: GabblerPost.page_count(op))
   end
 
   defp add_comment(%{id: op_id}, %{parent_id: parent_id} = new_comment, comments) do

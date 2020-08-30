@@ -135,8 +135,8 @@ defmodule GabblerWeb.Post.NewLive do
   end
 
   def handle_event("submit", _, %{assigns: %{mode: :update} = assigns} = socket) do
-    assign_updated_post(socket, query(:post).update(assigns.changeset))
-    |> assign_updated_meta(query(:post).update_meta(assigns.changeset_meta))
+    assign_updated_post(socket, Gabbler.Post.update(assigns.changeset))
+    |> assign_updated_meta(Gabbler.Post.update_meta(assigns.changeset_meta))
     |> no_reply()
   end
 

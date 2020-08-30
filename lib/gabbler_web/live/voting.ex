@@ -8,7 +8,6 @@ defmodule GabblerWeb.Live.Voting do
   """
   defmacro __using__(_) do
     quote do
-      import Gabbler, only: [query: 1]
       import GabblerWeb.Gettext
       import Gabbler.Live.SocketUtil, only: [no_reply: 1]
       
@@ -62,7 +61,7 @@ defmodule GabblerWeb.Live.Voting do
 
       defp vote(%{hash: hash} = post, user, amt) do
         if Gabbler.User.can_vote?(user, hash) do
-          case query(:post).increment_score(post, amt, nil) do
+          case Gabbler.Post.increment_score(post, amt, nil) do
             {1, nil} ->
               Gabbler.User.activity_voted(user, hash)
 

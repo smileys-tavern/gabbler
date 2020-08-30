@@ -14,12 +14,12 @@ defmodule GabblerWeb.House.AllLive do
   # PRIVATE FUNCTIONS
   ###################
   defp init(socket, _, _) do
-    posts = query(:post).list(order_by: :score_private, limit: 20, only: :op)
+    posts = Gabbler.Post.list(order_by: :score_private, limit: 20, only: :op)
 
     assign(socket, 
       posts: posts,
-      post_metas: query(:post).map_meta(posts),
-      rooms: query(:post).map_rooms(posts),
-      users: query(:post).map_users(posts))
+      post_metas: Gabbler.Post.map_meta(posts),
+      rooms: Gabbler.Post.map_rooms(posts),
+      users: Gabbler.Post.map_users(posts))
   end
 end

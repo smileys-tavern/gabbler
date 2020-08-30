@@ -37,19 +37,19 @@ defmodule GabblerWeb.UserController do
   end
 
   defp get_user_posts(%{assigns: %{subject_user: %{id: user_id}}}) do
-    query(:post).list(by_user: user_id, order_by: :inserted_at, only: :op)
+    Gabbler.Post.list(by_user: user_id, order_by: :inserted_at, only: :op)
   end
 
   defp get_user_posts(_), do: []
 
   defp get_post_rooms(%{assigns: %{posts: posts}}) when is_list(posts) do
-    query(:post).map_rooms(posts)
+    Gabbler.Post.map_rooms(posts)
   end
   
   defp get_post_rooms(_), do: %{}
 
   defp get_post_metas(%{assigns: %{posts: posts}}) when is_list(posts) do
-    query(:post).map_meta(posts)
+    Gabbler.Post.map_meta(posts)
   end
   
   defp get_post_metas(_), do: %{}

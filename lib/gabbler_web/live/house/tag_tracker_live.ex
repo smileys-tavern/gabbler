@@ -5,7 +5,6 @@ defmodule GabblerWeb.House.TagTrackerLive do
   use GabblerWeb, :live_view
   use GabblerWeb.Live.Auth, auth_required: ["no-op"]
   use GabblerWeb.Live.Voting
-  import Gabbler, only: [query: 1]
   import Gabbler.Live.SocketUtil, only: [no_reply: 1, assign_to: 3]
   import GabblerWeb.Gettext
 
@@ -17,9 +16,9 @@ defmodule GabblerWeb.House.TagTrackerLive do
      socket
      |> assign(
        posts: Enum.uniq(posts ++ curr_posts),
-       post_metas: Map.merge(query(:post).map_meta(posts), assigns.post_metas),
-       users: Map.merge(query(:post).map_users(posts), assigns.users),
-       rooms: Map.merge(query(:post).map_rooms(posts), assigns.rooms)
+       post_metas: Map.merge(Gabbler.Post.map_meta(posts), assigns.post_metas),
+       users: Map.merge(Gabbler.Post.map_users(posts), assigns.users),
+       rooms: Map.merge(Gabbler.Post.map_rooms(posts), assigns.rooms)
      )
      |> no_reply()
   end

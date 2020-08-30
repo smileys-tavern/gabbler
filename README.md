@@ -6,7 +6,7 @@ Gabbler is a customizable Phoenix 1.5+/LiveView project for creating a Reddit-Li
 
 # Features
 
-- Create Rooms:
+- Create Rooms (/r/..):
   - Public: Anyone can post / comment
   - Protected: Only allowed users can post original content, all can comment
   - Private: Only allowed users can view the room and post/comment
@@ -16,33 +16,36 @@ Gabbler is a customizable Phoenix 1.5+/LiveView project for creating a Reddit-Li
   - New: static view of new content
   - Chat: chat room for each post
 - Post Content:
+  - Collaborative Editing sesssions
+  - Stories: augment Post with a comic style set of images
+  - Fullscreen view mode
   - Markdown compatible for formatting
   - See post preview in real time as it's created
-  - (Coming soon) Collaborative post editing
-  - (Coming soon) upload images
   - Embed video from several sources
-  - Tag your content with search helpers
+  - Tag your content with search & trend helpers
 - Moderation:
   - Give temporary user timeouts, ban for life or delete from near anywhere you see a post
   - Add/Remove moderators
   - View all moderated room content in real time for efficient banning
+  - Monitor up to 7 rooms at once
+  - Ban for life or give post/comment timeouts
 - Tag Tracking:
   - Tag tracker room allows to see posts by any tag arrive in real time
   - Tracks top 500 or so trending tags
 - Authentication
   - Phoenix standard auth used for creating account
-  - Subscriptions: users can subscribe to rooms to easily come back to content
+  - Subscriptions: users can subscribe to rooms to easily come back to new content
   - Be notified on replies / mod requests etc
 
 # For Developers
 
-Gabbler tries to adhere to OTP principles and create easy to maintain a [LiveViews](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html) centric client. The basic architecture pattern:
+Gabbler tries to adhere to OTP principles and create easy to maintain a [LiveView](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html) centric client. The basic architecture pattern:
 
 ![Gabbler Architecture](https://res.cloudinary.com/smileys/image/upload/v1594734890/gabbler_architecture_xboelg.jpg "Gabbler Architecture")
 
 ## Up and Running
 
-The default dev setting is to have the Repo project alongside Gabbler Web. Everything else is pretty standard for a Phoenix project. To run a site configuration file is required. To deploy distillery and edeliver file are necessary (not included in repository).
+The default dev setting is to have the Repo project alongside Gabbler Web. Everything else is pretty standard for a Phoenix project. To run a site configuration file is required (example confs not added to project yet, request if interested). To deploy distillery and edeliver file are necessary (not included in repository).
 
 ```
 > cd project_dir
@@ -77,10 +80,21 @@ All site text is setup for internationalization via pot files
 
 4. mix edeliver deploy release prod --start-deploy
 
+
 ## Plans
 
-Features being deliberated:
+### Upcoming features:
 
-- Collaborative editing
-- Image Uploads for posts
-- Optional email subscriptions
+- Optional email updates for subscriptions
+
+- Big design update coming
+
+
+### Wishlist:
+
+- Tag tracker improvements (surface trending tags & recover trends after shutdowns)
+
+
+## Development Updates
+
+- More queries being added to cache

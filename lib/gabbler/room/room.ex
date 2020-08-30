@@ -8,6 +8,7 @@ defmodule Gabbler.Room do
   """
   import GabblerWeb.Gettext
   import Gabbler.Guards, only: [restricted?: 1]
+  import Gabbler, only: [query: 1]
 
   alias Gabbler.Room.Application, as: RoomApp
   alias Gabbler.Room.Query, as: QueryRoom
@@ -112,6 +113,16 @@ defmodule Gabbler.Room do
     |> call_if_miss(room, :get_user_timeouts, nil)
     |> return_timeout_result(room)
   end
+
+  @doc """
+  Retrieve info about the moderators for a room
+  """
+  def moderators(room), do: query(:moderating).list(room, join: :user)
+
+  @doc """
+  True/False whether a user is subbed
+  """
+  def subscribed?(room, user), do: query(:subscription).subscribed?(user, room)
 
   @doc """
   Retrieve all current users in timeouts for this room

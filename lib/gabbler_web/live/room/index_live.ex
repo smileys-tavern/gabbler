@@ -44,7 +44,7 @@ defmodule GabblerWeb.Room.IndexLive do
   defp init(%{assigns: %{room: room, posts: posts}} = socket, _, _) do
     assign(socket,
       post_metas: Gabbler.Post.map_metas(posts),
-      users: query(:post).map_users(posts),
+      users: Gabbler.Post.map_users(posts),
       timeouts: GabblerRoom.get_timeouts(room)
     )
   end
@@ -52,13 +52,13 @@ defmodule GabblerWeb.Room.IndexLive do
   defp init(%{assigns: %{room: nil}} = socket, _, _), do: socket
 
   defp init(%{assigns: %{mode: :new, room: %{id: id}}} = socket, params, session) do
-    posts = query(:post).list(by_room: id, order_by: :inserted_at, limit: 20)
+    posts = Gabbler.Post.list(by_room: id, order_by: :inserted_at, limit: 20)
 
     init(assign(socket, :posts, posts), params, session)
   end
 
   defp init(%{assigns: %{mode: :live, room: %{id: id, name: name}}} = socket, params, session) do
-    posts = query(:post).list(by_room: id, order_by: :inserted_at, limit: 20)
+    posts = Gabbler.Post.list(by_room: id, order_by: :inserted_at, limit: 20)
 
     GabSub.subscribe("room_live:#{name}")
 
@@ -66,7 +66,7 @@ defmodule GabblerWeb.Room.IndexLive do
   end
 
   defp init(%{assigns: %{mode: _, room: %{id: id}}} = socket, params, session) do
-    posts = query(:post).list(by_room: id, order_by: :score_private, limit: 20)
+    posts = Gabbler.Post.list(by_room: id, order_by: :score_private, limit: 20)
 
     assign(socket, :posts, posts)
     |> init(params, session)

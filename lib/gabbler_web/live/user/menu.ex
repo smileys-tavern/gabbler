@@ -141,7 +141,7 @@ defmodule GabblerWeb.Live.User.Menu do
 
     socket = assign(socket,
       posts: posts,
-      rooms: query(:post).map_rooms(posts),
+      rooms: Gabbler.Post.map_rooms(posts),
       activity: [])
 
     activity
@@ -176,7 +176,7 @@ defmodule GabblerWeb.Live.User.Menu do
   defp assign_activity(%{assigns: %{posts: posts, rooms: rooms, activity: activity}} = socket, post_id) do
     case Map.get(rooms, post_id) do
       nil ->
-        post = query(:post).get(post_id)
+        post = Gabbler.Post.get_by_id(post_id)
 
         socket = Enum.take([{post_id, "reply"} | activity], @max_activity_shown)
         |> assign_to(:activity, socket)
@@ -193,7 +193,7 @@ defmodule GabblerWeb.Live.User.Menu do
   end
 
   defp hash_to_post(user_posts) do
-    Enum.reduce(user_posts, [], fn {hash, _}, acc -> [query(:post).get_by_hash(hash)|acc] end)
+    Enum.reduce(user_posts, [], fn {hash, _}, acc -> [Gabbler.Post.get_post(hash)|acc] end)
     |> Enum.reverse()
   end
 end
