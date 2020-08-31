@@ -1,3 +1,9 @@
-<%= render(GabblerWeb.RoomView, "index.html", assigns) %>
+<page-content>
+  <display-content>
+    <%= render(GabblerWeb.RoomView, "index.html", assigns) %>
+  </display-content>
 
-<%= render(GabblerWeb.RoomView, "create.html", assigns) %>
+  <action-pane>
+    <%= render(GabblerWeb.RoomView, "create.html", assigns) %>
+  </action-pane>
+</page-content>

@@ -94,6 +94,8 @@ All site text is setup for internationalization via pot files
 
 - Tag tracker improvements (surface trending tags & recover trends after shutdowns)
 
+- Switch display modes (Chat, Live, Hot, New) to use live navigation
+
 
 ## Development Updates
 

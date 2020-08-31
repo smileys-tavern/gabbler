@@ -10,36 +10,36 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <%= csrf_meta_tag() %>
-
     <title>
       <%= Application.get_env(:gabbler, :page_title, "Gabbler") %>: 
-      <%= Application.get_env(:gabbler, :page_desc, "Build Your Community") %>
+      <%= title(assigns) %>
     </title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <div class="container">
-      <header class="header">
-        <h1><a href="/"><img class="logo" src="/images/logo/<%= logo() %>.svg" /></a></h1>
-
-        <div id="search"></div>
+    <page-container>
+      <header>
+        <a href="/">
+          <img class="logo" src="/images/logo/<%= logo() %>.svg" />
+        </a>
 
         <%= live_render(@conn, GabblerWeb.Live.User.Menu, session: %{
           "user" => assigns[:user], 
           "temp_token" => assigns[:temp_token]}) %>
       </header>
-      <div class="sub-header">
+
+      <sub-header>
         <%= for nav_item <- Application.get_env(:gabbler, :sub_nav, []) do %>
           <a href=<%= nav_item %>><%= nav_item %></a>&nbsp;&nbsp;
         <% end %>
-      </div>
+      </sub-header>
 
-      <main role="main" class="main-content">
+      <main role="main">
         <%= @inner_content %>
       </main>
+    </page-container>
 
-    </div> <!-- /container -->
     <%= live_render(@conn, GabblerWeb.Live.User.Login, 
       session: %{
         "user" => assigns[:user], 
