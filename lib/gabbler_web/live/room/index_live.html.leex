@@ -3,7 +3,7 @@
 <% else %>
   <%= if @allowed do %>
     <page-content>
-      <display-content>
+      <display-content <%= if @sidebar_on do %>class="desktop"<% end %>>
         <%= render(GabblerWeb.RoomView, "index.html", assigns) %>
       </display-content>
 

@@ -104,6 +104,7 @@ action-pane {
   overflow: hidden;
   border-radius: 4px;
   border: 2px solid #464646;
+  cursor: pointer;
 }
 .preview-square img {
   vertical-align: baseline;
@@ -113,8 +114,8 @@ action-pane {
 .title {
 }
 .title .text {
-  min-height: 51px;
-  padding: 3px;
+  min-height: 60px;  
+  line-height: 22px;
 }
 .title .actions {
   /*height: 20px;*/
@@ -146,4 +147,51 @@ action-pane {
 /* UTIL */
 .not-found-404 {
   margin: 20px;
+}
+
+/* Mobile Specific Areas */
+.mobile {
+  display: none;
+}
+.mobile-sidebar-options {
+  width: 100%;
+}
+.mobile-sidebar-options a,
+nav a {
+  color: #317ab7;
+  font-size: 14px;
+  background-color: #ffffff;
+  padding: 0 5px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #b6b0b0;
+  text-decoration: none;
+  display: block;
+  margin: 0px 4px 5px 0;
+  height: 52px;
+  min-width: 69px;
+  line-height: 55px;
+}
+.mobile-sidebar-options a {
+  min-width: 44px;
+  padding: 0px;
+}
+
+@media screen and (max-width: 600px) {
+  .mobile {
+    display: block;
+  }
+  .desktop {
+    display: none;
+  }
+  action-pane {
+  }
+  sub-header {
+    display: none;
+  }
+
+  nav ul {
+    top: 0;
+    right: -13px;
+  }
 }

@@ -43,35 +43,6 @@ nav li {
   margin: 0 3px;
   list-style: none;
 }
-.mobile {
-  display: none;
-}
-.mobile_sidebar_options {
-  position: absolute;
-  top: -14px;
-  left: -3px;
-  width: 101%;
-}
-.mobile_sidebar_options a,
-nav a {
-  color: #317ab7;
-  font-size: 14px;
-  background-color: #ffffff;
-  padding: 0 5px;
-  text-align: center;
-  border-radius: 5px;
-  border: 1px solid #b6b0b0;
-  text-decoration: none;
-  display: block;
-  margin: 0px 4px 5px 0;
-  height: 52px;
-  min-width: 69px;
-  line-height: 55px;
-}
-.mobile_sidebar_options a {
-  margin: 0;
-  width: 88%;
-}
 nav ul{
   position: absolute;
   top: 0;
@@ -643,11 +614,10 @@ nav .menu .menu-item {
  */
 .room-fact {
   padding: 5px;
-  background-color: #ffdd76;
+  background-color: #ffffff;
   margin: 11px 0;
-  border-radius: 5px;
-  border: 2px solid #464646;
-  color: #464646;
+  border-bottom: 2px solid #d4d4d4;
+  color: #e2840d;
   font-weight: bold;
   text-align: center;
 }
@@ -1477,11 +1447,6 @@ form.link, form.button {
   }
   nav a {
     margin: 5px 0 5px 0;
-  }
-
-  nav ul {
-    top: -6px;
-    right: 44px;
   }
 
   .posts {
