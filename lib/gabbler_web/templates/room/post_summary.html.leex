@@ -11,46 +11,57 @@
         <%= @post.title %>    
       </a>
       <%= if @user do %>
-        <br />by <a href="/u/<%= @user.name %>"><%= @user.name %></a>
+        <br />By <a href="/u/<%= @user.name %>"><%= @user.name %></a>
       <% end %>
-    </div>
-    
-    <div class="actions">
-      <%= if @post.parent_type == "room" do %>
-        <%= if @post_meta.comments && @post_meta.comments > 0 do %>
-          <span class="post-activity-comment activity-count"><%= @post_meta.comments %></span>
-        <% end %>
-        <%= if @room.name do %>
-          <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= String.replace(@post.title, "#", "") %>">Comment</a>
-        <% else %>
-          Comment
-        <% end %>
+      <%= if @post_meta.link do %>
+        <div class="external">
+          <a href="<%= @post_meta.link %>"><%= @post_meta.link %></a>
+        </div>
       <% end %>
-      
-      <%= if @room.name && @post.parent_type != "room" do %>
-        | <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>">Focus</a> 
-      <% end %>
-      
-      <%= if @room.name do %>
-        | <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
-      <% end %>
-      
-      <%= if @post_meta.link do %>| <a href="<%= @post_meta.link %>">Direct Link</a><% end %>
-      <%= if @post_meta.tags do %>| <strong><%= @post_meta.tags %></strong><% end %>
-
       <%= if assigns[:mod] && @mod do %>
-        | <a href="#" class="mod-action" 
-            phx-click="delete_post" 
-            phx-value-hash="<%= @post.hash %>">Delete</a>
-        | <a href="#" class="mod-action" 
-            phx-click="user_timeout" 
-            phx-value-hash="<%= @post.hash %>" 
-            phx-value-name="<%= @user.name %>">Timeout</a>
-        | <a href="#" class="mod-action" 
-            phx-click="user_ban" 
-            phx-value-hash="<%= @post.hash %>" 
-            phx-value-name="<%= @user.name %>">Ban for Life</a>
+        <div class="mod-actions">
+          <a href="#" class="mod-action" 
+              phx-click="delete_post" 
+              phx-value-hash="<%= @post.hash %>">Delete</a> 
+          | <a href="#" class="mod-action" 
+              phx-click="user_timeout" 
+              phx-value-hash="<%= @post.hash %>" 
+              phx-value-name="<%= @user.name %>">Timeout</a> 
+          | <a href="#" class="mod-action" 
+              phx-click="user_ban" 
+              phx-value-hash="<%= @post.hash %>" 
+              phx-value-name="<%= @user.name %>">Ban for Life</a>
+        </div>
       <% end %>
     </div>
+  </div>
+
+  <div class="actions">
+    <%= if @post.parent_type == "room" do %>
+      <%= if @room.name do %>
+        <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/<%= String.replace(@post.title, "#", "") %>" class="meta-available">
+          <%= if @post_meta.comments && @post_meta.comments > 0 do %>
+            <div class="post-activity-comment activity-count">
+              <%= @post_meta.comments %>    
+            </div>
+          <% end %>
+          <div>Comment</div>
+        </a>
+      <% else %>
+        Comment
+      <% end %>
+    <% end %>
+    
+    <%= if @room.name && @post.parent_type != "room" do %>
+      <a href="/r/<%= @room.name %>/comments/<%= @op.hash %>/focus/<%= @post.hash %>">
+        Focus
+      </a> 
+    <% end %>
+    
+    <%= if @room.name do %>
+      <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
+    <% end %>
+
+    <%= if @post_meta.tags do %><strong><%= @post_meta.tags %></strong><% end %>
   </div>
 </div>

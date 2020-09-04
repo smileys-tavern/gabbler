@@ -61,7 +61,7 @@ defmodule GabblerWeb.Live.Voting do
 
       defp vote(%{hash: hash} = post, user, amt) do
         if Gabbler.User.can_vote?(user, hash) do
-          case Gabbler.Post.increment_score(post, amt, nil) do
+          case Gabbler.Post.increment_score(post, amt) do
             {1, nil} ->
               Gabbler.User.activity_voted(user, hash)
 

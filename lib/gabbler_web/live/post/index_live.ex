@@ -63,6 +63,24 @@ defmodule GabblerWeb.Post.IndexLive do
 
   def handle_event("reply", _, socket), do: no_reply(socket)
 
+  def handle_event("story_page_up", _, %{assigns: %{story_page: story_page}} = socket) do
+    socket
+    |> assign(story_page: story_page + 1)
+    |> no_reply()
+  end
+
+  def handle_event("story_page_down", _, %{assigns: %{story_page: story_page}} = socket) do
+    socket
+    |> assign(story_page: story_page - 1)
+    |> no_reply()
+  end
+
+  def handle_event("story_view_change", %{"view" => view}, socket) when view in ["single", "double"] do
+    socket
+    |> assign(story_view: view)
+    |> no_reply()
+  end
+
   def handle_event("page_up", _, %{assigns: %{page: current_page}} = socket) do
     change_page(socket, current_page + 1)
     |> no_reply()
@@ -167,12 +185,14 @@ defmodule GabblerWeb.Post.IndexLive do
   defp init(socket, %{"hash" => hash} = params, session) do
     post = Gabbler.Post.get_post(hash)
     meta = GabblerPost.get_meta(post)
+    story = GabblerPost.get_story_images(meta)
 
     socket
     |> assign(:post, post)
     |> assign(:post_meta, meta)
     |> assign(:focus_hash, nil)
-    |> assign(:story, %{imgs: GabblerPost.get_story_images(meta)})
+    |> assign(:story, %{imgs: story})
+    |> assign(:story_pages, Enum.count(story))
     |> assign(:op, post)
     |> init(Map.drop(params, ["hash"]), session)
   end
@@ -180,11 +200,13 @@ defmodule GabblerWeb.Post.IndexLive do
   defp init(socket, %{"focushash" => focus_hash} = params, session) do
     post = GabblerPost.get_post(focus_hash)
     meta = GabblerPost.get_meta(post)
+    story = GabblerPost.get_story_images(meta)
 
     socket
     |> assign(:post, post)
     |> assign(:post_meta, meta)
-    |> assign(:story, %{imgs: GabblerPost.get_story_images(meta)})
+    |> assign(:story, %{imgs: story})
+    |> assign(:story_pages, Enum.count(story))
     |> assign(:focus_hash, focus_hash)
     |> assign(:op, GabblerPost.get_parent(post))
     |> init(Map.drop(params, ["focushash"]), session)
@@ -221,6 +243,9 @@ defmodule GabblerWeb.Post.IndexLive do
     |> assign(:reply_display, "hidden")
     |> assign(:reply_comment_display, "hidden")
     |> assign(:chat, nil)
+    |> assign(:story_page, 0)
+    |> assign(:story_view, "single")
+    |> assign(:story_pages, 0)
     |> assign(:chat_msg, "")
     |> assign(:story, %{imgs: []})
     |> assign(:parent, nil)

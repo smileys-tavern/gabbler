@@ -66,7 +66,7 @@ action-pane {
   border-bottom: 1px solid #464646;
 }
 .room-control {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 }
 
@@ -81,10 +81,11 @@ action-pane {
   margin: 26px 0;
   width: 100%;
   min-height: 60px;
-  overflow: hidden;
+  border-bottom: 1px dashed #dedada;
+  padding-bottom: 6px;
 }
 .vote {
-  margin: 15px 6px 15px 0;
+  margin: 10px 6px 15px 0;
   width: 28px;
 }
 .vote-up,
@@ -111,14 +112,50 @@ action-pane {
   width: 75px;
   height: 75px;
 }
+.preview-square strong {
+  text-decoration: none;
+}
+.preview-square a {
+  text-decoration: none;
+}
 .title {
 }
 .title .text {
   min-height: 60px;  
-  line-height: 22px;
+  line-height: 27px;
 }
-.title .actions {
-  /*height: 20px;*/
+.actions {
+  text-align: right;
+  flex-grow: 1;
+  margin-right: 20px;
+}
+.actions a {
+  display: block;
+  width: 200px;
+  background-color: #464646;
+  padding: 4px;
+  text-align: center;
+  border-radius: 4px;
+  color: #ffF;
+  text-decoration: none;
+  margin-left: auto;
+  margin-bottom: 3px;
+}
+.actions strong {
+  color: #e2842b;
+}
+.actions .meta-available {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.actions .meta-available div {
+  margin: 0 3px;
+}
+.actions .meta-available div:last-child {
+  line-height: 23px;
+  padding-top: 0px;
+  margin-top: 3px;
 }
 
 .original-post {
@@ -134,6 +171,7 @@ action-pane {
   flex-grow: 1;
   font-size: 18px;
   margin: 0 10px;
+  line-height: 27px;
 }
 .original-post .op-story-mode {
   cursor: pointer;
@@ -144,9 +182,40 @@ action-pane {
   margin-left: 10px;
 }
 
+/* POST */
+.comments a {
+  display: unset;
+  background: none;
+  color: #3984e2;
+}
+.comments .mod-action {
+  color: #E29739;
+}
+.comment {
+  display: flex;
+  padding: 10px;
+  margin-bottom: 6px;
+}
+.story-paging {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
+.story-paging button {
+  margin: 0 5px;
+  color: #317ab7;
+  font-size: 17px;
+  font-weight: bold;
+  background: none;
+  border: none;
+}
+
 /* UTIL */
 .not-found-404 {
   margin: 20px;
+}
+.external a {
+  color: #e2842b;
 }
 
 /* Mobile Specific Areas */
@@ -167,10 +236,9 @@ nav a {
   border: 1px solid #b6b0b0;
   text-decoration: none;
   display: block;
-  margin: 0px 4px 5px 0;
-  height: 52px;
-  min-width: 69px;
-  line-height: 55px;
+  margin: 7px 4px 5px 0;
+  min-width: 115px;
+  line-height: 38px;
 }
 .mobile-sidebar-options a {
   min-width: 44px;

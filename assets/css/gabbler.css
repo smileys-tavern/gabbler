@@ -32,6 +32,7 @@ button {
 }
 body a {
   color: #3984e2;
+  text-decoration: none;
 }
 
 nav {
@@ -139,7 +140,7 @@ nav .menu .menu-item {
   border: 2px solid #464646;
   background-color: #b6b0b0;
   text-align: center;
-  padding: 3px;
+  padding: 9px;
   text-decoration: none;
   color: #464646;
   border-radius: 5px;
@@ -613,10 +614,7 @@ nav .menu .menu-item {
  * Room specific
  */
 .room-fact {
-  padding: 5px;
-  background-color: #ffffff;
-  margin: 11px 0;
-  border-bottom: 2px solid #d4d4d4;
+  padding: 14px 0 5px 0;
   color: #e2840d;
   font-weight: bold;
   text-align: center;
@@ -688,7 +686,8 @@ nav .menu .menu-item {
 .vote-count {
   width: 30px;
   text-align: center;
-  padding-top: 1px;
+  padding-top: 4px;
+  padding-bottom: 3px;
 }
 
 /**
@@ -716,6 +715,27 @@ nav .menu .menu-item {
   padding: 0;
   display: block;
 }
+.story-view .view-mode {
+  width: 100%;
+  margin: 18px;
+}
+.story-view .view-mode button {
+  margin: 0 5px;
+  padding: 5px;
+  color: #FFF;
+  font-size: 17px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  text-decoration: underline;
+}
+.story-view-double {
+  display: flex;
+  flex-wrap: wrap;
+}
+.story-view-double img {
+  margin: 0;
+}
 .story-view-close {
   position: fixed;
   top: 30px;
@@ -741,6 +761,7 @@ nav .menu .menu-item {
 }
 .op-body img {
   display: block;
+  margin: 0 auto;
 }
 .op-body p {
   font-size: 21px;
@@ -751,12 +772,10 @@ nav .menu .menu-item {
   clear: both;
 }
 .op-meta p {
-  background-color: #b6b0b0;
   margin-block-start: 0;
-  padding: 2px 46px;
+  padding: 2px 0;
   border-radius: 4px;
   color: #352d1e;
-  float: left;
   margin: 0 5px 15px 0;
   font-size: 16px;
 }
@@ -822,60 +841,44 @@ nav .menu .menu-item {
 .comment-text .text {
   margin-bottom: 14px;
 }
-.comment {
-  clear: both;
-  display: block;
-  max-width: 75%;
-  padding: 10px;
-  margin-bottom: 6px;
-}
 .comment-depth-1 {
 
 }
 .comment-depth-2 {
   margin-left: 50px;
   border: 1px dashed #464646;
-  max-width: calc(75% - 50px);
   border-radius: 4px;
 }
 .comment-depth-3 {
   margin-left: 100px;
-  max-width: calc(75% - 100px);
 }
 .comment-depth-4 {
   margin-left: 150px;
   border: 1px dashed #464646;
-  max-width: calc(75% - 150px);
   border-radius: 4px;
 }
 .comment-depth-5 {
   margin-left: 200px;
-  max-width: calc(75% - 200px);
 }
 .comment-depth-6 {
   margin-left: 250px;
   border: 1px dashed #464646;
-  max-width: calc(75% - 250px);
   border-radius: 4px;
 }
 .comment-depth-7 {
   margin-left: 300px;
-  max-width: calc(75% - 300px);
 }
 .comment-depth-8 {
   margin-left: 350px;
   border: 1px dashed #464646;
-  max-width: calc(75% - 350px);
   border-radius: 4px;
 }
 .comment-depth-9 {
   margin-left: 400px;
-  max-width: calc(75% - 400px);
 }
 .comment-depth-10 {
   margin-left: 450px;
   border: 1px dashed #464646;
-  max-width: calc(75% - 450px);
 }
 
 .comment-reply-form-bottom,
@@ -928,6 +931,10 @@ nav .menu .menu-item {
 /**
  * Sidebar
  */
+.sidebar {
+  background-color: #f3f3f3;
+  border-radius: 5px;
+}
 .sidebar h3 {
   color: #3a5471;
 }
@@ -978,7 +985,7 @@ nav .menu .menu-item {
 .sidebar .site-actions a {
   display: block;
   font-size: 18px;
-  margin-bottom: 10px;
+  margin: 1px 0;
 }
 .sidebar .site-actions a:hover {
   background-color: #E29739;
@@ -986,7 +993,7 @@ nav .menu .menu-item {
 
 .current-room,
 .site-actions {
-  margin: 10px 20px;
+  margin: 0 20px 10px 20px;
 }
 
 .sidebar-links {
@@ -1048,7 +1055,7 @@ nav .menu .menu-item {
  */
 .alert {
   position: fixed;
-  top: 53px;
+  top: 50px;
   left: 0;
   width: 100%;
   background-color: #db873f;
@@ -1253,10 +1260,10 @@ form.link, form.button {
 }
 
 .activity-count {
-  border-radius: 8px;
-  height: 16px;
-  padding-left: 4px;
-  padding-right: 4px;
+  border-radius: 9px;
+  height: 18px;
+  padding-left: 6px;
+  padding-right: 6px;
   color: #fff;
   cursor: crosshair;
 }

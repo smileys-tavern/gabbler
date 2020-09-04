@@ -1,7 +1,11 @@
 <%= if @story_mode do %>
   <div class="story-view-container">
     <div class="story-view-close" phx-click="toggle_story_mode">X</div>
-    <div class="story-view">
+    <div class="story-view story-view-<%= @story_view %>">
+      <div class="view-mode">
+        <button phx-click="story_view_change" phx-value-view="single">Single Page</button>
+        <button phx-click="story_view_change" phx-value-view="double">Double Page</button>
+      </div>
       <%= for %{url: url} <- @story.imgs do %>
         <img src="<%= url %>" />
       <% end %>
@@ -17,7 +21,15 @@
 
     <div class="op-title">
       <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
-      <%= @post.title %> - <strong><a href="/u/<%= @post_user.name %>"><%= @post_user.name %></a></strong> 
+      <%= @post.title %>
+      <br />By <strong>
+        <a href="/u/<%= @post_user.name %>"><%= @post_user.name %></a>
+      </strong>
+      <%= if assigns[:post_meta] && @post_meta.link do %>
+        <div class="external">
+          <a href="<%= @post_meta.link %>"><%= @post_meta.link %></a>
+        </div>
+      <% end %> 
 
       <%= if @parent do %>
         <a href="/r/<%= @room.name %>/comments/<%= @post.hash %>/focus/<%= @parent.hash %>">Parent</a> | 
@@ -45,22 +57,27 @@
         <div><img src="<%= @post_meta.image %>" class="post-image" /></div><br />
       <% end %>
 
-      <div class="op-meta">
-        <%= if assigns[:post_meta] && @post_meta.link do %>
-          <p><a href="<%= @post_meta.link %>"><%= @post_meta.link %></a></p>
-        <% end %>
-
-        <%= if assigns[:post_meta] && @post_meta.tags do %>
-          <p>Tags: <strong><%= @post_meta.tags %></strong></p>
-        <% end %>
-      </div>
-
       <p class="op-post"><%= if @post.body do %>
         <%= raw display_post_body(@post) %>
       <% end %></p>
-      <%= for %{url: url} <- @story.imgs do %>
-        <img src="<%= url %>" />
+      
+      <%= if @story_pages > 0 do %>
+        <img src="<%= Map.get(Enum.at(@story.imgs, @story_page), :url) %>" />
+        <div class="story-paging">
+          <%= if @story_page > 0 do %>
+            <button phx-click="story_page_down">Previous Page</button>
+          <% end %>
+          <%= if @story_page < (@story_pages - 1) do %>
+            <button phx-click="story_page_up">Next Page</button>
+          <% end %>
+        </div>
       <% end %>
+
+      <div class="op-meta">
+        <%= if assigns[:post_meta] && @post_meta.tags do %>
+          <strong><%= @post_meta.tags %></strong>
+        <% end %>
+      </div>
     </div>
   </div>
   
