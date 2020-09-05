@@ -25,9 +25,10 @@ defmodule GabblerWeb.Post.NewLive do
   """
   def handle_info(
     %{event: "uploaded", public_id: _pub_id, thumb: _thumb}, 
-    %{assigns: %{story: %{hash: hash}}} = socket) do
+    %{assigns: %{story: %{hash: hash}, story_pages: story_pages}} = socket) do
     Gabbler.Story.state(hash)
     |> assign_to(:story, socket)
+    |> assign(:story_pages, story_pages + 1)
     |> update_story_size()
     |> sync_from_story()
     |> no_reply()
@@ -43,6 +44,30 @@ defmodule GabblerWeb.Post.NewLive do
     socket
     |> assign(story: story_state)
     |> sync_from_story()
+    |> no_reply()
+  end
+
+  def handle_event("story_page_up", _, %{assigns: %{story_page: story_page}} = socket) do
+    socket
+    |> assign(story_page: story_page + 1)
+    |> no_reply()
+  end
+
+  def handle_event("story_page_down", _, %{assigns: %{story_page: story_page}} = socket) do
+    socket
+    |> assign(story_page: story_page - 1)
+    |> no_reply()
+  end
+
+  def handle_event("story_view_change", %{"view" => view}, socket) when view in ["single", "double"] do
+    socket
+    |> assign(story_view: view)
+    |> no_reply()
+  end
+
+  def handle_event("toggle_story_mode", _, %{assigns: %{story_mode: is_on}} = socket) do
+    socket
+    |> assign(story_mode: !is_on)
     |> no_reply()
   end
 
@@ -163,6 +188,8 @@ defmodule GabblerWeb.Post.NewLive do
       page: 1,
       pages: 1,
       story_mode: false,
+      story_page: 0,
+      story_view: "single",
       comments: [],
       upload: nil,
       parent: nil,
@@ -199,6 +226,7 @@ defmodule GabblerWeb.Post.NewLive do
       |> assign(room: room)
       |> assign(allowed: true)
       |> assign(story: story)
+      |> assign(story_pages: Enum.count(story.imgs))
       |> assign(story_toggle: :off)
       |> init(params, session)
     else
@@ -206,6 +234,7 @@ defmodule GabblerWeb.Post.NewLive do
       |> assign(room: room)
       |> assign(allowed: false)
       |> assign(story: nil)
+      |> assign(story_pages: 0)
       |> assign(story_toggle: :off)
       |> put_flash(:info, gettext("you are either not logged in, banned for life or posting in this room is restricted"))
     end

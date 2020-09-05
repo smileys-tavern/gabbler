@@ -1,5 +1,6 @@
 <%= if @show_auth do %>
-  <div class="login-container">
+  <div class="login-container"></div>
+    
     <div class="login-middle">
       <div class="login">
         <% route = case @mode do
@@ -14,11 +15,10 @@
               <button class="btn btn-primary button-action" type="submit">Logout</button>
             </form>
         <% else %>
-          <h2>
+          <div>
             <a href="#" phx-click="login_mode" phx-value-mode="login">Login</a> | 
             <a href="#" phx-click="login_mode" phx-value-mode="register">Register</a>
-          </h2>
-          <p><%= gettext("Some actions require an account. Login or create one here.") %></p>
+          </div>
 
           <%= form_for @changeset_user, route, 
           [phx_change: :login_change, class: "login-form", csrf_token: @csrf] %>
@@ -50,7 +50,9 @@
               desc: gettext("Must be at least 12 characters")}) %>
 
             <div class="login-form-actions">
-              <a href="#" class="login-cancel button-action negation" phx-click="login_hide">Cancel</a>
+              <a href="#" class="login-cancel button-action negation" phx-click="login_hide">
+                Cancel
+              </a>
               <%= if @mode == :register do %>
                 <button class="btn btn-primary button-action" type="submit">Register</button>
               <% else %>
@@ -60,6 +62,5 @@
           </form>
         <% end %>
       </div>
-    </div>
   </div>
 <% end %>

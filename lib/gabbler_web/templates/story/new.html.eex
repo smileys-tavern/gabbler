@@ -2,7 +2,7 @@
   <h1>Story Creator</h1>
   <%= form_for :uploads, Routes.story_path(GabblerWeb.Endpoint, :upload, @hash), [multipart: true], fn f -> %>
     <div class="form-group">
-      <label for="images">Choose JPG files to upload (Max 20MB):</label>
+      <label for="images">Upload JPG files:</label>
       <input type="file" id="images" name="images[]" multiple /><br><br>
     </div>
     <div class="form-group">

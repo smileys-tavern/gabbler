@@ -68,9 +68,9 @@ nav .warning {
   top: 52px;
   right: 22px;
   z-index: 110;
-  background-color: #a0672e;
-  border: 2px solid #000;
-  color: #FFF;
+  background-color: #ffffff;
+  border: 2px solid #e9bf2d;
+  color: #464646;
   border-radius: 5px;
   border-top-right-radius: 0;
   padding: 21px;
@@ -84,8 +84,8 @@ nav p {
 
 .menu .options a,
 nav .menu .menu-item {
-  width: 305px;
-  min-height: 40px;
+  width: 436px;
+  min-height: 38px;
   background-color: #ffffff;
   color: #464646;
   margin: 0 5px;
@@ -111,7 +111,6 @@ nav .menu .menu-item {
   color: #E9BF2D;
 }
 .menu .activity a {
-  max-width: 299px;
   color: #FFF;
   line-height: 20px;
   height: 20px;
@@ -230,18 +229,29 @@ nav .menu .menu-item {
   z-index: 10;
   width: 100%;
   height: 100%;
-  opacity: 1;
+  opacity: 0.8;
+  background-color: #000;
 }
 .login-middle {
-  display: table-cell;
-  vertical-align: middle;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .login {
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: auto;
   width: 600px;
   padding: 25px;
-  background-color: #f7f6ef;
+  background-color: #FFF;
   border-radius: 5px;
   border: 2px solid #000;
   color: #083465;
@@ -250,10 +260,10 @@ nav .menu .menu-item {
   margin-left: 68px;
 }
 .login #user_name {
-  margin-left: 96px;
+  margin-left: 106px;
 }
 .login #user_email {
-  margin-left: 99px;
+  margin-left: 109px;
 }
 .login h2 {
   margin-top: 0;
@@ -294,8 +304,14 @@ nav .menu .menu-item {
 }
 .login-form-actions .button-action {
   width: 104px;
-  height: 26px;
   margin: 0 5px;
+  background-color: #e2840d;
+  font-size: 17px;
+  padding: 7px;
+}
+.login-form-actions .negation {
+  background-color: #F3F3F3;
+  padding: 7px 18px;
 }
 
 /* END AUTH */
@@ -495,14 +511,14 @@ nav .menu .menu-item {
 }
 .story-uploaded .delete-img {
   position: absolute;
-  top: -6px;
-  right: -9px;
+  top: -11px;
+  right: -10px;
   background-color: #FFF;
   border: 2px solid #9a1c1c;
   text-align: center;
-  width: 15px;
-  height: 15px;
-  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 12px;
   color: #9a1c1c;
   padding-top: 1px;
   cursor: pointer;
@@ -510,27 +526,30 @@ nav .menu .menu-item {
 .story-uploaded .img-order-up,
 .story-uploaded .img-order-down {
   position: absolute;
-  bottom: -19px;
+  bottom: -16px;
   background-color: #b6b0b0;
   width: 38px;
   text-align: center;
   font-size: 17px;
 }
 .story-uploaded .img-order-up {
-  left: 2px;
-  border-top-left-radius: 4px;
+  left: 0;
   border-bottom-left-radius: 4px;
+  border: 1px solid #9a7800;
+  background-color: #e9bf2d;
 }
 .story-uploaded .img-order-down {
-  right: 2px;
-  border-top-right-radius: 4px;
+  right: 0;
   border-bottom-right-radius: 4px;
+  border: 1px solid #9a7800;
+  background-color: #e9bf2d;
 }
 .story_create_container .story-size {
   margin-top: 20px;
 }
 .story-uploaded .thumb img {
-  border-radius: 4px;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
   border: 1px solid #9a7800;
 }
 
@@ -732,6 +751,7 @@ nav .menu .menu-item {
 .story-view-double {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .story-view-double img {
   margin: 0;
@@ -1105,7 +1125,7 @@ form.link, form.button {
 .moderating .room {
   float: left;
   margin: 15px 10px 10px 0;
-  width: 540px;
+  width: 49%;
   background-color: #f3f3f3;
 }
 .moderating .post {
