@@ -2,8 +2,6 @@
 
 Gabbler is a customizable Phoenix 1.5+/LiveView project for creating a Reddit-Like website. It remains true to a promise of writing no javascript (the only JS is the LiveView hook). The goal of this project is to provide a real time experience with every feature, maintain good 'bones' and create the best tooling for moderation and such that Elixir ecosystem does such a great job providing.
 
-- ***Demo Site [https://smileys.pub](https://smileys.pub)***
-
 # Features
 
 - Create Rooms (/r/..):

@@ -441,10 +441,6 @@ nav .menu .menu-item {
  */
 .story_create_container,
 .form-sidebar {
-  position: fixed;
-  top: 108px;
-  right: 0;
-  width: 400px;
   padding: 10px;
   background-color: #464646;
   color: #FFF;
@@ -452,21 +448,14 @@ nav .menu .menu-item {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   height: 800px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.story_create_container {
-  z-index: 10;
-  width: 560px;
 }
 
 .story_create_close {
-  position: fixed;
+  position: absolute;
   z-index: 11;
-  top: 123px;
-  right: 10px;
-  font-size: 24px;
+  top: 139px;
+  right: 21px;
+  font-size: 30px;
   cursor: pointer;
 }
 
@@ -476,6 +465,7 @@ nav .menu .menu-item {
   width: 560px;
   padding: 0 0 20px 0;
   border-bottom: 1px solid #b6b0b0;
+  overflow: hidden;
 }
 .create-story h1 {
   margin-bottom: 12px;
@@ -484,6 +474,8 @@ nav .menu .menu-item {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  width: 500px;
+  margin: 15px auto;
 }
 .create-story .form-group label {
   flex-grow: 2;

@@ -210,6 +210,13 @@ action-pane {
   border: none;
 }
 
+.iframe-container {
+  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  width: 540px;
+}
+
 /* UTIL */
 .not-found-404 {
   margin: 20px;
