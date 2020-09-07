@@ -9,6 +9,12 @@
     <div class="room-fact">
       <%= @user_count %> online here
     </div>
+    <%= if assigns[:room] do %>
+      <div class="room-description">
+        <h2><%= @room.name %></h2>
+        <%= @room.description %>
+      </div>
+    <% end %>
     <%= if @room do %>
       <%= if @user do %>
         <a href="/r/<%= @room.name %>/new_post/<%= @story_hash %>" class="button-action">

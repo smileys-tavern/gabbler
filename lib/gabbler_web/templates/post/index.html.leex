@@ -70,6 +70,7 @@
           <%= if @story_page < (@story_pages - 1) do %>
             <button phx-click="story_page_up">Next Page</button>
           <% end %>
+          (<%= @story_page + 1 %>/<%= @story_pages %>)
         </div>
       <% end %>
 

@@ -637,6 +637,13 @@ nav .menu .menu-item {
   font-weight: bold;
   text-align: center;
 }
+.room-description {
+  width: 550px;
+  margin: 1rem 0;
+}
+.room-description h2 {
+  font-size: 14pt;
+}
 .description .indented {
   padding: 10px;
 }

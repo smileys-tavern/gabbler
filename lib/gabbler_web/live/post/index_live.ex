@@ -218,8 +218,11 @@ defmodule GabblerWeb.Post.IndexLive do
     end
 
     chat = case mode do
-      :chat -> GabblerPost.get_chat(post)
-      _ -> nil
+      :chat -> 
+        _ = GabSub.subscribe("post_chat:#{op.hash}")
+        GabblerPost.get_chat(post)
+      _ -> 
+        nil
     end
 
     socket

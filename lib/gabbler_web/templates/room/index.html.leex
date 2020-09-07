@@ -3,7 +3,7 @@
 </div>
 
 <div class="description">
-  <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a> <%= @room.description %> 
+  <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
 </div>
 
 <%= if @room_type == "room" && @mode in [:new, :hot, :live] do %>
