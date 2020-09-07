@@ -110,8 +110,12 @@
       <iframe 
         src="/r/<%= @room.name %>/story/<%= @story.hash %>"
         title="Story Creator"
-        style="border: none; width: 560px; height: 170px; overflow: hidden;">
+        style="border: none; min-width: 560px; height: 220px;">
       </iframe>
+
+      <%= if @uploading > 0 do %>
+        <div class="story-uploading">Uploading <%= @uploading %> Images..</div>
+      <% end %>
 
       <div class="story-uploaded">
         <%= for %{thumb: thumb, id: id} <- @story.imgs do %>
@@ -129,6 +133,9 @@
           </div>
         <% end %>
       </div>
-      <div class="story-size"><%= Float.round(@story_size / 1000000, 1) %>/20MB</div>
+      <div class="story-size">
+        <%= Float.round(@story_size / 1000000, 1) %>/20MB
+        <div class="story_create_finished" phx-click="close_story_creator">Finished</div>
+      </div>
     </div>
   <% end %>

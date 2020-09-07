@@ -210,11 +210,15 @@ action-pane {
   border: none;
 }
 
+/* POST CREATE */
 .iframe-container {
   overflow: hidden;
   overflow-y: hidden;
   overflow-x: hidden;
   width: 540px;
+}
+.story-uploading {
+  margin: 20px 0;
 }
 
 /* UTIL */

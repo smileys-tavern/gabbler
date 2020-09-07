@@ -25,12 +25,19 @@ defmodule GabblerWeb.Post.NewLive do
   """
   def handle_info(
     %{event: "uploaded", public_id: _pub_id, thumb: _thumb}, 
-    %{assigns: %{story: %{hash: hash}, story_pages: story_pages}} = socket) do
+    %{assigns: %{uploading: u, story: %{hash: hash}, story_pages: story_pages}} = socket) do
     Gabbler.Story.state(hash)
     |> assign_to(:story, socket)
     |> assign(:story_pages, story_pages + 1)
+    |> assign(uploading: u - 1)
     |> update_story_size()
     |> sync_from_story()
+    |> no_reply()
+  end
+
+  def handle_info(%{event: "uploading"}, %{assigns: %{uploading: u}} = socket) do
+    socket
+    |> assign(uploading: u + 1)
     |> no_reply()
   end
 
@@ -187,6 +194,7 @@ defmodule GabblerWeb.Post.NewLive do
       changeset_reply: nil,
       page: 1,
       pages: 1,
+      uploading: 0,
       story_mode: false,
       story_page: 0,
       story_view: "single",

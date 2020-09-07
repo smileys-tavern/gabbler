@@ -447,7 +447,6 @@ nav .menu .menu-item {
   font-weight: bold;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  height: 800px;
 }
 
 .story_create_close {
@@ -456,6 +455,12 @@ nav .menu .menu-item {
   top: 139px;
   right: 21px;
   font-size: 30px;
+  cursor: pointer;
+}
+.story_create_finished {
+  float: right;
+  margin: 0 10px 0 0;
+  text-decoration: underline;
   cursor: pointer;
 }
 
@@ -495,6 +500,7 @@ nav .menu .menu-item {
 .story-uploaded {
   display: flex;
   flex-wrap: wrap;
+  max-width: 600px;
 }
 .story-uploaded .thumb {
   margin: 10px 10px 27px 10px;
@@ -602,6 +608,7 @@ nav .menu .menu-item {
   font-size: 12px;
   font-style: italic;
   padding: 8px;
+  max-width: 500px;
 }
 .form-sidebar a {
   color: #e9bf2d;

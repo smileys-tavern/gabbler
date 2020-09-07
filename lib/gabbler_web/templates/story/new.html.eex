@@ -1,5 +1,9 @@
 <div class="create-story">
   <h1>Story Creator</h1>
+  <p>
+    Choose JPG/JPEG images to create a story in your post.<br />Images will be displayed 800px
+    wide.
+  </p>
   <%= form_for :uploads, Routes.story_path(GabblerWeb.Endpoint, :upload, @hash), [multipart: true], fn f -> %>
     <div class="form-group">
       <label for="images">Upload JPG files:</label>
