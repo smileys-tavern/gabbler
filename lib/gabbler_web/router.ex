@@ -2,6 +2,7 @@ defmodule GabblerWeb.Router do
   use GabblerWeb, :router
 
   import GabblerWeb.UserAuth
+  import GabblerWeb.PagePlugs
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -10,6 +11,7 @@ defmodule GabblerWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug :populate_trending
   end
 
   pipeline :live_browser do

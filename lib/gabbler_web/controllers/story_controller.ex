@@ -11,7 +11,7 @@ defmodule GabblerWeb.StoryController do
     |> render("new.html", hash: hash)
   end
 
-  def upload(conn, %{"hash" => hash, "images" => images} = params) do
+  def upload(conn, %{"hash" => hash, "images" => images}) do
     story = Gabbler.Story.state(hash)
 
     for _img <- images do

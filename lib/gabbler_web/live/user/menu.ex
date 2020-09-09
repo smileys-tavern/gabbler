@@ -3,7 +3,6 @@ defmodule GabblerWeb.Live.User.Menu do
   Authentication live view to manage the ui based on a users status and actions
   """
   use Phoenix.LiveView
-  import Gabbler, only: [query: 1]
   import Gabbler.Live.SocketUtil
   import GabblerWeb.Gettext
 

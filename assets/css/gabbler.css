@@ -76,7 +76,7 @@ nav .warning {
   padding: 21px;
 }
 nav .info {
-  background-color: #e29739;
+  background-color: #fff;
 }
 nav p {
   margin: 0;
@@ -143,6 +143,7 @@ nav .menu .menu-item {
   text-decoration: none;
   color: #464646;
   border-radius: 5px;
+  font-size: 11pt;
   cursor: pointer;
 }
 .button-action:hover {
@@ -155,7 +156,7 @@ nav .menu .menu-item {
   margin-left: 3px;
 }
 .negation {
-  background-color: #7cacf1;
+  background-color: #b6b0b0;
   border-color: #4b1a00;
 }
 
@@ -968,13 +969,11 @@ nav .menu .menu-item {
   margin: 18px 0;
 }
 .sidebar input {
-  float: left;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border: 1px dashed #275d98;
   height: 22px;
   margin-top: 3px;
-  width: 78%;
   text-align: center;
 }
 .sidebar button {
@@ -985,7 +984,6 @@ nav .menu .menu-item {
   border: none;
   background-color: #464646;
   color: #FFF;
-  width: 21%;
 }
 
 .sidebar-nav {
@@ -1351,7 +1349,6 @@ form.link, form.button {
   .post,
   .original-post,
   .op-body {
-    width: 100%;
     max-width: 100%;
     padding: 10px;
   }
@@ -1494,9 +1491,5 @@ form.link, form.button {
     margin: 0;
     width: 100%;
     padding: 5px;
-  }
-
-  .room-title {
-    display: none;
   }
 }

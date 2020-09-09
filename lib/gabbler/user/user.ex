@@ -270,16 +270,16 @@ defmodule Gabbler.User do
   defp notify(user, :modding_room_error), do: user
   |> broadcast_msg(gettext("Failed to add as moderator"), "warning")
 
+  defp notify(%User{id: id} = user, %{} = event) do
+    GabSub.broadcast("user:#{id}", event)
+    user
+  end
+
   defp notify(user, :error, :invite_mod, {nil, _}), do: user
   |> broadcast_msg(gettext("User not found so mod request could not be sent"), "warning")
 
   defp notify(user, :error, :activity_moderating, _), do: user
   |> broadcast_msg(gettext("There was an issue accepting moderation request"), "warning")
-
-  defp notify(%User{id: id} = user, %{} = event) do
-    GabSub.broadcast("user:#{id}", event)
-    user
-  end
 
   # TODO: refactoring broadcasts from server interfaces soon
   defp broadcast_msg(%User{id: id} = user, msg, type) when alert?(type) do

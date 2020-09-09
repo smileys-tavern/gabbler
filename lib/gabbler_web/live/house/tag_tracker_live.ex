@@ -46,6 +46,15 @@ defmodule GabblerWeb.House.TagTrackerLive do
 
   # PRIV
   #############################
+  defp init(socket, %{"tag" => tag}, session) do
+    TagTracker.tag_channel(tag)
+    |> GabSub.subscribe()
+    |> TagTracker.get(tag)
+    |> assign_to(:tag_channel, socket)
+    |> assign(posts: [], current_tag: tag)
+    |> init(%{}, session)
+  end
+
   defp init(%{assigns: %{user: %{id: user_id}, temp_token: nil}} = socket, _, _) do
     TagTracker.user_channel(user_id)
     |> GabSub.subscribe()

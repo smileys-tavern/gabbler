@@ -83,13 +83,6 @@ defmodule Gabbler.Post do
   end
 
   @doc """
-  Map a set of posts to it's user data
-  """
-  def map_users(posts) do
-    QueryPost.map_users(posts)
-  end
-
-  @doc """
   Persist a reply and broadcast the resulting information to interested parties
   """
   def reply_submit(changeset, room, op, user) do

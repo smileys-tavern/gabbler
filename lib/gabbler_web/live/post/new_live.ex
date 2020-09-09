@@ -4,7 +4,6 @@ defmodule GabblerWeb.Post.NewLive do
   """
   use GabblerWeb, :live_view
   use GabblerWeb.Live.Auth, auth_required: [:_page]
-  import Gabbler, only: [query: 1]
   import Gabbler.Live.SocketUtil, only: [no_reply: 1, assign_to: 3]
 
   alias Gabbler.PostCreation

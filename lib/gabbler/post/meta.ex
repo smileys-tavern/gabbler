@@ -22,11 +22,11 @@ defmodule Gabbler.Post.Meta do
 
   @impl true
   def filter_tags(tags) when is_list(tags) do
-    Enum.slice(tags, 0..Application.get_env(:gabbler, :post_max_tags, 3))
+    tags
+    |> Enum.slice(0..Application.get_env(:gabbler, :post_max_tags, 3))
     |> Enum.filter(fn tag -> String.length(tag) > 2 end)
   end
 
-  @impl true
   def filter_tags(nil), do: []
 
   def filter_tags(tags) do

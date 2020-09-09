@@ -1,8 +1,6 @@
 defmodule GabblerWeb.UserController do
   use GabblerWeb, :controller
 
-  import Gabbler, only: [query: 1]
-
   alias Gabbler.Controller, as: GabController
 
 

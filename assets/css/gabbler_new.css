@@ -25,6 +25,10 @@ sub-header {
 }
 sub-header a {
   color: #464646;
+  text-decoration: underline;
+}
+sub-header span {
+  color: #000;
 }
 
 page-container {
@@ -221,6 +225,11 @@ action-pane {
   margin: 20px 0;
 }
 
+/* SIDEBAR */
+.current-room form {
+  display: flex; 
+}
+
 /* UTIL */
 .not-found-404 {
   margin: 20px;
@@ -254,6 +263,8 @@ nav a {
 .mobile-sidebar-options a {
   min-width: 44px;
   padding: 0px;
+  border-radius: 0;
+  margin: 0;
 }
 
 @media screen and (max-width: 600px) {
@@ -268,9 +279,99 @@ nav a {
   sub-header {
     display: none;
   }
+  display-content {
+    width: unset;
+    margin: 0 3px;
+  }
+  page-content {
+    flex-direction: column-reverse;
+  }
 
   nav ul {
     top: 0;
     right: -13px;
+    width: unset;
+  }
+  nav .menu {
+    right: -20px;
+  }
+  nav .menu .activity {
+    display: none;
+  }
+
+  .sidebar {
+    background-color: #d9d7d7;
+    width: unset;
+    border-radius: 0;
+  }
+
+  .posts .actions {
+    display: none;
+  }
+
+  .menu .options a {
+    width: unset;
+  }
+  .menu .options a:last-child {
+    border-bottom: 2px solid #000;
+  }
+
+  .original-post {
+    padding: 0;
+  }
+  .original-post img {
+    width: 100%;
+    margin-left: 0;
+  }
+  .original-post .op-story-mode div {
+    margin: 5px 3px;
+  }
+  .story-view img {
+    width: 100%;
+  }
+  .story-view-close {
+    top: -3px;
+    right: 3px;
+  }
+  .story-view .view-mode {
+    display: none;
+  }
+
+  .op-actions {
+    padding: 0;
+  }
+  .op-actions .reply {
+    display: block;
+    margin: 24px;
+  }
+  .op-actions .mod-action {
+    display: none;
+  }
+
+  .comment-reply-form {
+    width: unset;
+  }
+  .comment-reply-form textarea {
+    width: -webkit-fill-available;
+  }
+  .comment-reply-form-actions {
+    width: unset;
+  }
+  .comment-reply-form-actions a {
+    padding: 8px 9px 9px 9px;
+  }
+
+  .room-title {
+    max-width: unset;
+    margin: 0 -3px;
+    padding: 0;
+  }
+  .room-title img {
+    margin: 0;
+  }
+
+  .moderating .room {
+    margin: unset;
+    width: unset;
   }
 }

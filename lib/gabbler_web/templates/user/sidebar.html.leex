@@ -57,7 +57,9 @@
           </label>
           <input class="form-control" id="mod_name" name="mod[name]" type="text" value="<%= @mod_invite %>" placeholder="username" />
         </div>
-        <button class="btn btn-primary" type="submit"><%= gettext("Invite") %></button>
+        <div>
+          <button class="btn btn-primary" type="submit"><%= gettext("Invite") %></button>
+        </div>
       </form>
 
       <form action="#" phx-submit="submit_unban">
@@ -72,7 +74,9 @@
             value="<%= @user_name_unban %>" 
             placeholder="username" />
         </div>
-        <button class="btn btn-primary" type="submit"><%= gettext("Unban") %></button>
+        <div>
+          <button class="btn btn-primary" type="submit"><%= gettext("Unban") %></button>
+        </div>
       </form>
     <% end %>
     <%= if @user && @owner.id == @user.id 
@@ -92,7 +96,9 @@
             value="<%= @user_name_allow %>" 
             placeholder="username" />
         </div>
-        <button class="btn btn-primary" type="submit"><%= gettext("Allow") %></button>
+        <div>
+          <button class="btn btn-primary" type="submit"><%= gettext("Allow") %></button>
+        </div>
       </form>
 
       <form action="#" phx-submit="submit_user_disallow">
@@ -108,7 +114,9 @@
             value="<%= @user_name_disallow %>" 
             placeholder="username" />
         </div>
-        <button class="btn btn-primary" type="submit"><%= gettext("Revoke") %></button>
+        <div>
+          <button class="btn btn-primary" type="submit"><%= gettext("Revoke") %></button>
+        </div>
       </form>
     <% end %>
   </div>

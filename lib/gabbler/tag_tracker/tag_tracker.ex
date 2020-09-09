@@ -9,6 +9,7 @@ defmodule Gabbler.TagTracker do
   alias Gabbler.Post.Meta
   alias GabblerData.{Post, PostMeta}
   alias Gabbler.Accounts.User
+  alias Gabbler.Cache
 
   @doc """
   Add a new tag or set of tags from a new post
@@ -32,6 +33,14 @@ defmodule Gabbler.TagTracker do
   def get(channel_name, retrieve_type) when is_binary(channel_name) do
     _ = cast(:get, {retrieve_type, channel_name})
     channel_name
+  end
+
+  @doc """
+  Get a list out of memory of the latest 3 tags
+  """
+  def top_tags(limit \\ 3) do
+    Cache.get("TRENDING_TAGS")
+    |> Enum.slice(0..limit)
   end
 
   @doc """

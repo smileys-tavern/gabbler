@@ -1,6 +1,7 @@
 defmodule Gabbler.TagTracker.Server do
   use GenServer
 
+  alias Gabbler.Cache
   alias Gabbler.TagTracker
   alias Gabbler.TagTracker.TagState
   alias GabblerData.Post
@@ -11,6 +12,8 @@ defmodule Gabbler.TagTracker.Server do
   @rule_longest_body 140
   # Amount of items taken in a request for random tags
   @take_x_random 3
+
+  @trend_cache_ttl 3600
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, %TagState{},
@@ -30,7 +33,8 @@ defmodule Gabbler.TagTracker.Server do
         {:get, {:trending, client_channel}},
         %TagState{trending: trending, tags: tags} = state
       ) do
-    Enum.reduce(trending, [], fn tag, acc ->
+    trending
+    |> Enum.reduce([], fn tag, acc ->
       {_, _, posts} = Map.get(tags, tag)
 
       acc ++ posts
@@ -116,7 +120,14 @@ defmodule Gabbler.TagTracker.Server do
         score_a > score_b
       end)
 
-    trending_tags = Enum.slice(sorted_tags, 0..Application.get_env(:gabbler, :tags_max_trending))
+    IO.inspect "SORTING!!!!!!!!!!!"
+    IO.inspect queue
+    IO.inspect sorted_tags
+
+    trending_tags = sorted_tags
+    |> Enum.slice(0..Application.get_env(:gabbler, :tags_max_trending))
+    IO.inspect trending_tags
+     _ = Cache.set("TRENDING_TAGS", trending_tags, ttl: @trend_cache_ttl)
 
     # Split out the weak trending from the strong
     {tag_remain, texit} =
