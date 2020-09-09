@@ -120,13 +120,9 @@ defmodule Gabbler.TagTracker.Server do
         score_a > score_b
       end)
 
-    IO.inspect "SORTING!!!!!!!!!!!"
-    IO.inspect queue
-    IO.inspect sorted_tags
-
     trending_tags = sorted_tags
     |> Enum.slice(0..Application.get_env(:gabbler, :tags_max_trending))
-    IO.inspect trending_tags
+    
      _ = Cache.set("TRENDING_TAGS", trending_tags, ttl: @trend_cache_ttl)
 
     # Split out the weak trending from the strong
