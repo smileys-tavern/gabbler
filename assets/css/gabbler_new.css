@@ -52,15 +52,19 @@ action-pane {
   flex-shrink: 0;
 }
 
+.intro h1 {
+  font-size: 18pt;
+}
+
 /* ROOM */
 .room-title {
   font-weight: bold;
   font-size: 18px;
-  margin: 0 0 3px 0;
-  padding: 20px 0;
+  padding: 0 0 24px 0;
+  text-align: center;
 }
 .room-title img {
-  max-width: 100%;
+  width: 100%;
   margin: -20px;
 }
 .description {
@@ -140,10 +144,23 @@ action-pane {
   padding: 4px;
   text-align: center;
   border-radius: 4px;
-  color: #ffF;
+  color: #FFF;
   text-decoration: none;
   margin-left: auto;
   margin-bottom: 3px;
+}
+.actions .tags {
+  margin: 5px 0;
+}
+.actions .tags a {
+  display: unset;
+  width: unset;
+  background-color: unset;
+  padding: unset;
+  color: #377ab7;
+  font-size: 13pt;
+  text-decoration: underline;
+  margin: none;
 }
 .actions strong {
   color: #e2842b;

@@ -412,6 +412,9 @@ nav .menu .menu-item {
   padding: 10px;
   font-size: 13pt;
 }
+.tag-tracker-status div {
+  margin: 20px 0;
+}
 .tag-tracker-status span {
   color: #c24e10;
 }
@@ -959,7 +962,7 @@ nav .menu .menu-item {
  * Sidebar
  */
 .sidebar {
-  background-color: #f3f3f3;
+  background-color: #ebebeb;
   border-radius: 5px;
 }
 .sidebar h3 {

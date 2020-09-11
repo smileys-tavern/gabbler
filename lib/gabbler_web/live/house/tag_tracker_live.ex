@@ -52,7 +52,6 @@ defmodule GabblerWeb.House.TagTrackerLive do
     |> TagTracker.get(tag)
     |> assign_to(:tag_channel, socket)
     |> assign(posts: [], current_tag: tag)
-    |> init(%{}, session)
   end
 
   defp init(%{assigns: %{user: %{id: user_id}, temp_token: nil}} = socket, _, _) do
@@ -74,5 +73,6 @@ defmodule GabblerWeb.House.TagTrackerLive do
     |> assign(current_tag: gettext("all trending"))
     |> assign(posts: [])
     |> assign(post_metas: %{}, users: %{}, rooms: %{})
+    |> assign(trending_10: Gabbler.TagTracker.top_tags(10))
   end
 end

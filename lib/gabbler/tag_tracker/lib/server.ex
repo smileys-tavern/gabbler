@@ -122,7 +122,8 @@ defmodule Gabbler.TagTracker.Server do
 
     trending_tags = sorted_tags
     |> Enum.slice(0..Application.get_env(:gabbler, :tags_max_trending))
-    
+    |> Enum.uniq()
+
      _ = Cache.set("TRENDING_TAGS", trending_tags, ttl: @trend_cache_ttl)
 
     # Split out the weak trending from the strong

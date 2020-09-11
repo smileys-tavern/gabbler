@@ -34,10 +34,11 @@
         <%= for nav_item <- Application.get_env(:gabbler, :sub_nav, []) do %>
           <a href=<%= nav_item %>><%= nav_item %></a>&nbsp;&nbsp;
         <% end %>
-        <%= if assigns[:trending_tags] do %>
+        <%= if assigns[:trending_tags] && Enum.count(@trending_tags) > 0 do %>
           <span>Trending Tags: </span>
+          <% i = 0 %>
           <%= for tag <- @trending_tags do %>
-            <a href="/h/tag_tracker?tag=<%= tag %>"><%= tag %></a>&nbsp;&nbsp;
+            <a href="/h/tag_tracker?tag=<%= tag %>">#<%= tag %></a>&nbsp;&nbsp;
           <% end %>
         <% end %>
       </sub-header>

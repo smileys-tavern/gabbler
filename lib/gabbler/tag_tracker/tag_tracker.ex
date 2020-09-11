@@ -39,8 +39,10 @@ defmodule Gabbler.TagTracker do
   Get a list out of memory of the latest 3 tags
   """
   def top_tags(limit \\ 3) do
-    Cache.get("TRENDING_TAGS")
-    |> Enum.slice(0..limit)
+    case Cache.get("TRENDING_TAGS") do
+      nil -> []
+      tags -> Enum.slice(tags, 0..limit)
+    end
   end
 
   @doc """

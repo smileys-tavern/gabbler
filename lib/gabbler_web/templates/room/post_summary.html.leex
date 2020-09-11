@@ -62,6 +62,12 @@
       <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
     <% end %>
 
-    <%= if @post_meta.tags do %><strong><%= @post_meta.tags %></strong><% end %>
+    <%= if @post_meta.tags do %>
+      <div class="tags">
+        <%= for tag <- String.split(@post_meta.tags, ", ") do %>
+          <a href="/h/tag_tracker?tag=<%= tag %>">#<%= tag %></a>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>

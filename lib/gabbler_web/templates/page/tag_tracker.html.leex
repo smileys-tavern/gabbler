@@ -1,4 +1,9 @@
 <!-- Tag input form -->
+<div class="intro">
+  <h1>Tag Tracker</h1>
+  <p>Original Content is allowed 3 tags. Enter a tag name to be notified of new content
+  in real time.</p>
+</div>
 <form class="tag-tracker-form" action="#" phx-submit="submit">
   <div class="form-group">
     <input class="form-control" 
@@ -13,7 +18,12 @@
 
 <!-- POSTS! -->
 <div class="tag-tracker-status">
-  Current tag: <span>"<%= @current_tag %>"</span>
+  <div>Current tag: <span>"<%= @current_tag %>"</span></div>
+  <div>Trending:
+    <%= for tag <- @trending_10 do %>
+      <a href="/h/tag_tracker?tag=<%= tag %>">#<%= tag %></a>&nbsp;&nbsp;
+    <% end %>
+  </div>
 </div>
 <div class="posts">
   <%= if Enum.count(@posts) do %>
