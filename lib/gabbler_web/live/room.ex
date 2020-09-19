@@ -18,11 +18,27 @@ defmodule GabblerWeb.Live.Room do
       alias GabblerWeb.Presence
 
       @default_mode :live
+      @max_trends 5
+      @banner_uptime 1000 * 5
 
       @impl true
       def handle_info(%{event: "presence_diff"}, %{assigns: %{room: %{name: name}}} = socket) do
         Enum.count(Presence.list("room:#{name}"))
         |> assign_to(:user_count, socket)
+        |> no_reply()
+      end
+
+      @impl true
+      def handle_info(:inc_selected, %{assigns: %{selected_trend: selected}} = socket) do
+        new_selected = cond do
+          selected >= @max_trends -> 0
+          true -> selected + 1
+        end
+
+        Process.send_after(self(), :inc_selected, @banner_uptime)
+
+        socket
+        |> assign(selected_trend: new_selected)
         |> no_reply()
       end
 
@@ -177,6 +193,8 @@ defmodule GabblerWeb.Live.Room do
       end
 
       defp init_room(socket, :room_defaults) do
+        Process.send_after(self(), :inc_selected, @banner_uptime)
+
         assign(socket, 
           room_type: "room",
           sidebar_on: false, 
@@ -184,7 +202,9 @@ defmodule GabblerWeb.Live.Room do
           user_name_allow: "",
           user_name_disallow: "",
           user_name_unban: "",
-          user_count: 0)
+          user_count: 0,
+          selected_trend: 0,
+          max_trends: @max_trends)
       end
 
       defp init_room(%{assigns: %{room: nil}} = socket, _), do: socket

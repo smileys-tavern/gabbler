@@ -7,7 +7,7 @@
   phx-target="window">
   <div class="site-actions">
     <div class="room-fact">
-      <%= @user_count %> online here
+      <%= @user_count %> online in <%= @room.name %>
     </div>
     <%= if assigns[:room] do %>
       <div class="room-description">
@@ -16,11 +16,6 @@
       </div>
     <% end %>
     <%= if @room do %>
-      <%= if @user do %>
-        <a href="/r/<%= @room.name %>/new_post/<%= @story_hash %>" class="button-action">
-          Post
-        </a>
-      <% end %>
       <%= if @subscribed do %>
         <a href="#" class="button-action" phx-click="unsubscribe">
           Unsubscribe /r/<%= @room.name %>    
@@ -33,6 +28,11 @@
       <%= if @user && @owner.id == @user.id do %>
         <a href="/room/new?room=<%= @room.name %>" class="button-action">
           Edit /r/<%= @room.name %>  
+        </a>
+      <% end %>
+      <%= if assigns[:op] && @user && @op.user_id == @user.id do %>
+        <a href="/r/<%= @room.name %>/edit_post/<%= @op.hash %>" class="button-action">
+          Edit Post
         </a>
       <% end %>
     <% end %>
@@ -126,6 +126,12 @@
       <a href="/about">About <%= Application.get_env(:gabbler, :page_title) %></a>
     </div>
   </div>
+
+  <%= live_component @socket, GabblerWeb.LiveComponent.SuggestionWidget, 
+    id: :banner,
+    top_content: @max_trends,
+    selected: @selected_trend,
+    mode: :thumbs %>
 
   <%= if assigns[:konami] do %>
     <%= render GabblerWeb.PageView, "konami.html" %>

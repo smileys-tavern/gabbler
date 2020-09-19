@@ -46,7 +46,7 @@ defmodule GabblerWeb.House.TagTrackerLive do
 
   # PRIV
   #############################
-  defp init(socket, %{"tag" => tag}, session) do
+  defp init(socket, %{"tag" => tag}, _session) do
     TagTracker.tag_channel(tag)
     |> GabSub.subscribe()
     |> TagTracker.get(tag)

@@ -59,6 +59,7 @@ defmodule GabblerWeb.Router do
 
     # GABBLER -> ROOM -> POST
     live "/r/:room/new_post/:story_hash", Post.NewLive, :new
+    live "/r/:room/edit_post/:hash", Post.NewLive, :new
     live "/r/:room/comments/:hash/:title", Post.IndexLive, :index
     live "/r/:room/comments/:hash/:title/view/:mode", Post.IndexLive, :index
     live "/r/:room/comments/:hash/", Post.IndexLive, :index

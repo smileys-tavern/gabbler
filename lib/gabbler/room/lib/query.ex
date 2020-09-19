@@ -38,7 +38,7 @@ defmodule Gabbler.Room.Query do
   end
 
   @impl true
-  def list(_), do: []
+  def list(opts), do: QueryRoom.list(opts)
 
   @impl true
   def increment_reputation(_, _), do: {:ok, %Room{}}

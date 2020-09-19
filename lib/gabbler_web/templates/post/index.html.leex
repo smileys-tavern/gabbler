@@ -83,7 +83,12 @@
   </div>
   
   <div class="op-content">
-    <span class="time-blatant">Posted <%= posted_at(@post.inserted_at) %></span>
+    <span class="time-blatant">
+      Posted <%= posted_at(@post.inserted_at) %>
+      <%= if @post.inserted_at != @post.updated_at do %>
+        and updated <%= posted_at(@post.updated_at) %>
+      <% end %>
+    </span>
 
     <div class="op-actions">
       <%= if !assigns[:chat] do %>

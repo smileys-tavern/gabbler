@@ -1,3 +1,8 @@
+<%= live_component @socket, GabblerWeb.LiveComponent.SuggestionWidget, 
+    id: :banner,
+    top_content: @max_trends,
+    selected: @selected %>
+
 <page-content>
   <display-content>
     <%= render(GabblerWeb.PageView, "index.html", assigns) %>

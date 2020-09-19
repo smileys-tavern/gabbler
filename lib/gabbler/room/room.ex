@@ -40,6 +40,13 @@ defmodule Gabbler.Room do
   end
 
   @doc """
+  Retrieve the newest rooms
+  """
+  def newest_rooms(limit \\ 5) do
+    QueryRoom.list(limit: limit, order_by: :recent)
+  end
+
+  @doc """
   Create a room using data store
   """
   def create_room(changeset), do: QueryRoom.create(changeset)

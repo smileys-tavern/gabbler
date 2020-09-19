@@ -1,7 +1,11 @@
+<div class="room-title room-adjustment">
+  <%= raw @room.title %>
+</div>
+
 <page-content>
-  <display-content>
+  <display-room-content>
     <%= render(GabblerWeb.RoomView, "index.html", assigns) %>
-  </display-content>
+  </display-room-content>
 
   <action-pane>
     <%= render(GabblerWeb.RoomView, "create.html", assigns) %>

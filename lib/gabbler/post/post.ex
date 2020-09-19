@@ -33,7 +33,7 @@ defmodule Gabbler.Post do
   @doc """
   Retrieve the story images associated with the post
   """
-  def get_story_images(post), do: QueryPost.get_story_images(post)
+  def get_story_images(post_meta), do: QueryPost.get_story_images(post_meta)
 
   @doc """
   Create a new image associated with a post

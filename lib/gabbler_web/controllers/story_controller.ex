@@ -20,7 +20,7 @@ defmodule GabblerWeb.StoryController do
       })
     end
 
-    for img <- images do
+    for img <- Enum.reverse(images) do
       Gabbler.Story.add_img(story, img)
     end
 

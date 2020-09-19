@@ -1,5 +1,9 @@
 <div class="description">
   <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
+
+  <a href="/r/<%= @room.name %>/new_post/<%= assigns[:story_hash] %>" class="button-action">
+    Post Here
+  </a>
 </div>
 
 <%= if @room_type == "room" && @mode in [:new, :hot, :live] do %>

@@ -6,10 +6,13 @@ defmodule Gabbler.TagTracker do
   NOTE: The presence of an application instead of just a genserver served by gabbler is mainly to promote future
   additions where the work is distributed further to solve potential scaling situations.
   """
-  alias Gabbler.Post.Meta
-  alias GabblerData.{Post, PostMeta}
+  alias GabblerData.{Post, PostMeta, Room}
   alias Gabbler.Accounts.User
   alias Gabbler.Cache
+  alias Gabbler.Post.Meta
+  alias Gabbler.TagTracker.TopContent
+
+  @ttl_top5 1000 * 60 * 5 # 5 minutes
 
   @doc """
   Add a new tag or set of tags from a new post
@@ -42,6 +45,29 @@ defmodule Gabbler.TagTracker do
     case Cache.get("TRENDING_TAGS") do
       nil -> []
       tags -> Enum.slice(tags, 0..limit)
+    end
+  end
+
+  @doc """
+  Retrieve a list of the top content around the site returning it in
+  a standard way whether it be a post, story, room or other. Returns as
+  TopContent structs
+  """
+  def top_content() do
+    case nil do # Cache.get("TOP5:ALL")
+      nil ->
+        newest_rooms = Gabbler.Room.newest_rooms(1)
+
+        trending_posts = Gabbler.Post.list(only: :op, order_by: :score_private, limit: 4)
+
+        top_content = populate_top_content(newest_rooms ++ trending_posts, [])
+        |> Enum.take(5)
+
+        _ = Cache.set("TOP5:ALL", top_content, ttl: @ttl_top5)
+
+        top_content
+      top_content ->
+        top_content
     end
   end
 
@@ -87,5 +113,54 @@ defmodule Gabbler.TagTracker do
           _ -> GenServer.cast(pid, {action, args})
         end
     end
+  end
+
+  defp populate_top_content([], acc), do: Enum.shuffle(acc)
+
+  defp populate_top_content([%Room{title: title, name: name, description: desc}|t], acc) do
+    img = case String.split(title, "\"") do
+      [_, href, _] -> href
+      _ -> nil
+    end
+
+    populate_top_content(t, [%TopContent{
+      type: :room, 
+      url: "/r/#{name}",
+      desc: desc,
+      imgs: [img]}|acc])
+  end
+
+  defp populate_top_content([%Post{room_id: r_id, user_id: u_id, hash: hash} = p|t], acc) do
+    user = Gabbler.User.get(u_id)
+
+    room = Gabbler.Room.get(r_id)
+
+    meta = Gabbler.Post.get_meta(p)
+
+    images = Gabbler.Post.get_story_images(meta)
+    |> Enum.map(fn %{public_id: pub_id} -> 
+      Cloudex.Url.for(pub_id, %{width: 195, height: 215})
+    end)
+    |> Enum.take(10)
+
+    thumbs = Gabbler.Post.get_story_images(meta)
+    |> Enum.map(fn %{public_id: pub_id} -> 
+      Cloudex.Url.for(pub_id, %{width: 118, height: 138})
+    end)
+    |> Enum.take(10)
+
+    ext_url = case meta do
+      %{link: nil} -> nil
+      %{link: link} -> link
+    end
+
+    populate_top_content(t, [%TopContent{
+      type: :post,
+      url: "/r/#{room.name}/comments/#{hash}/#{p.title}",
+      ext_url: ext_url,
+      desc: "#{p.title} by #{user.name}",
+      imgs: images,
+      thumbs: thumbs,
+      long: String.slice(p.body, 0, 300)}|acc])
   end
 end

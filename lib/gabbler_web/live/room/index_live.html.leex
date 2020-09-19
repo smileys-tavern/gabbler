@@ -2,13 +2,13 @@
   <%= render(GabblerWeb.RoomView, "404.html", assigns) %>
 <% else %>
   <%= if @allowed do %>
-    <div class="room-title">
+    <div class="room-title room-adjustment">
       <%= raw @room.title %>
     </div>
     <page-content>
-      <display-content <%= if @sidebar_on do %>class="desktop"<% end %>>
+      <display-room-content <%= if @sidebar_on do %>class="desktop"<% end %>>
         <%= render(GabblerWeb.RoomView, "index.html", assigns) %>
-      </display-content>
+      </display-room-content>
 
       <action-pane>
         <%= render(GabblerWeb.UserView, "sidebar.html", assigns) %>

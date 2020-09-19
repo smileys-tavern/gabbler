@@ -107,11 +107,13 @@
 <%= if @story_toggle == :on do %>
     <div class="story_create_container">
       <div class="story_create_close" phx-click="close_story_creator">X</div>
-      <iframe 
-        src="/r/<%= @room.name %>/story/<%= @story.hash %>"
-        title="Story Creator"
-        style="border: none; min-width: 560px; height: 220px;">
-      </iframe>
+      <%= if @mode == :create do %>
+        <iframe 
+          src="/r/<%= @room.name %>/story/<%= @story.hash %>"
+          title="Story Creator"
+          style="border: none; min-width: 560px; height: 220px;">
+        </iframe>
+      <% end %>
 
       <%= if @uploading > 0 do %>
         <div class="story-uploading">Uploading <%= @uploading %> Images..</div>

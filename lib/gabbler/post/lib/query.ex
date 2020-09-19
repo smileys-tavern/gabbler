@@ -58,7 +58,7 @@ defmodule Gabbler.Post.Query do
   def map_users(posts), do: QueryPost.map_users(posts)
 
   @impl true
-  def get_story_images(post), do: QueryPost.get_story_images(post)
+  def get_story_images(post_meta), do: QueryPost.get_story_images(post_meta)
 
   @impl true
   def delete_story_image(public_id), do: QueryPost.delete_story_image(public_id)
@@ -76,10 +76,26 @@ defmodule Gabbler.Post.Query do
   def create_reply(changeset), do: QueryPost.create_reply(changeset)
 
   @impl true
-  def update(changeset), do: QueryPost.update(changeset)
+  def update(changeset) do
+    case QueryPost.update(changeset) do
+      {:ok, %{hash: hash}} = result ->
+        _ = Cache.delete("POST_#{hash}")
+        result
+      error->
+        error
+    end
+  end
 
   @impl true
-  def update_meta(changeset), do: QueryPost.update_meta(changeset)
+  def update_meta(changeset) do 
+    case QueryPost.update_meta(changeset) do
+      {:ok, %{id: id}} = result ->
+        _ = Cache.delete("POST_META_#{id}")
+        result
+      error ->
+        error
+    end
+  end
 
   @impl true
   def increment_score(post, amt, amt_priv), do: QueryPost.increment_score(post, amt, amt_priv)

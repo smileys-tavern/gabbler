@@ -451,6 +451,7 @@ nav .menu .menu-item {
   font-weight: bold;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
+  min-width: 400px;
 }
 
 .story_create_close {
@@ -962,8 +963,12 @@ nav .menu .menu-item {
  * Sidebar
  */
 .sidebar {
-  background-color: #ebebeb;
-  border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top: 2px solid #464646;
+  border-bottom: 2px solid #464646;
+  border-left: 2px solid #464646;
+  border-bottom-left-radius: 5px;
+  width: 610px;
 }
 .sidebar h3 {
   color: #3a5471;
@@ -1012,7 +1017,7 @@ nav .menu .menu-item {
 .sidebar .site-actions a {
   display: block;
   font-size: 18px;
-  margin: 1px 0;
+  margin: 2px 0;
 }
 .sidebar .site-actions a:hover {
   background-color: #E29739;

@@ -54,6 +54,10 @@ defmodule Gabbler.Story do
     call(story, :remove_img, public_id)
   end
 
+  def set_imgs(story, imgs) do
+    call(story, :set_imgs, imgs)
+  end
+
   @doc """
   Update thumbnail by modifying the posts meta
   """

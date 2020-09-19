@@ -41,6 +41,12 @@ defmodule Gabbler.Story.Server do
   end
 
   @impl true
+  def handle_call({:set_imgs, imgs}, _f, state) do
+    state = %{state | imgs: imgs}
+    {:reply, state, state}
+  end
+
+  @impl true
   def handle_call({:add_img, img}, _f, %{hash: hash, imgs: imgs, post_meta: meta} = state) do
     case Images.upload(state, img) do
       {:ok, _, %Image{id: public_id, thumb: thumb} = uploaded_img} ->

@@ -8,6 +8,7 @@ defmodule GabblerWeb.Post.NewLive do
 
   alias Gabbler.PostCreation
   alias Gabbler.Room, as: GabblerRoom
+  alias Gabbler.Story.Image
   alias Gabbler.Subscription, as: GabSub
   alias GabblerData.{Post, PostMeta}
 
@@ -166,8 +167,24 @@ defmodule GabblerWeb.Post.NewLive do
   end
 
   def handle_event("submit", _, %{assigns: %{mode: :update} = assigns} = socket) do
-    assign_updated_post(socket, Gabbler.Post.update(assigns.changeset))
-    |> assign_updated_meta(Gabbler.Post.update_meta(assigns.changeset_meta))
+    # TODO: probably the changeset should remain pure until change time instead of
+    # mirroring post/meta updates
+    changes = %{body: assigns.post.body, title: assigns.post.title}
+    changeset = Post.changeset(%Post{
+      id: assigns.post.id,
+      hash: assigns.post.hash,
+      user_id: assigns.post.user_id}, changes)
+
+    meta_changes = %{link: assigns.post_meta.link, thumb: assigns.post_meta.thumb}
+    changeset_meta = PostMeta.changeset(%PostMeta{
+      id: assigns.post_meta.id,
+      user_id: assigns.post.user_id,
+      post_id: assigns.post.id
+      }, meta_changes)
+
+    socket
+    |> assign_updated_post(Gabbler.Post.update(changeset))
+    |> assign_updated_meta(Gabbler.Post.update_meta(changeset_meta))
     |> no_reply()
   end
 
@@ -181,8 +198,9 @@ defmodule GabblerWeb.Post.NewLive do
 
   # PRIV
   #############################
-  defp init(%{assigns: %{story: story}} = socket, _, _) do
+  defp init(%{assigns: %{allowed: true} = assigns} = socket, _, _) do
     # TODO Address the large list of defaults for the preview (repeated and ugly)
+    story = assigns.story
 
     assign(socket,
       changeset: Post.changeset(story.post),
@@ -203,7 +221,6 @@ defmodule GabblerWeb.Post.NewLive do
       story_size: Gabbler.Story.get_story_size(story),
       uploads: Application.get_env(:gabbler, :uploads, :off),
       room_type: "room",
-      mode: :create,
       updated: false,
       user: story.user,
       post_user: story.user,
@@ -217,23 +234,59 @@ defmodule GabblerWeb.Post.NewLive do
     |> redirect(to: "/")
   end
 
-  defp init(%{assigns: assigns} = socket, %{"room" => name, "story_hash" => hash} = params, session) do
-    room = GabblerRoom.get_room(name)
+  defp init(socket, %{"room" => name} = params, session) do
+    GabblerRoom.get_room(name)
+    |> assign_to(:room, socket)
+    |> init(Map.drop(params, ["room"]), session)
+  end
 
-    if GabblerRoom.allow_entrance?(room, assigns.user) do
-      story = Gabbler.Story.state(
-        hash, 
-        assigns.user,
-        %Post{user_id: assigns.user.id, parent_id: room.id, parent_type: "room"},
-        %PostMeta{user_id: assigns.user.id})
+  defp init(%{assigns: %{room: room, user: user}} = socket, %{"story_hash" => hash} = params, session) do
+    GabSub.subscribe("story:#{hash}")
 
-      GabSub.subscribe("story:#{hash}")
+    story = Gabbler.Story.state(
+      hash, 
+      user,
+      %Post{user_id: user.id, parent_id: room.id, parent_type: "room"},
+      %PostMeta{user_id: user.id})
+    
+    socket
+    |> assign(story: story)
+    |> assign(story_pages: Enum.count(story.imgs))
+    |> assign(mode: :create)
+    |> init(Map.drop(params, ["story_hash"]), session)
+  end
 
+  defp init(%{assigns: %{user: user}} = socket, %{"hash" => hash} = params, session) do
+    post = Gabbler.Post.get_post(hash)
+
+    if post.user_id == user.id do
+      meta = Gabbler.Post.get_meta(post)
+
+      story = Gabbler.Story.state(hash, user, post, meta)
+
+      images = Gabbler.Post.get_story_images(meta)
+      |> Enum.map(fn %{public_id: id, url: url, thumb: thumb} -> 
+        %Image{id: id, url: url, thumb: thumb, size: 0}
+      end)
+
+      story = Gabbler.Story.set_imgs(story, images)
+
+      socket
+      |> assign(story: story)
+      |> assign(story_pages: Enum.count(story.imgs))
+      |> assign(mode: :update)
+      |> init(Map.drop(params, ["hash"]), session)
+    else
+      socket
+      |> put_flash(:info, gettext("you do not seem to have permission to be here"))
+    end
+  end
+
+  defp init(%{assigns: %{user: user, room: room}} = socket, params, session) do
+    if GabblerRoom.allow_entrance?(room, user) do
       socket
       |> assign(room: room)
       |> assign(allowed: true)
-      |> assign(story: story)
-      |> assign(story_pages: Enum.count(story.imgs))
       |> assign(story_toggle: :off)
       |> init(params, session)
     else
@@ -321,7 +374,10 @@ defmodule GabblerWeb.Post.NewLive do
   end
 
   defp assign_updated_post(%{assigns: %{updated: updated}} = socket, {:ok, post}) do
-    assign(socket, post: post, changeset: Post.changeset(post), updated: update_updated(updated))
+    assign(socket, 
+      post: post, 
+      changeset: Post.changeset(post),
+      updated: update_updated(updated))
   end
 
   defp assign_updated_post(socket, {:error, changeset}) do
