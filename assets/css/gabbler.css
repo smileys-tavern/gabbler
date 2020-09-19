@@ -31,7 +31,7 @@ button {
   -moz-appearance: button;
 }
 body a {
-  color: #3984e2;
+  color: #0E79B2;
   text-decoration: none;
 }
 
@@ -70,7 +70,7 @@ nav .warning {
   z-index: 110;
   background-color: #ffffff;
   border: 2px solid #e9bf2d;
-  color: #464646;
+  color: #3D3B30;
   border-radius: 5px;
   border-top-right-radius: 0;
   padding: 21px;
@@ -87,13 +87,13 @@ nav .menu .menu-item {
   width: 436px;
   min-height: 38px;
   background-color: #ffffff;
-  color: #464646;
+  color: #3D3B30;
   margin: 0 5px;
   border-radius: 0;
   border-bottom: none;
-  border-top: 2px solid #464646;
-  border-left: 2px solid #464646;
-  border-right: 2px solid #464646;
+  border-top: 2px solid #3D3B30;
+  border-left: 2px solid #3D3B30;
+  border-right: 2px solid #3D3B30;
 }
 .menu .options a:first-child {
   border-top-left-radius: 5px;
@@ -119,7 +119,7 @@ nav .menu .menu-item {
   text-align: left;
 }
 .menu .new-activity a {
-  background-color: #3984e2;
+  background-color: #0E79B2;
   padding: 5px;
 }
 .menu .activity div {
@@ -136,12 +136,12 @@ nav .menu .menu-item {
   margin-bottom: 15px;
 }
 .button-action {
-  border: 2px solid #464646;
-  background-color: #b6b0b0;
+  border: 2px solid #3D3B30;
+  background-color: #5DA271;
   text-align: center;
   padding: 9px;
   text-decoration: none;
-  color: #464646;
+  color: #3D3B30;
   border-radius: 5px;
   font-size: 11pt;
   cursor: pointer;
@@ -170,7 +170,7 @@ nav .menu .menu-item {
   font-size: 18px;
 }
 .chat .chat-user {
-  background-color: #3984e2;
+  background-color: #0E79B2;
   color: #FFF;
   padding: 5px;
   border-radius: 4px;
@@ -182,7 +182,7 @@ nav .menu .menu-item {
   color: #FFF;
 }
 .chat .chat-msg {
-  background-color: #464646;
+  background-color: #3D3B30;
   color: #FFF;
   border-radius: 4px;
   margin: 1px 4px;
@@ -199,7 +199,7 @@ nav .menu .menu-item {
 }
 
 .chat input {
-  border-color: #464646;
+  border-color: #3D3B30;
   border-radius: 4px;
   border-width: 1px;
   width: 99%;
@@ -207,16 +207,16 @@ nav .menu .menu-item {
   margin: 5px 0;
   padding: 0 4px;
   font-size: 17px;
-  color: #464646;
+  color: #3D3B30;
 }
 .chat button {
   float: right;
   margin: 5px;
   width: 180px;
   height: 27px;
-  border: 1px solid #317ab7;
+  border: 1px solid #0E79B2;
   border-radius: 4px;
-  background-color: #317ab7;
+  background-color: #0E79B2;
   color: #FFF;
   font-weight: bold;
 }
@@ -306,7 +306,7 @@ nav .menu .menu-item {
 .login-form-actions .button-action {
   width: 104px;
   margin: 0 5px;
-  background-color: #e2840d;
+  background-color: #F9A03F;
   font-size: 17px;
   padding: 7px;
 }
@@ -336,9 +336,9 @@ nav .menu .menu-item {
 .account button {
   height: 37px;
   font-size: 16px;
-  color: #464646;
+  color: #3D3B30;
   background-color: #ffffff;
-  border: 2px solid #464646;
+  border: 2px solid #3D3B30;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
@@ -446,7 +446,7 @@ nav .menu .menu-item {
 .story_create_container,
 .form-sidebar {
   padding: 10px;
-  background-color: #464646;
+  background-color: #3D3B30;
   color: #FFF;
   font-weight: bold;
   border-top-left-radius: 5px;
@@ -638,7 +638,7 @@ nav .menu .menu-item {
  */
 .room-fact {
   padding: 14px 0 5px 0;
-  color: #e2840d;
+  color: #5DA271;
   font-weight: bold;
   text-align: center;
 }
@@ -672,7 +672,7 @@ nav .menu .menu-item {
   border-bottom: 15px solid #ababab;
 }
 .arrow-up:hover {
-  border-bottom: 15px solid #FF9800;
+  border-bottom: 15px solid #5DA271;
 }
 
 .arrow-down {
@@ -684,7 +684,7 @@ nav .menu .menu-item {
   border-top: 15px solid #ababab;
 }
 .arrow-down:hover {
-  border-top: 15px solid #FF9800;
+  border-top: 15px solid #5DA271;
 }
 
 .arrow-right {
@@ -877,7 +877,7 @@ nav .menu .menu-item {
 }
 .comment-depth-2 {
   margin-left: 50px;
-  border: 1px dashed #464646;
+  border: 1px dashed #3D3B30;
   border-radius: 4px;
 }
 .comment-depth-3 {
@@ -885,7 +885,7 @@ nav .menu .menu-item {
 }
 .comment-depth-4 {
   margin-left: 150px;
-  border: 1px dashed #464646;
+  border: 1px dashed #3D3B30;
   border-radius: 4px;
 }
 .comment-depth-5 {
@@ -893,7 +893,7 @@ nav .menu .menu-item {
 }
 .comment-depth-6 {
   margin-left: 250px;
-  border: 1px dashed #464646;
+  border: 1px dashed #3D3B30;
   border-radius: 4px;
 }
 .comment-depth-7 {
@@ -901,7 +901,7 @@ nav .menu .menu-item {
 }
 .comment-depth-8 {
   margin-left: 350px;
-  border: 1px dashed #464646;
+  border: 1px dashed #3D3B30;
   border-radius: 4px;
 }
 .comment-depth-9 {
@@ -909,7 +909,7 @@ nav .menu .menu-item {
 }
 .comment-depth-10 {
   margin-left: 450px;
-  border: 1px dashed #464646;
+  border: 1px dashed #3D3B30;
 }
 
 .comment-reply-form-bottom,
@@ -956,7 +956,7 @@ nav .menu .menu-item {
 }
 
 .mod-action {
-  color: #da780d;
+  color: #F9A03F;
 }
 
 /**
@@ -964,11 +964,12 @@ nav .menu .menu-item {
  */
 .sidebar {
   border-top-left-radius: 5px;
-  border-top: 2px solid #464646;
-  border-bottom: 2px solid #464646;
-  border-left: 2px solid #464646;
+  border-top: 2px solid #3D3B30;
+  border-bottom: 2px solid #3D3B30;
+  border-left: 2px solid #3D3B30;
   border-bottom-left-radius: 5px;
   width: 610px;
+  background-color: #F7F7F2;
 }
 .sidebar h3 {
   color: #3a5471;
@@ -990,7 +991,7 @@ nav .menu .menu-item {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border: none;
-  background-color: #464646;
+  background-color: #3D3B30;
   color: #FFF;
 }
 
@@ -1003,7 +1004,7 @@ nav .menu .menu-item {
 }
 
 .sidebar .nav {
-  background-color: #3984e2;
+  background-color: #0E79B2;
   float: none !important;
   margin: -1px 0 0 0;
   padding: 4px;
@@ -1031,14 +1032,14 @@ nav .menu .menu-item {
 .sidebar-links {
   margin: 25px 20px 20px 20px;
   text-align: center;
-  border-bottom: 5px solid #3984e2;
+  border-bottom: 5px solid #0E79B2;
   padding-bottom: 6px;
 }
 .sidebar-links-last {
   border-bottom: none;
 }
 .sidebar-links a{
-  color: #317ab7;
+  color: #0E79B2;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
@@ -1120,7 +1121,7 @@ form.link, form.button {
 }
 .moderating .off {
   background-color: #FFF;
-  color: #464646;
+  color: #3D3B30;
 }
 .mod-section {
   margin: 20px;
@@ -1149,7 +1150,7 @@ form.link, form.button {
   width: 100%;
   text-align: center;
   padding: 5px 0;
-  background-color: #464646;
+  background-color: #3D3B30;
   color: #FFF;
   border-radius: 4px;
 }
@@ -1267,19 +1268,19 @@ form.link, form.button {
   border-bottom: none ;
 }
 .user-activity-comment{
-  background-color: #E29739;
+  background-color: #5DA271;
 }
 .user-activity-vote{
   background-color: #ababab;
 }
 .post-activity-comment{
-  background-color: #E29739;
+  background-color: #5DA271;
 }
 .room-activity-new-posts{
-  background-color: #E29739;
+  background-color: #5DA271;
 }
 .room-activity-subs{
-  background-color: #3984E2;
+  background-color: #0E79B2;
 }
 .user-activity-url{
   text-decoration: underline;

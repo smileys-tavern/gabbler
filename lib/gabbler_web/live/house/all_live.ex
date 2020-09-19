@@ -12,7 +12,7 @@ defmodule GabblerWeb.House.AllLive do
   @impl true
   def handle_info(:inc_selected, %{assigns: %{selected: selected}} = socket) do
     new_selected = cond do
-      selected >= @max_trends -> 0
+      selected >= (@max_trends - 1) -> 0
       true -> selected + 1
     end
 

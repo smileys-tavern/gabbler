@@ -11,7 +11,11 @@
         <%= @post.title %>    
       </a>
       <%= if @user do %>
-        <br />By <a href="/u/<%= @user.name %>"><%= @user.name %></a>
+        <br />
+        <span class="timestamp">
+          <%= Timex.format!(@post.inserted_at, "{relative}", :relative) %>   
+        </span> 
+        By <a href="/u/<%= @user.name %>"><%= @user.name %></a>
       <% end %>
       <%= if @post_meta.link do %>
         <div class="external">

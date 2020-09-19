@@ -7,7 +7,7 @@ body {
 header {
   display: flex;
   justify-content: space-between;
-  background-color: #464646;
+  background-color: #3D3B30;
   height: 53px;
   padding: 7px 15px;
   font-weight: bold;
@@ -18,13 +18,15 @@ header img {
 }
 
 sub-header {
-  background-color: #FFF;
-  color: #464646;
+color: #3D3B30;
   line-height: 40px;
-  margin-left: 20px;
+  height: 40px;
+  background-color: #F7F7F2;
+  padding-left: 20px;
+  display: block;
 }
 sub-header a {
-  color: #464646;
+  color: #3D3B30;
   text-decoration: underline;
 }
 sub-header span {
@@ -87,7 +89,7 @@ action-pane {
   padding: 11px 0px;
   margin: 0 0 20px 0;
   position: relative;
-  border-top: 1px solid #464646;
+  border-top: 1px solid #3D3B30;
 }
 .description .button-action {
   float: right;
@@ -95,8 +97,8 @@ action-pane {
   margin-right: 20px;
   font-weight: bold;
   background-color: #fff;
-  color: #3984e2;
-  border-color: #3984e2;
+  color: #0E79B2;
+  border-color: #0E79B2;
   text-decoration: underline;
 }
 .room-control {
@@ -138,7 +140,7 @@ action-pane {
   cursor: default;
   overflow: hidden;
   border-radius: 4px;
-  border: 2px solid #464646;
+  border: 2px solid #3D3B30;
   cursor: pointer;
 }
 .preview-square img {
@@ -166,7 +168,7 @@ action-pane {
 .actions a {
   display: block;
   width: 200px;
-  background-color: #464646;
+  background-color: #3D3B30;
   padding: 4px;
   text-align: center;
   border-radius: 4px;
@@ -189,7 +191,7 @@ action-pane {
   margin: none;
 }
 .actions strong {
-  color: #e2842b;
+  color: #F9A03F;
 }
 .actions .meta-available {
   display: flex;
@@ -233,7 +235,7 @@ action-pane {
 .comments a {
   display: unset;
   background: none;
-  color: #3984e2;
+  color: #0E79B2;
 }
 .comments .mod-action {
   color: #E29739;
@@ -250,7 +252,7 @@ action-pane {
 }
 .story-paging button {
   margin: 0 5px;
-  color: #317ab7;
+  color: #0E79B2;
   font-size: 17px;
   font-weight: bold;
   background: none;
@@ -276,11 +278,11 @@ action-pane {
 /* TRENDING */
 .suggestions {
   display: flex;
-  border-top: 2px solid #464646;
+  border-top: 2px solid #3D3B30;
   position: relative;
   width: 100%;
   height: 215px;
-  background-color: #F3F3F3;
+  background-color: #F7F7F2;
 }
 .sidebar .suggestions {
   height: 200px;
@@ -386,7 +388,7 @@ action-pane {
   margin: 20px;
 }
 .external a {
-  color: #e2842b;
+  color: #F9A03F;
 }
 .alert-temp {
   margin-block-start: 0;
@@ -402,9 +404,9 @@ action-pane {
 }
 .mobile-sidebar-options a,
 nav a {
-  color: #317ab7;
+  color: #0E79B2;
   font-size: 14px;
-  background-color: #ffffff;
+  background-color: #f7f7f2;
   padding: 0 5px;
   text-align: center;
   border-radius: 5px;
