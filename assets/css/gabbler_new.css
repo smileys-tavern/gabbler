@@ -55,8 +55,10 @@ display-content {
 }
 display-room-content {
   width: 100%;
-  margin: -60px 0 0 20px;
-  background-color: #FFF;
+  margin: -60px 0 0 0;
+  background-color: #fff;
+  padding-left: 20px;
+  border-top: 1px solid #000;
 }
 action-pane {
   flex-shrink: 0;
@@ -89,7 +91,6 @@ action-pane {
   padding: 11px 0px;
   margin: 0 0 20px 0;
   position: relative;
-  border-top: 1px solid #3D3B30;
 }
 .description .button-action {
   float: right;

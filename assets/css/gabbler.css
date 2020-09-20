@@ -137,7 +137,7 @@ nav .menu .menu-item {
 }
 .button-action {
   border: 2px solid #3D3B30;
-  background-color: #5DA271;
+  background-color: #8CB369;
   text-align: center;
   padding: 9px;
   text-decoration: none;
@@ -638,7 +638,7 @@ nav .menu .menu-item {
  */
 .room-fact {
   padding: 14px 0 5px 0;
-  color: #5DA271;
+  color: #8CB369;
   font-weight: bold;
   text-align: center;
 }
@@ -672,7 +672,7 @@ nav .menu .menu-item {
   border-bottom: 15px solid #ababab;
 }
 .arrow-up:hover {
-  border-bottom: 15px solid #5DA271;
+  border-bottom: 15px solid #8CB369;
 }
 
 .arrow-down {
@@ -684,7 +684,7 @@ nav .menu .menu-item {
   border-top: 15px solid #ababab;
 }
 .arrow-down:hover {
-  border-top: 15px solid #5DA271;
+  border-top: 15px solid #8CB369;
 }
 
 .arrow-right {
@@ -1268,16 +1268,16 @@ form.link, form.button {
   border-bottom: none ;
 }
 .user-activity-comment{
-  background-color: #5DA271;
+  background-color: #8CB369;
 }
 .user-activity-vote{
   background-color: #ababab;
 }
 .post-activity-comment{
-  background-color: #5DA271;
+  background-color: #8CB369;
 }
 .room-activity-new-posts{
-  background-color: #5DA271;
+  background-color: #8CB369;
 }
 .room-activity-subs{
   background-color: #0E79B2;
