@@ -283,7 +283,7 @@ defmodule GabblerWeb.Post.NewLive do
   end
 
   defp init(%{assigns: %{user: user, room: room}} = socket, params, session) do
-    if GabblerRoom.allow_entrance?(room, user) do
+    if GabblerRoom.allow_entrance?(room, user, :restricted) do
       socket
       |> assign(room: room)
       |> assign(allowed: true)

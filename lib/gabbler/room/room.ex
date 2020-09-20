@@ -7,7 +7,7 @@ defmodule Gabbler.Room do
   the database is used the Room Server has it's room info refreshed.
   """
   import GabblerWeb.Gettext
-  import Gabbler.Guards, only: [restricted?: 1]
+  import Gabbler.Guards, only: [restricted?: 1, private?: 1]
   import Gabbler, only: [query: 1]
 
   alias Gabbler.Room.Application, as: RoomApp
@@ -99,13 +99,15 @@ defmodule Gabbler.Room do
   @doc """
   Return boolean based on whether a user is allowed in the room
   """
-  def allow_entrance?(nil, _), do: true
+  def allow_entrance?(room, user, access_type \\ :private)
 
-  def allow_entrance?(%{type: "private"}, nil), do: false
+  def allow_entrance?(nil, _, _), do: true
 
-  def allow_entrance?(room, user) do
+  def allow_entrance?(%{type: "private"}, nil, _), do: false
+
+  def allow_entrance?(room, user, access_type) do
     banned?(room, user)
-    |> allow_private_if_not_banned?(room, user)
+    |> allow_private_if_not_banned?(room, user, access_type)
   end
 
   @doc """
@@ -222,15 +224,19 @@ defmodule Gabbler.Room do
     end
   end
 
-  defp allow_private_if_not_banned?(true, _, _), do: false
+  defp allow_private_if_not_banned?(true, _, _, _), do: false
 
-  defp allow_private_if_not_banned?(_, %{user_id: creator_id}, %{id: creator_id}), do: true
+  defp allow_private_if_not_banned?(_, %{user_id: creator_id}, %{id: creator_id}, _), do: true
 
-  defp allow_private_if_not_banned?(false, %{id: id, type: type}, %{id: user_id}) when restricted?(type) do
+  defp allow_private_if_not_banned?(false, %{id: id, type: type}, %{id: user_id}, :private) when private?(type) do
     QueryRoom.allow_list?(id, user_id)
   end
 
-  defp allow_private_if_not_banned?(false, _, _), do: true
+  defp allow_private_if_not_banned?(false, %{id: id, type: type}, %{id: user_id}, :restricted) when restricted?(type) do
+    QueryRoom.allow_list?(id, user_id)
+  end
+
+  defp allow_private_if_not_banned?(false, _, _, _), do: true
 
   defp broadcast_if({:ok, _}, room, channel, %{} = event) do
     GabSub.broadcast(channel, event)

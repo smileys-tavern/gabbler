@@ -40,6 +40,12 @@ defmodule GabblerWeb.Room.NewLive do
 
   # PRIV
   #############################
+  defp init(%{assigns: %{user: nil}} = socket, _, _) do
+    socket
+    |> put_flash(:info, gettext("Sign in to create a room"))
+    |> redirect(to: "/")
+  end
+
   defp init(%{assigns: assigns} = socket, %{"room" => name}, _) do
     case GabblerRoom.get_room(name) do
       nil ->

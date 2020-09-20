@@ -1,5 +1,6 @@
 <div class="description">
-  <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a>
+  <a href="/r/<%= @room.name %>">/r/<%= @room.name %></a> 
+  <span>Moderator permission is required to post here</span>
 
   <a href="/r/<%= @room.name %>/new_post/<%= assigns[:story_hash] %>" class="button-action">
     Post Here
@@ -8,9 +9,9 @@
 
 <%= if @room_type == "room" && @mode in [:new, :hot, :live] do %>
   <div class="room-control">
-    <a href="/r/<%= @room.name %>/view/live">Live</a> | 
-    <a href="/r/<%= @room.name %>/view/hot">Hot</a> | 
-    <a href="/r/<%= @room.name %>/view/new">New</a>
+    <a href="/r/<%= @room.name %>/view/live" <%= if @mode == :live do %>class="active"<%end%>>Live</a> | 
+    <a href="/r/<%= @room.name %>/view/hot" <%= if @mode == :hot do %>class="active"<%end%>>Hot</a> | 
+    <a href="/r/<%= @room.name %>/view/new" <%= if @mode == :new do %>class="active"<%end%>>New</a>
   </div>
 <% end %>
 
